@@ -2,11 +2,13 @@ import io
 import os
 import re
 
-from setuptools import find_packages, setup
+import setuptools
 
+
+
+###############################################################################
 
 NAME = "pup"
-PACKAGES = find_packages(where="src")
 META_PATH = os.path.join("src", "pup", "__init__.py")
 KEYWORDS = ["packaging", "gui", "applications"]
 CLASSIFIERS = [
@@ -44,10 +46,11 @@ EXTRAS_REQUIRE = {
 }
 EXTRAS_REQUIRE["dev"] = EXTRAS_REQUIRE["tests"] + EXTRAS_REQUIRE["docs"]
 
+
+
 ###############################################################################
 
 HERE = os.path.abspath(os.path.dirname(__file__))
-
 
 def read(*parts):
     """
@@ -58,8 +61,8 @@ def read(*parts):
         return f.read()
 
 
-META_FILE = read(META_PATH)
 
+META_FILE = read(META_PATH)
 
 def find_meta(meta):
     """
@@ -74,25 +77,22 @@ def find_meta(meta):
     raise RuntimeError("Unable to find __{meta}__ string.".format(meta=meta))
 
 
-VERSION = find_meta("version")
-URI = find_meta("uri")
-LONG = read("README.rst")
-
 
 if __name__ == "__main__":
-    setup(
+    setuptools.setup(
         name=NAME,
         description=find_meta("description"),
         license=find_meta("license"),
-        url=URI,
-        version=VERSION,
+        url=find_meta("uri"),
+        version=find_meta("version"),
         author=find_meta("author"),
         author_email=find_meta("email"),
         maintainer=find_meta("author"),
         maintainer_email=find_meta("email"),
         keywords=KEYWORDS,
-        long_description=LONG,
-        packages=PACKAGES,
+        long_description=read("README.rst"),
+        long_description_content_type='text/x-rst',
+        packages=setuptools.find_packages(where="src"),
         package_dir={"": "src"},
         zip_safe=False,
         classifiers=CLASSIFIERS,
@@ -104,3 +104,4 @@ if __name__ == "__main__":
             ],
         },
     )
+

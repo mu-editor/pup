@@ -18,7 +18,7 @@ that's fine too.
 
 The purpose,
 again,
-is to package the `Mu Editor`_
+is to package `Mu Editor <https://codewith.mu/>`_
 for macOS and Windows distribution.
 
 
@@ -29,7 +29,7 @@ Foreword
 As I write these words,
 I'm not really sure for how long ``pup`` will actually live --
 let me be clear:
-it's not that I don't think the Mu Editor,
+it's not that I don't think the `Mu Editor <https://codewith.mu/>`_,
 in particular,
 and the world of Python GUI applications in general
 don't need a simple and effective native packager,
@@ -187,7 +187,7 @@ Thanks
 
 .. marker-start-thanks-dont-remove
 
-- Nicholas Tollervey for the amazing `Mu Editor`_.
+- Nicholas Tollervey for the amazing `Mu Editor <https://codewith.mu/>`_.
 
 - The Mu contributors I've been having the privilege of working more directly with,
   Carlos Pereira Atencio, Martin Dybdal, and Tim Golden, as well as the others

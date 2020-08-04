@@ -18,7 +18,7 @@ that's fine too.
 
 The purpose,
 again,
-is to package the `Mu Editor <https://codewith.mu/>`_
+is to package the `Mu Editor`_
 for macOS and Windows distribution.
 
 
@@ -187,7 +187,7 @@ Thanks
 
 .. marker-start-thanks-dont-remove
 
-- Nicholas Tollervey for the amazing `Mu Editor <https://codewith.mu>`_.
+- Nicholas Tollervey for the amazing `Mu Editor`_.
 
 - The Mu contributors I've been having the privilege of working more directly with,
   Carlos Pereira Atencio, Martin Dybdal, and Tim Golden, as well as the others

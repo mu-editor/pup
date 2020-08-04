@@ -203,6 +203,8 @@ Thanks
   project,
   on top of which we plan to package redistributable Python GUI applications.
 
+- To Donald Stufft for letting us pick up the ``pup`` name in PyPI.
+
 .. marker-end-thanks-dont-remove
 
 

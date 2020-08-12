@@ -27,8 +27,9 @@ Packaging a Python GUI Application
 
 A possible way to package a Python GUI application is as follows:
 
-Stage 1
-^^^^^^^
+
+Stage 1 | Works from the CLI
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 1. Lay a relocatable Python distribution in a *build* directory.
 
@@ -50,15 +51,14 @@ Stage 1
    and declares one `setuptools <https://setuptools.readthedocs.io/>`_
    `entry point <https://setuptools.readthedocs.io/en/latest/pkg_resources.html#entry-points>`_.
 
-
 At this point,
 the application should be launchable from a CLI,
 by running the ``pip install``-ed entry point executable
 within the relocatable Python distribution.
 
 
-Stage 2
-^^^^^^^
+Stage 2 | Works from the GUI
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 On macOS:
 
@@ -82,7 +82,6 @@ On macOS:
 
    Care must be taken to avoid having absolute paths,
    which the application's entry point executable probably includes.
-
 
 At this point,
 the application should be launchable from the Finder.
@@ -117,6 +116,12 @@ On Windows:
    that itself will be responsible for creating a *Start Menu* link,
    much like this one.
 
+   How to do this:
+
+   * Use `winshell <https://pypi.org/project/winshell/>`_ by none other
+     than Tim Golden, a Mu contributor. :)
+   * Maybe get some ideas from
+     `this stack overflow thing <https://stackoverflow.com/questions/30028709/how-do-i-create-a-shortcut-via-command-line-in-windows>`_.
 
 On Linux:
 
@@ -127,6 +132,35 @@ On Linux:
 3. *[profit?!]* :)
 
 
+Stage 3 | Creating a distributable artifact
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+On macOS:
+
+1. Create DMG file containing the application bundle created in the previous stage.
+
+   Nice and useful tidbits for consideration:
+   include a link to the ``Applications`` directory,
+   have it displayed in a nice visual layout, when open,
+   optionally require accepting a license before attaching/mounting.
+
+   How to do this:
+
+   * Run the ``hdiutil`` command with the proper arguments.
+   * Use `dmgbuild <https://pypi.org/project/dmgbuild/>`_.
+
+   Eventually useful:
+
+   * Adding a license file to a DMG using the ``rez`` command:
+     `article <https://thehobbsfamily.net/archive2011/adding-software-license-agreement-dmg-file/>`_ and
+     `code <https://bitbucket.org/jaredhobbs/pyhacker/raw/master/licenseDMG.py>`_
+     (requires XCode Command Line tools to be installed,
+     but then again so will signing and notarization).
+
+
+On Windows:
+
+There are two common ways of distributing installable programs: ``setup.exe``-like *thingies*, and MSI files. I tend to prefer the latter because they are `natively supported <https://docs.microsoft.com/en-us/windows/win32/msi/windows-installer-portal>`_, but I suppose supporting both is feasible given that, up until now, Mu has been distributed with a ``setup.exe``-like *thingie* -- so there's that!
 
 
 Things we'd like soon

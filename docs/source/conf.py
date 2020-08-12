@@ -57,3 +57,11 @@ html_theme_options = {
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+
+
+# -- readthedocs.org  --------------------------------------------------------
+
+# The master toctree document.
+# Motive: https://github.com/readthedocs/readthedocs.org/issues/2569
+master_doc = 'index'
+

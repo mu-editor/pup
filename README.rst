@@ -105,65 +105,16 @@ in other words,
 
 
 
-Wish List
----------
-
-Near term:
-
-* If it's ``pip install``-able it should be ``pup package``-able.
-
-* Distributions must have exactly one `setuptools <https://setuptools.readthedocs.io/>`_ `entry point <https://setuptools.readthedocs.io/en/latest/pkg_resources.html#entry-points>`_.
-
-* Supports:
-
-  * Recent Windows and macOS operating systems.
-  * `CPython <https://www.python.org/>`_ 3.7 and 3.8.
-  * GUIs built on top of
-    `tkinter <https://docs.python.org/3/library/tkinter.html>`_ and
-    `pyqt5 <https://pypi.org/project/PyQt5/>`_.
-  * Signing/notarizing binaries and installers per platform requirements.
-
-Needs thinking:
-
-* Support 32 bit Windows or go 64 bit only?
-* Support NSIS-based Windows installers? MSI ones? Both?
-* Windows tend to need installers: consider localization (argh!).
-* macOS distributions should be DMG file based.
-* Probably want to go plugin-based.
-* Can work offline, as far as platform signing/notarization requirements allow.
-* Installers/DMGs should have a LICENSE for the user to read/agree with.
-
-
-Later:
-
-* Supports:
-
-  * Linux Snap, Flatpak, AppImage (no idea what I'm talking about here!). :)
-  * Current CPython.
-  * GUIs built on top of
-    `pygame <https://pypi.org/project/pygame/>`_,
-    `pgzero <https://pypi.org/project/pgzero/>`_,
-    `pyside2 <https://pypi.org/project/PySide2/>`_,
-    `kivy <https://pypi.org/project/Kivy/>`_,
-    `arcade <https://pypi.org/project/arcade/>`_.
-
-* Direct to "store" publishing.
-
-
-Non-trivial at first sight:
-
-* Cross-platform packaging. Challenges:
-
-  * Cross-platform ``pip installing``.
-  * Cross-platform signing.
-
-
-
 More
 ----
 
-To learn more about ``pup`` you will have to wait a bit.
-Development is going forward in the open
+To learn more about ``pup``
+refer to the `online documentation <https://pup.readthedocs.io/>`_:
+at this early stage,
+it is mostly a collection
+of thoughts and ideas
+around behaviour, requirements, and internal design.
+Development moves forward
 on GitHub at https://github.com/mu-editor/pup/.
 
 .. marker-end-welcome-dont-remove
@@ -173,7 +124,7 @@ on GitHub at https://github.com/mu-editor/pup/.
 Installation
 ------------
 
-``pup`` will be distributed via `PyPI <https://pypi.org/pypi/pup>`_.
+``pup`` is distributed via `PyPI <https://pypi.org/pypi/pup>`_.
 Install it with:
 
 .. code-block:: console

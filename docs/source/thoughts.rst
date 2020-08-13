@@ -3,18 +3,122 @@ Thoughts
 
 .. note::
 
-   This is a draft of an *in progress* section, as of now.
-   You have been warned! :)
+   This is a somewhat open and in-progress section,
+   by definition.
+   As soon as development reaches a minimally mature state,
+   it will probably be either dropped
+   or evolve into some kind of roadmap/whish list --
+   you have been warned! :)
 
 
 
-Preliminary words on how ``pup`` could work that should help:
+Preliminary words on what ``pup`` should do and how it could work.
+That should help:
 
 * Determine usage patterns.
 
 * Define fundamental concepts.
 
 * Identify challenges and requirements.
+
+
+
+.. _things-wed-like-now:
+
+Things we'd like now
+--------------------
+
+* Package `Mu Editor <https://codewith.mu/>`_
+  for current macOS and Windows versions,
+  into commonly used single file downloads for software distribution and installation..
+
+  * Let's go with DMG files for macOS.
+  * Windows needs thinking and experimentation, maybe.
+  * Implies supporting `PyQt5 <https://pypi.org/project/PyQt5/>`_ based applications.
+  * Extra: let's support
+    `tkinter <https://docs.python.org/3/library/tkinter.html>`_ based ones too.
+
+* Packaged distributions should be signed/notarized per platform requirements.
+
+* Packaging with/under `CPython <https://www.python.org/>`_ 3.7 and 3.8.
+
+* Distributable artifacts optionally ask for license agreement,
+  during the installation.
+
+* Can work offline,
+  as far as platform signing/notarization requirements allow
+  (but will require some initial "online time").
+
+
+
+Things that need thinking now
+-----------------------------
+
+* Support 32-bit Windows or go 64-bit only?
+* Go for Windows ``setup.exe``-like installers or MSI based ones, on Windows?
+* The packaging process varies depending on several things:
+  platform, final artifact "kind", and probably many more.
+  Let's have ``pup`` be extendable via plugins.
+
+  * Could ``pup`` just be the *engine*,
+    and packaging implementations be exclusively implemented by plugins?
+    Maybe,
+    as long as ``pup`` itself includes a set of *core plugins* that solve
+    (most?) of the things "we'd like now",
+    listed above.
+
+  * Are we reinventing
+    `make <https://pubs.opengroup.org/onlinepubs/9699919799/utilities/make.html>`_?
+    Can we build on top of
+    `tox <https://pypi.org/project/tox/>`_
+    or `nox <https://pypi.org/project/nox/>`_?
+    Something else?
+
+* What's the usage pattern?
+  Do we want ``make``-like behaviour where dependencies are analysed
+  and incremental "builds" are supported,
+  or do we go for something simpler,
+  more along the lines of "just do it all, please, I don't care about the details"?
+
+
+
+Things we'd like later
+----------------------
+
+* Linux Snap, Flatpak, AppImage (no idea what I'm talking about here!). :)
+* Support current CPython: soon to be 3.9, then 3.10, and so on.
+* GUIs built on top of
+  `pygame <https://pypi.org/project/pygame/>`_,
+  `pgzero <https://pypi.org/project/pgzero/>`_,
+  `pyside2 <https://pypi.org/project/PySide2/>`_,
+  `kivy <https://pypi.org/project/Kivy/>`_,
+  `arcade <https://pypi.org/project/arcade/>`_.
+* If it's ``pip install``-able,
+  it should be ``pup`` packageable.
+* Given that ``pup`` will probably make things relocatable,
+  producing "portable Windows applications"
+  (no installation needed)
+  should be easy -- we want that.
+* ``pup`` should not only be a CLI tool,
+  but also a library with a stable API that other programs can use.
+  How cool will it be when Mu itself gains a "package button"
+  to help beginners share their projects with friends and family? :)
+  (yes, huge challenges here, especially WRT signing and cross-platform-ness).
+* Support running tests on the pre-packaged result:
+  right before the final put-it-all-in-a-single-file stage,
+  running under the to-be-distributed Python environment.
+* Installer and license agreement localization.
+
+
+Things that need thinking later
+-------------------------------
+
+* Direct to "store" publishing.
+* Cross-platform packaging.
+  Challenges:
+
+  * Cross-platform ``pip install``-ing.
+  * Cross-platform signing, notarizing and, ultimately, "store" publishing.
 
 
 
@@ -177,17 +281,10 @@ On Windows:
    * Maybe get some ideas from
      `this stack overflow link <https://stackoverflow.com/questions/30028709/how-do-i-create-a-shortcut-via-command-line-in-windows>`_.
 
-On Linux:
-
-1. *[TBD]*
-
-2. ...
-
-3. *[profit?!]* :)
 
 
-Stage 3 | Create a distributable artifact
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Stage 3 | Single-file distributable artifact
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 On macOS:
 
@@ -254,92 +351,11 @@ the general procedure will be:
 
 
 
-.. _things-wed-like-now:
+More Thoughts
+-------------
 
-Things we'd like now
---------------------
-
-* Package `Mu Editor <https://codewith.mu/>`_
-  for current macOS and Windows versions,
-  into commonly used single file downloads for software distribution and installation..
-
-  * Let's go with DMG files for macOS.
-  * Windows needs thinking and experimentation, maybe.
-  * Implies supporting `PyQt5 <https://pypi.org/project/PyQt5/>`_ based applications.
-  * Extra: let's support
-    `tkinter <https://docs.python.org/3/library/tkinter.html>`_ based ones too.
-
-* Packaged distributions should be signed/notarized per platform requirements.
-
-* Packaging with/under `CPython <https://www.python.org/>`_ 3.7 and 3.8.
-
-* Distributable artifacts optionally ask for license agreement,
-  during the installation.
-
-* Can work offline,
-  as far as platform signing/notarization requirements allow
-  (but will require some initial "online time").
-
-
-
-Things that need thinking now
------------------------------
-
-* Support 32-bit Windows or go 64-bit only?
-* Go for Windows ``setup.exe``-like installers or MSI based ones, on Windows?
-* The packaging process varies depending on several things:
-  platform, final artifact "kind", and probably many more,
-  yet to be identified.
-  Let's have ``pup`` be extendable via plugins.
-
-  * Could ``pup`` just be the *engine*,
-    and packaging implementations be exclusively implemented by plugins?
-    Maybe,
-    as long as ``pup`` itself includes a set of *core plugins* that solve
-    (most?) of the things "we'd like now",
-    listed above.
-
-  * Are we reinventing
-    `make <https://pubs.opengroup.org/onlinepubs/9699919799/utilities/make.html>`_?
-    Can we build on top of
-    `tox <https://pypi.org/project/tox/>`_
-    or `nox <https://pypi.org/project/nox/>`_?
-    Something else?
-
-
-
-Things we'd like later
-----------------------
-
-* Linux Snap, Flatpak, AppImage (no idea what I'm talking about here!). :)
-* Support current CPython: soon to be 3.9, then 3.10, and so on.
-* GUIs built on top of
-  `pygame <https://pypi.org/project/pygame/>`_,
-  `pgzero <https://pypi.org/project/pgzero/>`_,
-  `pyside2 <https://pypi.org/project/PySide2/>`_,
-  `kivy <https://pypi.org/project/Kivy/>`_,
-  `arcade <https://pypi.org/project/arcade/>`_.
-* Direct to "store" publishing.
-* If it's ``pip install``-able,
-  it should be ``pup`` packageable.
-* Given that ``pup`` will work hard to make things relocatable,
-  producing "portable applications",
-  that don't require installation on Windows,
-  should be easy -- we want that.
-* ``pup`` should not only be a CLI tool,
-  but also a library with a stable API that other programs can use.
-  How cool will it be when Mu itself gains a "package button"
-  to help beginner's share their projects with friends and family? :)
-  (yes, huge challenges here, especially WRT signing and cross-platform-ness).
-
-
-Things that need thought, later
--------------------------------
-
-* Installer and license agreement localization.
-* Cross-platform packaging.
-  Challenges:
-
-  * Cross-platform ``pip install``-ing.
-  * Cross-platform signing, notarizing and, ultimately, "store" publishing.
-
+As progress is made,
+maybe more thoughts are written down here.
+Or maybe in other,
+more specific sections.
+We will see...

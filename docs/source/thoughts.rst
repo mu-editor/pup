@@ -254,6 +254,8 @@ the general procedure will be:
 
 
 
+.. _things-wed-like-now:
+
 Things we'd like now
 --------------------
 
@@ -340,21 +342,4 @@ Things that need thought, later
 
   * Cross-platform ``pip install``-ing.
   * Cross-platform signing, notarizing and, ultimately, "store" publishing.
-
-
-
-About Plugins
--------------
-
-.. note::
-
-   More on this later. Just writing down the basic idea.
-
-
-* Plugins announce themselves via ``setuptools`` *entrypoints*.
-
-* We will use ``importlib-metadata`` to figure out which plugins are available.
-
-* ``pup`` will then import and call the published entry points,
-  depending on its configuration/invocation.
 

@@ -152,6 +152,8 @@ let's see...
 Really Packaging a Python GUI Application
 -----------------------------------------
 
+.. _stage_1:
+
 Stage 1 | Works from the CLI
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -220,7 +222,7 @@ On macOS:
      Overriding it should be possible, though.
 
 2. Copy the relocatable Python distribution
-   from Stage 1
+   from :ref:`stage_1`
    into the application bundle.
 
    No thoughts,
@@ -251,7 +253,7 @@ On Windows:
    * Let's use the same templated solution as for macOS, if any.
 
 2. Copy the relocatable Python distribution
-   from Stage 1
+   from :ref:`stage_1`
    into it.
 
 3. Create the application's *explorer clickable thing* as a
@@ -349,6 +351,148 @@ the general procedure will be:
 
 2. Run the tool with that.
 
+
+
+Possible Usage
+--------------
+
+Packaging
+^^^^^^^^^
+
+Keeping things simple and aligned with the things we want,
+the basic,
+"it just works" usage shall be::
+
+    $ pup package <src>
+
+
+Where:
+
+* ``<src>`` will be a directory containing a ``pip install``-able application source.
+  If omitted,
+  the `CWD <https://en.wikipedia.org/wiki/Working_directory>`_ will be assumed.
+
+* The final single-file artifact will be put into ``<src>/dist``,
+  in a file named after the application,
+  including its version and,
+  maybe,
+  some other meta-data:
+  Python version,
+  32/64 bitness,
+  *Portable ZIP*- vs. *NSIS*- vs. *Inno Setup*-packaged,
+  more?...
+
+* Packaging will default to produce a packaged application for the same platform
+  where the packaging process is run,
+  bundling the same major version of Python.
+
+* As the process progresses,
+  one per-stage sub-directory will probably be created under ``<src>/build/pup``
+  and left alone for later analysis, maybe.
+
+Some optional/required parameters can be envisioned:
+
+* If there are multiple output format options for the platform
+  (Windows MSI vs. ``setup.exe``-based installer, for example),
+  maybe a ``--output-format=<format>`` will be required
+  (unless a default one is implemented).
+
+* Signing will very probably require some kind of ``--signer=<whom>`` argument
+  so that the correct code-signing certificate can be used
+  (again,
+  unless an effective default certificate identification mechanism is put in place)
+
+* Not sure if a ``--preview`` / ``--flight-check`` option will be useful:
+  maybe it could not only run a few validations,
+  but also report on its decisions,
+  displaying the metadata for the application to be packaged,
+  which relocatable Python will be downloaded,
+  (if any, otherwise, which cached version will be used),
+  which final packaging format will be used,
+  whether or not required third-party tools are found
+  (say,
+  *XCode Command Line Tools*, needed for signing on macOS,
+  or *NSIS* or the *WiX toolset* for final Windows packaging,
+  and more).
+  On possibly very useful output could be the "packaging plan",
+  as a series of *stages* and *steps*.
+  
+Interesting future options:
+
+* ``--platform=<platform>`` should support the production of a foreign-platform
+  single-file application distribution artifact.
+
+Some thoughts:
+
+* Running the packaging process
+  up until a specific *stage* or *step* might be useful.
+
+* Tracking cross-*stage*/*step* dependencies is very non-trivial:
+  ``pup`` will probably not implement a ``make``-like behaviour.
+  It will probably always "start from scratch".
+  This raises the question:
+  how should it behave when it finds the left-overs of a previous run,
+  say,
+  under the ``<src>/build/pup`` directory?
+  
+
+
+Testing
+^^^^^^^
+
+Testing the application under the packaged environment will be a valuable capability.
+It might be triggered with::
+
+    $ pup test <src>
+
+...where the ``<src>`` argument will be optional as with the ``package`` command.
+
+The process will probably need to:
+
+1. Complete :ref:`stage_1`.
+2. Then install any test dependencies on that environment.
+3. Finally running them.
+
+The way to handle the test dependency installation and test running is non-obvious,
+for now. One possibility could be:
+
+* Requiring that the application source specifies a pre-defined
+  `setuptools extra <https://setuptools.readthedocs.io/en/latest/setuptools.html#declaring-extras-optional-features-with-their-own-dependencies>`_
+  called ``dev`` (or ``test``, maybe?),
+  declaring the test running dependencies.
+
+* Having an optional ``--run-tests-with=<python-args>`` that would have ``pup``
+  pick up on ``<python-args>`` and run the tests by calling the Python executable
+  in the :ref:`stage_1` output directory,
+  like ``.../python <python-args>``.
+  This would support running:
+
+  * `unittest <https://docs.python.org/3/library/unittest.html>`_-based tests
+    with ``--run-tests-with='-m unittest'``,
+  * `pytest <https://pypi.org/project/pytest/>`_-based tests
+    with ``--run-tests-with='-m pytest'``,
+  * `Twisted Trial <https://twistedmatrix.com/trac/wiki/TwistedTrial>`_-based tests
+    with ``--run-tests-with='-m twisted.trial ...'``,
+  * ...and more, I suppose.
+
+
+
+Cleaning Up
+^^^^^^^^^^^
+
+We want ``pup`` to be a nice citizen to your filesystem layout and disk utilization so
+a single command will used to remove files and directories produced by itself::
+
+    $ pup cleanup
+
+Removes the intermediate *build* directories.
+
+Then, maybe the following options could be useful:
+
+* ``--caches`` removing all cached files that were previously downloaded.
+* ``--artifacts`` removing all ``pup``-produced artifacts.
+* ``--build`` (would be the implicit default, per the note above: do we want that?)
+* ``--all`` might be friendly, too.
 
 
 More Thoughts

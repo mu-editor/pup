@@ -1,18 +1,81 @@
 """
-Command line interface entry point.
+Command line interface for PUP.
 """
 
+import functools
+import logging
+import os
 import sys
 
+import click
+
+from . import __version__ as sw_version
+from . import api
+from . import logs
 
 
-def main(*_args):
 
-    return 42
-
+_log = logging.getLogger(__package__)
 
 
-if __name__ == '__main__':
 
-    sys.exit(main(*sys.argv))
+def command_wrapper(command_function):
+    """
+    Decorator for click.command functions that i) logs version at start/finish,
+    ii) logs exceptions raised during execution, iii) sets process exit status.
+    """
+    @functools.wraps(command_function)
+    def wrapper(*args, **kw):
+        _log.info('%s - starting with PID=%r', sw_version, os.getpid())
+        try:
+            exit_code = command_function(*args, **kw)
+        except Exception as exc:
+            _log.error('Command execution error: %s', exc)
+            _log.info('Exception:', exc_info=exc)
+            exit_code = -1
+        except BaseException:
+            # KeyboardInterrupt exceptions (CTRL-C, SIGINT)
+            exit_code = -2
+        finally:
+            _log.info('%s - done', sw_version)
+            sys.exit(exit_code)
 
+    return wrapper
+
+
+
+
+@click.group()
+@click.version_option(version=sw_version)
+@click.option(
+    '--log-level',
+    type=click.Choice(
+        ['CRITICAL', 'ERROR', 'WARNING', 'WARN', 'INFO', 'DEBUG'],
+        case_sensitive=False,
+    ),
+    default='WARNING',
+    show_default=True,
+    envvar='PUP_LOG_LEVEL',
+)
+def main(log_level):
+    """
+    Python Mu Packager.
+    """
+    logs.start(log_level)
+
+
+
+@main.command()
+@click.option('--output-format')
+@click.option('--ignore-plugin', 'ignore_plugins', multiple=True)
+@click.argument('src')
+@command_wrapper
+def package(src, output_format, ignore_plugins):
+    """
+    Packages the GUI application in the given pip-installable source.
+    """
+    return api.package(
+        src,
+        output_format=output_format,
+        ignore_plugins=ignore_plugins,
+    )

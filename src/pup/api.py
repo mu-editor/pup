@@ -24,7 +24,7 @@ def _context(ignore_plugins):
 
 
 
-def package(src, *, output_format, ignore_plugins=()):
+def package(src, *, output_format=None, ignore_plugins=()):
 
     _log.info('Package %r: starting.', src)
 

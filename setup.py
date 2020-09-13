@@ -106,14 +106,14 @@ if __name__ == "__main__":
                 'pup=pup.__main__:main',
             ],
             'pup.plugins': [
+                'pup.download=pup.plugins.download:Step',
+                'pup.python_runtime=pup.plugins.python_runtime:Step',
+                'pup.pip_install=pup.plugins.pip_install:Step',
                 'mac.dirs=pup.plugins.mac.dirs:Directories',
                 'mac.steps=pup.plugins.mac.steps:Steps',
                 'mac.app_bundle_template=pup.plugins.mac.app_bundle:Step',
                 'win.dirs=pup.plugins.win.dirs:Directories',
                 'win.steps=pup.plugins.win.steps:Steps',
-                'download=pup.plugins.download:Step',
-                'python_runtime=pup.plugins.python_runtime:Step',
-                'pip_install=pup.plugins.pip_install:Step',
             ],
         },
     )

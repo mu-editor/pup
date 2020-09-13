@@ -25,7 +25,7 @@ class Step:
             (ctx.pkg_platform == ctx.tgt_platform)
         )
 
-    def __call__(self, ctx):
+    def __call__(self, ctx, _dsp):
         _log.warning(
             'TODO: Extract relocatable Python runtime for %r into %r.',
             ctx.tgt_platform,

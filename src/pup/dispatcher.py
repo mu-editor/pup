@@ -63,7 +63,7 @@ class Dispatcher:
 
         plugin_class, _ = classes_and_names[0]
         plugin = plugin_class()
-        return plugin(self._ctx)
+        return plugin(self._ctx, self)
 
 
     def steps(self):
@@ -75,3 +75,8 @@ class Dispatcher:
 
         name = name.replace('-', '_')
         return self._invoke_plugin(name)
+
+
+    def directories(self):
+
+        return self._invoke_plugin('.dirs')

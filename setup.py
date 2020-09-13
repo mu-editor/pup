@@ -105,8 +105,10 @@ if __name__ == "__main__":
                 'pup=pup.__main__:main',
             ],
             'pup.plugins': [
+                'mac.dirs=pup.plugins.mac.dirs:Directories',
                 'mac.steps=pup.plugins.mac.steps:Steps',
                 'mac.app_bundle_template=pup.plugins.mac.app_bundle:Step',
+                'win.dirs=pup.plugins.win.dirs:Directories',
                 'win.steps=pup.plugins.win.steps:Steps',
                 'python_runtime=pup.plugins.python_runtime:Step',
                 'pip_install=pup.plugins.pip_install:Step',

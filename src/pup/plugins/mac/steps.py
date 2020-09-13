@@ -12,7 +12,7 @@ class Steps:
             (ctx.tgt_platform == 'darwin')
         )
 
-    def __call__(self, ctx):
+    def __call__(self, ctx, _dsp):
         return (
             'mac.app-bundle-template',
             'python-runtime',

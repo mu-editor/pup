@@ -24,6 +24,6 @@ class Step:
             (ctx.tgt_platform == 'darwin')
         )
 
-    def __call__(self, ctx):
+    def __call__(self, ctx, _dsp):
         _log.warning('TODO: extract macOS app bundle template.')
         ctx.python_runtime_dir = 'fill-this-with-the-correct-abs-path'

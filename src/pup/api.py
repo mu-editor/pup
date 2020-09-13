@@ -38,3 +38,12 @@ def package(src, *, ignore_plugins=()):
         _log.info('Step %r: completed.', step)
 
     _log.info('Package %r: completed.', src)
+
+
+
+def directories(*, ignore_plugins=()):
+
+    ctx = _context(ignore_plugins)
+    dsp = dispatcher.Dispatcher(ctx)
+
+    return dsp.directories()

@@ -12,7 +12,7 @@ class Steps:
             (ctx.tgt_platform == 'win32')
         )
 
-    def __call__(self, ctx):
+    def __call__(self, ctx, _dsp):
         return (
             'lay-down-relocatable-python',
             'pip-install-src',

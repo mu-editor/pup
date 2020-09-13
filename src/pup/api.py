@@ -47,3 +47,12 @@ def directories(*, ignore_plugins=()):
     dsp = dispatcher.Dispatcher(ctx)
 
     return dsp.directories()
+
+
+
+def download(url, *, ignore_plugins=()):
+
+    ctx = _context(ignore_plugins)
+    dsp = dispatcher.Dispatcher(ctx)
+
+    return dsp.download(url)

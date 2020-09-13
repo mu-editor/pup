@@ -75,3 +75,8 @@ class Dispatcher:
 
         name = name.replace('-', '_')
         return self._invoke_plugin(name)
+
+
+    def directories(self):
+
+        return self._invoke_plugin('.dirs')

@@ -1,5 +1,5 @@
 """
-PUP Plugin implementing the 'python-runtime' step.
+PUP Plugin implementing the 'pup.python-runtime' step.
 """
 
 import logging

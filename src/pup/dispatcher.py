@@ -84,4 +84,4 @@ class Dispatcher:
 
     def download(self, url):
 
-        return self._invoke_plugin('download', url=url)
+        return self._invoke_plugin('pup.download', url=url)

@@ -43,14 +43,14 @@ class Dispatcher:
         return [
             (entry_point.load(), entry_point.value)
             for entry_point in self._plugin_entry_points
-            if entry_point.name.startswith(f'{what}.')
+            if entry_point.name.endswith(what)
         ]
 
 
     def steps(self, ctx):
         classes_and_names = [
             (plugin_class, name)
-            for plugin_class, name in self._classes_and_names_for('steps')
+            for plugin_class, name in self._classes_and_names_for('.steps')
             if plugin_class.usable_in(ctx)
         ]
         count = len(classes_and_names)

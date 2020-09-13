@@ -49,7 +49,7 @@ class Dispatcher:
         ]
 
 
-    def _invoke_plugin(self, name):
+    def _invoke_plugin(self, name, **kwargs):
 
         classes_and_names = [
             (plugin_class, name)
@@ -63,7 +63,7 @@ class Dispatcher:
 
         plugin_class, _ = classes_and_names[0]
         plugin = plugin_class()
-        return plugin(self._ctx, self)
+        return plugin(self._ctx, self, **kwargs)
 
 
     def steps(self):
@@ -80,3 +80,8 @@ class Dispatcher:
     def directories(self):
 
         return self._invoke_plugin('.dirs')
+
+
+    def download(self, url):
+
+        return self._invoke_plugin('download', url=url)

@@ -32,6 +32,7 @@ CLASSIFIERS = [
 INSTALL_REQUIRES = [
     "importlib-metadata==1.7.0;python_version<'3.8'",
     "click==7.1.2",
+    "httpx==0.14.3",
 ]
 EXTRAS_REQUIRE = {
     "docs": [
@@ -110,6 +111,7 @@ if __name__ == "__main__":
                 'mac.app_bundle_template=pup.plugins.mac.app_bundle:Step',
                 'win.dirs=pup.plugins.win.dirs:Directories',
                 'win.steps=pup.plugins.win.steps:Steps',
+                'download=pup.plugins.download:Step',
                 'python_runtime=pup.plugins.python_runtime:Step',
                 'pip_install=pup.plugins.pip_install:Step',
             ],

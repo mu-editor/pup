@@ -30,6 +30,8 @@ CLASSIFIERS = [
     "Topic :: System :: Software Distribution",
 ]
 INSTALL_REQUIRES = [
+    "importlib-metadata==1.7.0;python_version<'3.8'",
+    "click==7.1.2",
 ]
 EXTRAS_REQUIRE = {
     "docs": [
@@ -101,6 +103,13 @@ if __name__ == "__main__":
         entry_points={                                                                    
             'console_scripts': [
                 'pup=pup.__main__:main',
+            ],
+            'pup.plugins': [
+                'mac.steps=pup.plugins.mac.steps:Steps',
+                'mac.app_bundle_template=pup.plugins.mac.app_bundle:Step',
+                'win.steps=pup.plugins.win.steps:Steps',
+                'python_runtime=pup.plugins.python_runtime:Step',
+                'pip_install=pup.plugins.pip_install:Step',
             ],
         },
     )

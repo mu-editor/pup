@@ -13,3 +13,8 @@ __uri__ = 'https://github.com/mu-editor/pup/'
 __author__ = 'Tiago Montes'
 __email__ = 'tiago.montes@gmail.com'
 
+
+
+from . api import package
+
+__all__ = ['package']

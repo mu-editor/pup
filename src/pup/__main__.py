@@ -30,8 +30,8 @@ def command_wrapper(command_function):
         try:
             exit_code = command_function(*args, **kw)
         except Exception as exc:
-            _log.error('Command execution error: %s', exc)
-            _log.info('Exception:', exc_info=exc)
+            _log.error('Execution failure: %s', exc)
+            _log.debug('Traceback below:', exc_info=exc)
             exit_code = -1
         except BaseException:
             # KeyboardInterrupt exceptions (CTRL-C, SIGINT)

@@ -20,11 +20,13 @@ class Dispatcher:
 
     def __init__(self, ctx):
 
+        self._ctx = ctx
+
         all_plugin_entry_points = ilm.entry_points().get('pup.plugins', ())
         self._plugin_entry_points = [
             entry_point
             for entry_point in all_plugin_entry_points
-            if not self._ignore(entry_point, ctx.ignore_plugins)
+            if not self._ignore(entry_point, self._ctx.ignore_plugins)
         ]
         _log.debug('plugin_entry_points=%r', self._plugin_entry_points)
 
@@ -47,17 +49,29 @@ class Dispatcher:
         ]
 
 
-    def steps(self, ctx):
+    def _invoke_plugin(self, name):
+
         classes_and_names = [
             (plugin_class, name)
-            for plugin_class, name in self._classes_and_names_for('.steps')
-            if plugin_class.usable_in(ctx)
+            for plugin_class, name in self._classes_and_names_for(name)
+            if plugin_class.usable_in(self._ctx)
         ]
         count = len(classes_and_names)
         if count != 1:
             names = ', '.join(repr(name) for _, name in classes_and_names)
-            raise RuntimeError(f'{count} packaging stage plugins: {names}.')
+            raise RuntimeError(f'{count} {name!r} plugins: {names}.')
 
         plugin_class, _ = classes_and_names[0]
         plugin = plugin_class()
-        return plugin(ctx)
+        return plugin(self._ctx)
+
+
+    def steps(self):
+
+        return self._invoke_plugin('.steps')
+
+
+    def run_pluggable_step(self, name):
+
+        name = name.replace('-', '_')
+        return self._invoke_plugin(name)

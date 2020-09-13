@@ -10,3 +10,5 @@ class Context:
         self.pkg_platform = platform
         self.tgt_platform = platform
         self.tgt_python_version = python_version[:3]
+
+        self.python_runtime_dir = None

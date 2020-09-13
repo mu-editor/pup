@@ -32,10 +32,9 @@ def package(src, *, output_format=None, ignore_plugins=()):
     ctx = _context(ignore_plugins)
     dsp = dispatcher.Dispatcher(ctx)
 
-    for step in dsp.steps(ctx):
+    for step in dsp.steps():
         _log.info('Step %r: starting.', step)
-        # step_callable = getattr(dsp, step)
+        dsp.run_pluggable_step(step)
         _log.info('Step %r: completed.', step)
 
     _log.info('Package %r: completed.', src)
-    return 42

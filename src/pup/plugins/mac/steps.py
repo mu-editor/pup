@@ -14,10 +14,10 @@ class Steps:
 
     def __call__(self, ctx):
         return (
-            'lay-down-relocatable-python',
-            'pip-install-src',
-            'sign-and-notarize-like-crazy',
-            'lay-down-application-bundle',
-            'sign-more-and-notarize-oh-and-give-money-to-tim',
-            'create-dmg',
+            'mac.app-bundle-template',
+            'python-runtime',
+            'pip-install',
+            # 'mac.sign-app-bundle',
+            # 'mac.notarize-app-bundle',
+            # 'mac.create-dmg',
         )

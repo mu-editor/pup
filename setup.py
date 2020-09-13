@@ -106,7 +106,10 @@ if __name__ == "__main__":
             ],
             'pup.plugins': [
                 'mac.steps=pup.plugins.mac.steps:Steps',
+                'mac.app_bundle_template=pup.plugins.mac.app_bundle:Step',
                 'win.steps=pup.plugins.win.steps:Steps',
+                'python_runtime=pup.plugins.python_runtime:Step',
+                'pip_install=pup.plugins.pip_install:Step',
             ],
         },
     )

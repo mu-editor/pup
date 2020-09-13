@@ -1,5 +1,5 @@
 """
-Tracks available plugins.
+Dispatches calls to plugins.
 """
 
 import logging
@@ -39,6 +39,7 @@ class Dispatcher:
 
 
     def _classes_and_names_for(self, what):
+
         return [
             (entry_point.load(), entry_point.value)
             for entry_point in self._plugin_entry_points
@@ -46,15 +47,10 @@ class Dispatcher:
         ]
 
 
-    @staticmethod
-    def _class_names(classes):
-        return [repr(f'{cls.__module__}.{cls.__name__}') for cls in classes]
-
-
-    def stages(self, ctx):
+    def steps(self, ctx):
         classes_and_names = [
             (plugin_class, name)
-            for plugin_class, name in self._classes_and_names_for('stages')
+            for plugin_class, name in self._classes_and_names_for('steps')
             if plugin_class.usable_in(ctx)
         ]
         count = len(classes_and_names)

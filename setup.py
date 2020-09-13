@@ -105,8 +105,8 @@ if __name__ == "__main__":
                 'pup=pup.__main__:main',
             ],
             'pup.plugins': [
-                'stages.mac=pup.plugins.stages_mac:PackagingStages',
-                'stages.win=pup.plugins.stages_win:PackagingStages',
+                'steps.mac=pup.plugins.steps_mac:Steps',
+                'steps.win=pup.plugins.steps_win:Steps',
             ],
         },
     )

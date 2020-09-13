@@ -66,16 +66,14 @@ def main(log_level):
 
 
 @main.command()
-@click.option('--output-format')
 @click.option('--ignore-plugin', 'ignore_plugins', multiple=True)
 @click.argument('src')
 @command_wrapper
-def package(src, output_format, ignore_plugins):
+def package(src, ignore_plugins):
     """
     Packages the GUI application in the given pip-installable source.
     """
     return api.package(
         src,
-        output_format=output_format,
         ignore_plugins=ignore_plugins,
     )

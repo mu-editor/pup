@@ -1,0 +1,3 @@
+#!/bin/sh
+
+exec "$(dirname $0)/../Resources/Python/bin/python{{cookiecutter.python_version}}" -m {{cookiecutter.pkg_name}} "$@"

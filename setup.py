@@ -35,6 +35,8 @@ INSTALL_REQUIRES = [
     "httpx==0.14.3",
     "wheel==0.35.1",
     "pkginfo==1.5.0.1",
+    "importlib-resources==3.0.0;python_version<'3.8'",
+    "cookiecutter==1.7.2",
 ]
 EXTRAS_REQUIRE = {
     "docs": [

@@ -15,9 +15,10 @@ _log.addHandler(logging.NullHandler())
 
 
 
-def _context(ignore_plugins):
+def _context(src, ignore_plugins):
 
     return context.Context(
+        src=src,
         ignore_plugins=ignore_plugins,
         platform=sys.platform,
         python_version=sys.version_info,
@@ -29,8 +30,10 @@ def package(src, *, ignore_plugins=()):
 
     _log.info('Package %r: starting.', src)
 
-    ctx = _context(ignore_plugins)
+    ctx = _context(src, ignore_plugins)
     dsp = dispatcher.Dispatcher(ctx)
+
+    dsp.collect_src_metadata()
 
     for step in dsp.steps():
         _log.info('Step %r: starting.', step)
@@ -43,7 +46,7 @@ def package(src, *, ignore_plugins=()):
 
 def directories(*, ignore_plugins=()):
 
-    ctx = _context(ignore_plugins)
+    ctx = _context(None, ignore_plugins)
     dsp = dispatcher.Dispatcher(ctx)
 
     return dsp.directories()
@@ -52,7 +55,7 @@ def directories(*, ignore_plugins=()):
 
 def download(url, *, ignore_plugins=()):
 
-    ctx = _context(ignore_plugins)
+    ctx = _context(None, ignore_plugins)
     dsp = dispatcher.Dispatcher(ctx)
 
     return dsp.download(url)

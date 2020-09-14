@@ -50,6 +50,7 @@ class Step:
             'cookiecutter': {
                 'app_name': ctx.src_metadata.name,
                 'version': ctx.src_metadata.version,
+                'launch_module': self._launch_module_from_context(ctx),
             }
         }
 
@@ -64,3 +65,8 @@ class Step:
         result_path = generate.generate_files(tmpl_path, tmpl_data, build_dir)
 
         ctx.python_runtime_dir = pathlib.Path(result_path) / 'Temp'
+
+
+    def _launch_module_from_context(self, ctx):
+
+        return ctx.launch_module if ctx.launch_module else ctx.src_metadata.name

@@ -14,11 +14,13 @@
 	<key>CFBundleShortVersionString</key>
 	<string>{{cookiecutter.version_string}}</string>
 
+	<key>NSHumanReadableCopyright</key>                                               
+	<string>{{cookiecutter.copyright}}</string>
+
 	<key>CFBundleExecutable</key>
-	<string>{{cookiecutter.app_executable}}</string>
+	<string>{{cookiecutter.launcher_name}}</string>
 
 	<key>CFBundleIconFile</key>
 	<string>Icon.icns</string>
-
 </dict>
 </plist>

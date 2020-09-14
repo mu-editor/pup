@@ -85,3 +85,8 @@ class Dispatcher:
     def download(self, url):
 
         return self._invoke_plugin('pup.download', url=url)
+
+
+    def collect_src_metadata(self):
+
+        return self._invoke_plugin('pup.metadata')

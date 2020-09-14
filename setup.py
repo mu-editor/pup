@@ -33,6 +33,8 @@ INSTALL_REQUIRES = [
     "importlib-metadata==1.7.0;python_version<'3.8'",
     "click==7.1.2",
     "httpx==0.14.3",
+    "wheel==0.35.1",
+    "pkginfo==1.5.0.1",
 ]
 EXTRAS_REQUIRE = {
     "docs": [
@@ -43,7 +45,6 @@ EXTRAS_REQUIRE = {
         "coverage",
     ],
     "release": [
-        "wheel",
         "twine",
     ],
 }
@@ -106,6 +107,7 @@ if __name__ == "__main__":
                 'pup=pup.__main__:main',
             ],
             'pup.plugins': [
+                'pup.metadata=pup.plugins.metadata:Step',
                 'pup.download=pup.plugins.download:Step',
                 'pup.python_runtime=pup.plugins.python_runtime:Step',
                 'pup.pip_install=pup.plugins.pip_install:Step',

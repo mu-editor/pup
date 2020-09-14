@@ -10,6 +10,8 @@ import tempfile
 
 import pkginfo
 
+from . import common
+
 
 _log = logging.getLogger(__name__)
 
@@ -89,19 +91,10 @@ class Step:
             os.chdir(work_dir)
             result = subprocess.run(cmd, capture_output=True)
             if result.stderr:
-                self._log_lines('pip stderr', logging.ERROR, result.stderr)
-            self._log_lines('pip stdout', logging.DEBUG, result.stdout)
+                common.log_lines(_log.error, 'pip stderr', result.stderr)
+            common.log_lines(_log.debug, 'pip stdout', result.stdout)
             wheel_file = os.listdir()[0]
         finally:
             os.chdir(cwd)
 
         return os.path.join(work_dir, wheel_file)
-
-
-    def _log_lines(self, marker, level, lines):
-
-        _log.log(level, '%s start', marker)
-        for line in lines.splitlines():
-            _log.log(level, '%s', line)
-        _log.log(level, '%s done', marker)
-

@@ -54,7 +54,7 @@ class Step:
                 'copyright': self._copyright_from_context(ctx),
                 'launcher_name': ctx.src_metadata.name,
                 'python_version_suffix': ctx.tgt_python_version_suffix,
-                'pkg_name': ctx.src_metadata.name,
+                'launch_module': self._launch_module_from_context(ctx),
             }
         }
 
@@ -98,3 +98,8 @@ class Step:
         license = ctx.src_metadata.license
 
         return f'{author}, {license}'
+
+
+    def _launch_module_from_context(self, ctx):
+
+        return ctx.launch_module if ctx.launch_module else ctx.src_metadata.name

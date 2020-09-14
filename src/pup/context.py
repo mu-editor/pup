@@ -4,9 +4,11 @@ Packaging Context.
 
 class Context:
 
-    def __init__(self, *, src, ignore_plugins, platform, python_version):
+    def __init__(self, *, src, launch_module, ignore_plugins, platform, python_version):
 
         self.src = src
+        self.launch_module = launch_module
+
         self.src_metadata = None
 
         self.ignore_plugins = ignore_plugins

@@ -67,13 +67,15 @@ def main(log_level):
 
 @main.command()
 @click.option('--ignore-plugin', 'ignore_plugins', multiple=True)
+@click.option('--launch-module')
 @click.argument('src')
 @command_wrapper
-def package(src, ignore_plugins):
+def package(src, ignore_plugins, launch_module):
     """
     Packages the GUI application in the given pip-installable source.
     """
     return api.package(
         src,
         ignore_plugins=ignore_plugins,
+        launch_module=launch_module,
     )

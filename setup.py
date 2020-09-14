@@ -119,6 +119,7 @@ if __name__ == "__main__":
                 'mac.app_bundle_template=pup.plugins.mac.app_bundle:Step',
                 'win.dirs=pup.plugins.win.dirs:Directories',
                 'win.steps=pup.plugins.win.steps:Steps',
+                'win.distribution_layout=pup.plugins.win.dist_layout:Step',
             ],
         },
     )

@@ -34,6 +34,7 @@ class Step:
             '-m',
             'pip',
             'install',
+            '--no-warn-script-location',
             ctx.src,
         ]
 

@@ -14,9 +14,10 @@ class Steps:
 
     def __call__(self, ctx, _dsp):
         return (
-            'lay-down-relocatable-python',
-            'pip-install-src',
-            'sign-the-way-microsoft-needs',
-            'create-a-clickable-thingie',
-            'pack-it-all-into-a-single-file-artifact',
+            'win.distribution-layout',
+            'pup.python-runtime',
+            'pup.pip-install',
+            # 'sign-the-way-microsoft-needs',
+            # 'create-a-clickable-thingie',
+            # 'pack-it-all-into-a-single-file-artifact',
         )

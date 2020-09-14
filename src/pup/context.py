@@ -16,3 +16,4 @@ class Context:
         self.tgt_python_version_suffix = '.'.join(map(str, python_version[:2]))
 
         self.python_runtime_dir = None
+        self.python_runtime_exec = None

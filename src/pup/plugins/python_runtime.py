@@ -67,6 +67,8 @@ class Step:
             shutil.move(str(source), str(extract_dir))
         shutil.rmtree(extract_dir / 'python')
 
+        ctx.python_runtime_exec = extract_dir / 'bin' / f'python{py_version}'
+
         # Size optimization
         delete_these = [
             'lib/python3.7/config-3.7m-darwin',

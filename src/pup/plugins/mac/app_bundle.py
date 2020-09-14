@@ -53,7 +53,7 @@ class Step:
                 'version_string': ctx.src_metadata.version,
                 'copyright': self._copyright_from_context(ctx),
                 'launcher_name': ctx.src_metadata.name,
-                'python_version': self._python_version_from_context(ctx),
+                'python_version_suffix': ctx.tgt_python_version_suffix,
                 'pkg_name': ctx.src_metadata.name,
             }
         }
@@ -98,10 +98,3 @@ class Step:
         license = ctx.src_metadata.license
 
         return f'{author}, {license}'
-
-
-    def _python_version_from_context(self, ctx):
-        
-        # Dot-separated, two-component Python version string (ie: '3.7')
-
-        return '.'.join(map(str, ctx.tgt_python_version[:2]))

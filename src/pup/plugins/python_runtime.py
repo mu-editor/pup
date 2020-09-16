@@ -65,9 +65,6 @@ class Step:
         adjust_layout = getattr(self, f'_adjust_layout_{platform}')
         adjust_layout(extract_dir, ctx, py_version)
 
-        cleanup_runtime = getattr(self, f'_cleanup_runtime_{platform}')
-        cleanup_runtime(extract_dir)
-
 
     def _adjust_layout_darwin(self, extract_dir, ctx, py_version):
 
@@ -79,16 +76,6 @@ class Step:
         ctx.python_runtime_exec = extract_dir / 'bin' / f'python{py_version}'
 
 
-    def _cleanup_runtime_darwin(self, extract_dir):
-
-        delete_these = [
-            'lib/python3.7/config-3.7m-darwin',
-            'lib/python3.7/test',
-        ]
-        for this in delete_these:
-            shutil.rmtree(extract_dir / this)
-
-
     def _adjust_layout_win32(self, extract_dir, ctx, py_version):
 
         shutil.move(
@@ -96,20 +83,3 @@ class Step:
             extract_dir.parent / 'python',
         )
         ctx.python_runtime_exec = extract_dir.parent / 'python/python.exe'
-
-
-    def _cleanup_runtime_win32(self, extract_dir):
-
-        shutil.rmtree(extract_dir)
-
-        python_dir = extract_dir.parent / 'python'
-        delete_these = [
-            'include',
-            'lib/test',
-            'libs',
-        ]
-        for this in delete_these:
-            shutil.rmtree(python_dir / this)
-
-        for path in python_dir.glob('**/*.pdb'):
-            path.unlink()

@@ -17,12 +17,34 @@
 
 # -- Project information -----------------------------------------------------
 
+import pathlib
+import re
+
+
 project = 'Python Mu Packager'
 copyright = '2020, Tiago Montes'
 author = 'Tiago Montes'
 
+def _get_release_from_package():
+
+    pup_init_filename = (
+        pathlib.Path(__file__).parent / '..' / '..' / 'src' / 'pup' / '__init__.py'
+    )
+    with open(pup_init_filename, 'rt', encoding='utf8') as f:
+        pup_init_contents = f.read()
+
+    match = re.search(
+        r'^__version__\s*=\s*[\'"](\S*)[\'"].*$',
+        pup_init_contents,
+        re.MULTILINE,
+    )
+    if not match:
+        raise ValueError('Could not extract version from source package.')
+
+    return match.group(1)
+
 # The full version, including alpha/beta/rc tags
-release = '1.0.0a1'
+release = _get_release_from_package()
 
 
 # -- General configuration ---------------------------------------------------

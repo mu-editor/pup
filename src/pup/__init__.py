@@ -2,7 +2,7 @@
 Python Mu Packager
 """
 
-__version__ = '1.0.0a1'
+__version__ = '1.0.0a2'
 
 __title__ = 'pup'
 __description__ = 'Python Mu Packager'

@@ -1,0 +1,29 @@
+[tool.towncrier]
+
+package = "pup"
+package_dir = "src"
+filename = "CHANGELOG.rst"
+issue_format = "`#{issue} <https://github.com/mu-editor/pup/issues/{issue}>`_"
+title_format = "{name} {version} ({project_date})"
+directory = "docs/newsfragments"
+underlines = ["-", "^"]
+
+	[[tool.towncrier.type]]
+	directory = "enhancement"
+	name = "Enhancements"
+	showcontent = true
+
+	[[tool.towncrier.type]]
+	directory = "bug"
+	name = "Bug Fixes"
+	showcontent = true
+
+	[[tool.towncrier.type]]
+	directory = "other"
+	name = "Other Changes"
+	showcontent = true
+
+	[[tool.towncrier.type]]
+	directory = "deprecate"
+	name = "Deprecations"
+	showcontent = true

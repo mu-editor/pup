@@ -10,7 +10,7 @@ from urllib import parse
 import cookiecutter
 from cookiecutter import generate
 try:
-    # Python < 3.8
+    # Python < 3.9
     import importlib_resources as ilr
 except ImportError:
     import importlib.resources as ilr

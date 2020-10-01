@@ -10,6 +10,8 @@ except ImportError:
     # Python <= 3.8
     import importlib_metadata as ilm
 
+from . import spawn
+
 
 
 _log = logging.getLogger(__name__)
@@ -90,3 +92,8 @@ class Dispatcher:
     def collect_src_metadata(self):
 
         return self._invoke_plugin('pup.metadata')
+
+
+    def spawn(self, command, out_callable=None, err_callable=None, encoding='utf8'):
+
+        return spawn.spawn(command, out_callable, err_callable, encoding)

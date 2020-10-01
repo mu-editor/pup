@@ -5,8 +5,6 @@ PUP Plugin implementing the 'pup.pip-install' step.
 import logging
 import subprocess
 
-from . import common
-
 
 _log = logging.getLogger(__name__)
 
@@ -27,7 +25,7 @@ class Step:
             (ctx.pkg_platform == ctx.tgt_platform)
         )
 
-    def __call__(self, ctx, _dsp):
+    def __call__(self, ctx, dsp):
 
         cmd = [
             str(ctx.python_runtime_exec),
@@ -38,9 +36,10 @@ class Step:
             ctx.src,
         ]
 
-        _log.debug('About to run %r.', ' '.join(cmd))
+        _log.info('About to run %r.', ' '.join(cmd))
 
-        result = subprocess.run(cmd, capture_output=True)
-        if result.stderr:
-            common.log_lines(_log.error, 'pip stderr', result.stderr)
-        common.log_lines(_log.debug, 'pip stdout', result.stdout)
+        dsp.spawn(
+            cmd,
+            out_callable=lambda line: _log.info('pip out: %s', line),
+            err_callable=lambda line: _log.info('pip err: %s', line),
+        )

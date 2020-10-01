@@ -10,8 +10,6 @@ import tempfile
 
 import pkginfo
 
-from . import common
-
 
 _log = logging.getLogger(__name__)
 
@@ -66,33 +64,34 @@ class Step:
         'version',
     ]
 
-    def __call__(self, ctx, _dsp):
+    def __call__(self, ctx, dsp):
 
         src = ctx.src
         _log.info('Collecting metadata for %r.', src)
 
         with tempfile.TemporaryDirectory(prefix='pup-metadata-') as temp_dir:
-            wheel_file = self._create_wheel(ctx.src, temp_dir)
+            wheel_file = self._create_wheel(ctx.src, temp_dir, dsp)
             ctx.src_metadata = pkginfo.Wheel(wheel_file)
 
         for field in self._METADATA_FIELDS:
             _log.debug('%s=%r', field, getattr(ctx.src_metadata, field))
 
 
-    def _create_wheel(self, src, work_dir):
+    def _create_wheel(self, src, work_dir, dsp):
 
         src_abs = os.path.abspath(src)
         cmd = [sys.executable, '-m', 'pip', 'wheel', '--no-deps', src_abs]
         
-        _log.debug('About to run %r.', ' '.join(cmd))
+        _log.info('About to run %r.', ' '.join(cmd))
 
         cwd = os.getcwd()
         try:
             os.chdir(work_dir)
-            result = subprocess.run(cmd, capture_output=True)
-            if result.stderr:
-                common.log_lines(_log.error, 'pip stderr', result.stderr)
-            common.log_lines(_log.debug, 'pip stdout', result.stdout)
+            dsp.spawn(
+                cmd,
+                out_callable=lambda line: _log.info('pip out: %s', line),
+                err_callable=lambda line: _log.info('pip err: %s', line),
+            )
             wheel_file = os.listdir()[0]
         finally:
             os.chdir(cwd)

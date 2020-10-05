@@ -2,9 +2,12 @@
 PUP Plugin implementing the 'pup.python-runtime' step.
 """
 
+import json
 import logging
+import pathlib
 import shutil
 import tarfile
+import tempfile as tf
 
 import zstandard
 
@@ -44,42 +47,45 @@ class Step:
 
     def __call__(self, ctx, dsp):
 
-        platform = ctx.tgt_platform
-        py_version = ctx.tgt_python_version_suffix
+        url = self._pbs_url(ctx.tgt_platform, ctx.tgt_python_version_suffix)
+
+        pbs_artifact = dsp.download(url)
+
+        runtime_parent_dir = ctx.python_runtime_dir.parent
+        with tf.TemporaryDirectory(prefix='pup-', dir=runtime_parent_dir) as td:
+
+            td = pathlib.Path(td)
+            self._extract_zstd_file(pbs_artifact, td)
+
+            pbs_python = td / 'python'
+            pbs_python_json = self._load_pbs_python_json(pbs_python / 'PYTHON.json')
+
+            pbs_data = pbs_python_json['python_paths']['data']
+            (pbs_python / pbs_data).replace(ctx.python_runtime_dir)
+
+        pbs_python_exe = pathlib.Path(pbs_python_json['python_exe'])
+        relative_python_exe = pbs_python_exe.relative_to(pbs_data)
+        ctx.python_runtime_exec = ctx.python_runtime_dir / relative_python_exe
+
+
+    def _pbs_url(self, platform, py_version):
 
         try:
-            url = _PYTHON_BUILD_STANDALONE_URLs[platform][py_version]
+            return _PYTHON_BUILD_STANDALONE_URLs[platform][py_version]
         except KeyError:
             raise RuntimeError(f'No {platform} Python runtime for Python {py_version}.')
 
-        pbs_download = dsp.download(url)
 
-        extract_dir = ctx.python_runtime_dir
-        with open(pbs_download, 'rb') as input_file:
+    def _extract_zstd_file(self, filename, target_dir):
+
+        with open(filename, 'rb') as input_file:
             decompressor = zstandard.ZstdDecompressor()
             with decompressor.stream_reader(input_file) as reader:
                 with tarfile.open(mode='r|', fileobj=reader) as tf:
-                    tf.extractall(path=extract_dir)
+                    tf.extractall(path=target_dir)
 
 
-        adjust_layout = getattr(self, f'_adjust_layout_{platform}')
-        adjust_layout(extract_dir, ctx, py_version)
+    def _load_pbs_python_json(self, filename):
 
-
-    def _adjust_layout_darwin(self, extract_dir, ctx, py_version):
-
-        for dirname in ('bin', 'lib', 'share'):
-            source = extract_dir / 'python/install' / dirname
-            shutil.move(str(source), str(extract_dir))
-        shutil.rmtree(extract_dir / 'python')
-
-        ctx.python_runtime_exec = extract_dir / 'bin' / f'python{py_version}'
-
-
-    def _adjust_layout_win32(self, extract_dir, ctx, py_version):
-
-        shutil.move(
-            extract_dir / 'python/install',
-            extract_dir.parent / 'python',
-        )
-        ctx.python_runtime_exec = extract_dir.parent / 'python/python.exe'
+        with open(filename, 'rt', encoding='utf8') as input_file:
+            return json.load(input_file)

@@ -51,7 +51,8 @@ class Step:
 
         pbs_artifact = dsp.download(url)
 
-        runtime_parent_dir = ctx.python_runtime_dir.parent
+        python_runtime_dir = ctx.python_runtime_dir
+        runtime_parent_dir = python_runtime_dir.parent
         with tf.TemporaryDirectory(prefix='pup-', dir=runtime_parent_dir) as td:
 
             td = pathlib.Path(td)
@@ -62,7 +63,7 @@ class Step:
 
             pbs_py_paths = pbs_py_json['python_paths']
             pbs_data = pbs_py_paths['data']
-            (pbs_py / pbs_data).replace(ctx.python_runtime_dir)
+            (pbs_py / pbs_data).replace(python_runtime_dir)
 
         # Track Python Runtime executable.
         ctx.python_rel_exe = self._relative(pbs_py_json['python_exe'], pbs_data)
@@ -72,13 +73,21 @@ class Step:
         ctx.python_rel_site_packages = self._relative(pbs_py_paths['purelib'], pbs_data)
 
         # Delete what we can immediately.
-        python_stdlib = ctx.python_runtime_dir / self._relative(pbs_py_paths['stdlib'], pbs_data)
-        files = [self._relative(pbs_py_json['python_stdlib_platform_config'], pbs_data)]
+        python_rel_stdlib = self._relative(pbs_py_paths['stdlib'], pbs_data)
         test_packages = pbs_py_json['python_stdlib_test_packages']
-        self._delete_unneeded(ctx.python_runtime_dir, python_stdlib, files, test_packages)
+        self._delete_test_packages(python_runtime_dir, python_rel_stdlib, test_packages)
+
+        # May not exist.
+        stdlib_platform_config = pbs_py_json.get('python_stdlib_platform_config')
+        if stdlib_platform_config:
+            shutil.rmtree(
+                str(python_runtime_dir / self._relative(stdlib_platform_config, pbs_data)),
+                ignore_errors=True,
+            )
 
         # Compile the Standard Library.
-        python_exe = ctx.python_runtime_dir / ctx.python_rel_exe
+        python_exe = python_runtime_dir / ctx.python_rel_exe
+        python_stdlib = python_runtime_dir / python_rel_stdlib
         self._compile_stdlib(dsp, python_exe, python_stdlib)
 
 
@@ -107,13 +116,11 @@ class Step:
             )
 
 
-    def _delete_unneeded(self, python_runtime_dir, python_stdlib, files, test_packages):
-
-        for file in files:
-            self._delete(python_runtime_dir / file)
+    def _delete_test_packages(self, python_runtime_dir, python_rel_stdlib, test_packages):
 
         for test_package in test_packages:
-            self._delete(python_stdlib / test_package.replace('.', '/'))
+            test_package_path = test_package.replace('.', '/')
+            self._delete(python_runtime_dir / python_rel_stdlib / test_package_path)
 
 
     def _delete(self, path):

@@ -28,7 +28,7 @@ class Step:
     def __call__(self, ctx, dsp):
 
         cmd = [
-            str(ctx.python_runtime_exec),
+            str(ctx.python_runtime_dir / ctx.python_rel_exe),
             '-m',
             'pip',
             'install',

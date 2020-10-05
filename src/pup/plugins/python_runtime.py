@@ -57,15 +57,73 @@ class Step:
             td = pathlib.Path(td)
             self._extract_zstd_file(pbs_artifact, td)
 
-            pbs_python = td / 'python'
-            pbs_python_json = self._load_pbs_python_json(pbs_python / 'PYTHON.json')
+            pbs_py = td / 'python'
+            pbs_py_json = self._load_pbs_python_json(pbs_py / 'PYTHON.json')
 
-            pbs_data = pbs_python_json['python_paths']['data']
-            (pbs_python / pbs_data).replace(ctx.python_runtime_dir)
+            pbs_py_paths = pbs_py_json['python_paths']
+            pbs_data = pbs_py_paths['data']
+            (pbs_py / pbs_data).replace(ctx.python_runtime_dir)
 
-        pbs_python_exe = pathlib.Path(pbs_python_json['python_exe'])
-        relative_python_exe = pbs_python_exe.relative_to(pbs_data)
-        ctx.python_runtime_exec = ctx.python_runtime_dir / relative_python_exe
+        # Track Python Runtime executable.
+        ctx.python_rel_exe = self._relative(pbs_py_json['python_exe'], pbs_data)
+
+        # Track Python Runtime paths than need cleaning up later.
+        ctx.python_rel_scripts = self._relative(pbs_py_paths['scripts'], pbs_data)
+        ctx.python_rel_site_packages = self._relative(pbs_py_paths['purelib'], pbs_data)
+
+        # Delete what we can immediately.
+        python_stdlib = ctx.python_runtime_dir / self._relative(pbs_py_paths['stdlib'], pbs_data)
+        files = [self._relative(pbs_py_json['python_stdlib_platform_config'], pbs_data)]
+        test_packages = pbs_py_json['python_stdlib_test_packages']
+        self._delete_unneeded(ctx.python_runtime_dir, python_stdlib, files, test_packages)
+
+        # Compile the Standard Library.
+        python_exe = ctx.python_runtime_dir / ctx.python_rel_exe
+        self._compile_stdlib(dsp, python_exe, python_stdlib)
+
+
+    def _compile_stdlib(self, dsp, python_exe, python_stdlib):
+
+        compile_cmd = [
+            str(python_exe),
+            '-m',
+            'compileall',
+            '-l',
+            '-f',
+            '-q',
+            '-b',
+            None
+        ]
+        for each in python_stdlib.glob('*'):
+            if not each.is_dir():
+                continue
+            if each.name == 'site-packages':
+                continue
+            compile_cmd[-1] = str(each)
+            dsp.spawn(
+                compile_cmd,
+                out_callable=lambda line: _log.info('compile out: %s', line),
+                err_callable=lambda line: _log.info('compile err: %s', line),
+            )
+
+
+    def _delete_unneeded(self, python_runtime_dir, python_stdlib, files, test_packages):
+
+        for file in files:
+            self._delete(python_runtime_dir / file)
+
+        for test_package in test_packages:
+            self._delete(python_stdlib / test_package.replace('.', '/'))
+
+
+    def _delete(self, path):
+
+        shutil.rmtree(str(path), ignore_errors=True)
+
+
+    def _relative(self, path, base):
+
+        return pathlib.Path(path).relative_to(base)
 
 
     def _pbs_url(self, platform, py_version):

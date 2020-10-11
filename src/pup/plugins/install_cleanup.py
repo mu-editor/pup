@@ -68,6 +68,9 @@ class Step:
                 continue
             if candidate_path in paths_to_keep:
                 continue
+            # Don't delete if candidate_path is parent of any of paths_to_keep.
+            if any(candidate_path == parent for p in paths_to_keep for parent in p.parents):
+                continue
             _log.info('Deleting %r...', str(candidate_path))
             shutil.rmtree(
                 str(candidate_path),

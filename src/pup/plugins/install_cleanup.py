@@ -26,6 +26,7 @@ class Step:
 
         self._delete_test_packages(ctx)
         self._delete_platform_config(ctx)
+        self._delete_unneeded_scripts(ctx)
         self._delete_unneeded_paths(ctx)
         self._delete_unneeded_files(ctx)
         self._compile_lib(ctx, dsp)
@@ -47,6 +48,21 @@ class Step:
         if not ctx.stdlib_platform_config:
             return
         shutil.rmtree(str(ctx.python_runtime_dir / ctx.stdlib_platform_config), ignore_errors=True)
+
+
+    def _delete_unneeded_scripts(self, ctx):
+
+        python_exe = ctx.python_runtime_dir / ctx.python_rel_exe
+        python_scripts_path =  ctx.python_runtime_dir / ctx.python_rel_scripts
+
+        for file_path in python_scripts_path.glob('*'):
+            if file_path == python_exe:
+                continue
+            if file_path.is_dir():
+                shutil.rmtree(str(file_path), ignore_errors=True)
+            elif not file_path.is_symlink() or file_path.resolve() != python_exe:
+                # Delete any file that doesn't symlink to the Python executable.
+                file_path.unlink()
 
 
     def _delete_unneeded_paths(self, ctx):

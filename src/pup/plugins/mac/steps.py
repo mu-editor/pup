@@ -17,6 +17,7 @@ class Steps:
             'mac.app-bundle-template',
             'pup.python-runtime',
             'pup.pip-install',
+            'pup.install-cleanup',
             # 'mac.sign-app-bundle',
             # 'mac.notarize-app-bundle',
             # 'mac.create-dmg',

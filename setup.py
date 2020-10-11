@@ -114,6 +114,7 @@ if __name__ == "__main__":
                 'pup.download=pup.plugins.download:Step',
                 'pup.python_runtime=pup.plugins.python_runtime:Step',
                 'pup.pip_install=pup.plugins.pip_install:Step',
+                'pup.install_cleanup=pup.plugins.install_cleanup:Step',
                 'mac.dirs=pup.plugins.mac.dirs:Directories',
                 'mac.steps=pup.plugins.mac.steps:Steps',
                 'mac.app_bundle_template=pup.plugins.mac.app_bundle:Step',

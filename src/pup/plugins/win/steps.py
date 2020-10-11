@@ -17,6 +17,7 @@ class Steps:
             'win.distribution-layout',
             'pup.python-runtime',
             'pup.pip-install',
+            'pup.install-cleanup',
             # 'sign-the-way-microsoft-needs',
             # 'create-a-clickable-thingie',
             # 'pack-it-all-into-a-single-file-artifact',

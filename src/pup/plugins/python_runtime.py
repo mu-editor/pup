@@ -5,7 +5,6 @@ PUP Plugin implementing the 'pup.python-runtime' step.
 import json
 import logging
 import pathlib
-import shutil
 import tarfile
 import tempfile as tf
 
@@ -48,7 +47,6 @@ class Step:
     def __call__(self, ctx, dsp):
 
         url = self._pbs_url(ctx.tgt_platform, ctx.tgt_python_version_suffix)
-
         pbs_artifact = dsp.download(url)
 
         python_runtime_dir = ctx.python_runtime_dir
@@ -70,67 +68,20 @@ class Step:
 
         # Track Python Runtime paths than need cleaning up later.
         ctx.python_rel_scripts = self._relative(pbs_py_paths['scripts'], pbs_data)
+        ctx.python_rel_stdlib = self._relative(pbs_py_paths['stdlib'], pbs_data)
         ctx.python_rel_site_packages = self._relative(pbs_py_paths['purelib'], pbs_data)
 
-        # Delete what we can immediately.
-        python_rel_stdlib = self._relative(pbs_py_paths['stdlib'], pbs_data)
-        test_packages = pbs_py_json['python_stdlib_test_packages']
-        self._delete_test_packages(python_runtime_dir, python_rel_stdlib, test_packages)
-
-        # May not exist.
-        stdlib_platform_config = pbs_py_json.get('python_stdlib_platform_config')
-        if stdlib_platform_config:
-            shutil.rmtree(
-                str(python_runtime_dir / self._relative(stdlib_platform_config, pbs_data)),
-                ignore_errors=True,
-            )
-
-        # Compile the Standard Library.
-        python_exe = python_runtime_dir / ctx.python_rel_exe
-        python_stdlib = python_runtime_dir / python_rel_stdlib
-        self._compile_stdlib(dsp, python_exe, python_stdlib)
-
-
-    def _compile_stdlib(self, dsp, python_exe, python_stdlib):
-
-        compile_cmd = [
-            str(python_exe),
-            '-m',
-            'compileall',
-            '-l',
-            '-f',
-            '-q',
-            '-b',
-            None
-        ]
-        for each in python_stdlib.glob('*'):
-            if not each.is_dir():
-                continue
-            if each.name == 'site-packages':
-                continue
-            compile_cmd[-1] = str(each)
-            dsp.spawn(
-                compile_cmd,
-                out_callable=lambda line: _log.info('compile out: %s', line),
-                err_callable=lambda line: _log.info('compile err: %s', line),
-            )
-
-
-    def _delete_test_packages(self, python_runtime_dir, python_rel_stdlib, test_packages):
-
-        for test_package in test_packages:
-            test_package_path = test_package.replace('.', '/')
-            self._delete(python_runtime_dir / python_rel_stdlib / test_package_path)
-
-
-    def _delete(self, path):
-
-        shutil.rmtree(str(path), ignore_errors=True)
+        ctx.python_test_packages = pbs_py_json['python_stdlib_test_packages']
+        ctx.stdlib_platform_config = self._relative(
+            pbs_py_json.get('python_stdlib_platform_config'),
+            pbs_data,
+        )
+        
 
 
     def _relative(self, path, base):
 
-        return pathlib.Path(path).relative_to(base)
+        return pathlib.Path(path).relative_to(base) if path else None
 
 
     def _pbs_url(self, platform, py_version):

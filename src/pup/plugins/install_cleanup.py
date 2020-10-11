@@ -26,11 +26,14 @@ class Step:
 
         self._delete_test_packages(ctx)
         self._delete_platform_config(ctx)
+        self._delete_unneeded_paths(ctx)
+        self._delete_unneeded_files(ctx)
         self._compile_lib(ctx, dsp)
 
 
     def _delete_test_packages(self, ctx):
 
+        _log.info('Deleting Standard Library test packages...')
         for test_package in ctx.python_test_packages:
             test_package_path = test_package.replace('.', '/')
             shutil.rmtree(
@@ -38,12 +41,63 @@ class Step:
                 ignore_errors=True,
             )
 
+
     def _delete_platform_config(self, ctx):
 
         if not ctx.stdlib_platform_config:
             return
         shutil.rmtree(str(ctx.python_runtime_dir / ctx.stdlib_platform_config), ignore_errors=True)
 
+
+    def _delete_unneeded_paths(self, ctx):
+
+        paths_to_keep = {
+            ctx.python_runtime_dir / rel_path
+            for rel_path in (
+                ctx.python_rel_stdlib,
+                ctx.python_rel_site_packages,
+                ctx.python_rel_scripts,
+                'DLLs',
+                'Tcl',
+            )
+        }
+
+        for candidate in ctx.python_runtime_dir.iterdir():
+            candidate_path = ctx.python_runtime_dir / candidate
+            if not candidate_path.is_dir():
+                continue
+            if candidate_path in paths_to_keep:
+                continue
+            _log.info('Deleting %r...', str(candidate_path))
+            shutil.rmtree(
+                str(candidate_path),
+                ignore_errors=True,
+            )
+
+
+    _GLOBS_TO_DELETE = (
+        '*.lib',
+        '*.pdb',
+        '*.a',
+    )
+
+    def _delete_unneeded_files(self, ctx):
+
+        for glob in self._GLOBS_TO_DELETE:
+            _log.info('Deleting %r files...', glob)
+            for file_path in ctx.python_runtime_dir.glob(f'**/{glob}'):
+                file_path.unlink()
+
+
+    _DONT_COMPILE_NAMES = {
+        '__pycache__',
+        'EGG-INFO',
+    }
+
+    _DONT_COMPILE_SUFFIXES = {
+        '.dist-info',
+        '.egg-info',
+    }
 
     def _compile_lib(self, ctx, dsp):
 
@@ -63,8 +117,13 @@ class Step:
             None
         ]
 
-        for each in python_stdlib.glob('**'):
-            compile_cmd[-1] = str(each)
+        for lib_dir_path in python_stdlib.glob('**'):
+            if lib_dir_path.name in self._DONT_COMPILE_NAMES:
+                continue
+            if lib_dir_path.suffix in self._DONT_COMPILE_SUFFIXES:
+                continue
+            compile_cmd[-1] = str(lib_dir_path)
+            _log.info('Compiling %r...', str(lib_dir_path))
             dsp.spawn(
                 compile_cmd,
                 out_callable=lambda line: _log.info('compile out: %s', line),

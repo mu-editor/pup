@@ -2,9 +2,11 @@
 PUP Plugin implementing the 'pup.python-runtime' step.
 """
 
+import json
 import logging
-import shutil
+import pathlib
 import tarfile
+import tempfile as tf
 
 import zstandard
 
@@ -44,42 +46,62 @@ class Step:
 
     def __call__(self, ctx, dsp):
 
-        platform = ctx.tgt_platform
-        py_version = ctx.tgt_python_version_suffix
+        url = self._pbs_url(ctx.tgt_platform, ctx.tgt_python_version_suffix)
+        pbs_artifact = dsp.download(url)
+
+        python_runtime_dir = ctx.python_runtime_dir
+        runtime_parent_dir = python_runtime_dir.parent
+        with tf.TemporaryDirectory(prefix='pup-', dir=runtime_parent_dir) as td:
+
+            td = pathlib.Path(td)
+            self._extract_zstd_file(pbs_artifact, td)
+
+            pbs_py = td / 'python'
+            pbs_py_json = self._load_pbs_python_json(pbs_py / 'PYTHON.json')
+
+            pbs_py_paths = pbs_py_json['python_paths']
+            pbs_data = pbs_py_paths['data']
+            (pbs_py / pbs_data).replace(python_runtime_dir)
+
+        # Track Python Runtime executable.
+        ctx.python_rel_exe = self._relative(pbs_py_json['python_exe'], pbs_data)
+
+        # Track Python Runtime paths than need cleaning up later.
+        ctx.python_rel_scripts = self._relative(pbs_py_paths['scripts'], pbs_data)
+        ctx.python_rel_stdlib = self._relative(pbs_py_paths['stdlib'], pbs_data)
+        ctx.python_rel_site_packages = self._relative(pbs_py_paths['purelib'], pbs_data)
+
+        ctx.python_test_packages = pbs_py_json['python_stdlib_test_packages']
+        ctx.stdlib_platform_config = self._relative(
+            pbs_py_json.get('python_stdlib_platform_config'),
+            pbs_data,
+        )
+        
+
+
+    def _relative(self, path, base):
+
+        return pathlib.Path(path).relative_to(base) if path else None
+
+
+    def _pbs_url(self, platform, py_version):
 
         try:
-            url = _PYTHON_BUILD_STANDALONE_URLs[platform][py_version]
+            return _PYTHON_BUILD_STANDALONE_URLs[platform][py_version]
         except KeyError:
             raise RuntimeError(f'No {platform} Python runtime for Python {py_version}.')
 
-        pbs_download = dsp.download(url)
 
-        extract_dir = ctx.python_runtime_dir
-        with open(pbs_download, 'rb') as input_file:
+    def _extract_zstd_file(self, filename, target_dir):
+
+        with open(filename, 'rb') as input_file:
             decompressor = zstandard.ZstdDecompressor()
             with decompressor.stream_reader(input_file) as reader:
                 with tarfile.open(mode='r|', fileobj=reader) as tf:
-                    tf.extractall(path=extract_dir)
+                    tf.extractall(path=target_dir)
 
 
-        adjust_layout = getattr(self, f'_adjust_layout_{platform}')
-        adjust_layout(extract_dir, ctx, py_version)
+    def _load_pbs_python_json(self, filename):
 
-
-    def _adjust_layout_darwin(self, extract_dir, ctx, py_version):
-
-        for dirname in ('bin', 'lib', 'share'):
-            source = extract_dir / 'python/install' / dirname
-            shutil.move(str(source), str(extract_dir))
-        shutil.rmtree(extract_dir / 'python')
-
-        ctx.python_runtime_exec = extract_dir / 'bin' / f'python{py_version}'
-
-
-    def _adjust_layout_win32(self, extract_dir, ctx, py_version):
-
-        shutil.move(
-            extract_dir / 'python/install',
-            extract_dir.parent / 'python',
-        )
-        ctx.python_runtime_exec = extract_dir.parent / 'python/python.exe'
+        with open(filename, 'rt', encoding='utf8') as input_file:
+            return json.load(input_file)

@@ -64,7 +64,7 @@ class Step:
         shutil.rmtree(result_path, ignore_errors=True)
         result_path = generate.generate_files(tmpl_path, tmpl_data, build_dir)
 
-        ctx.python_runtime_dir = pathlib.Path(result_path) / 'Temp'
+        ctx.python_runtime_dir = pathlib.Path(result_path) / 'Python'
 
 
     def _launch_module_from_context(self, ctx):

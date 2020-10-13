@@ -53,7 +53,7 @@ def command_wrapper(command_function):
         ['CRITICAL', 'ERROR', 'WARNING', 'WARN', 'INFO', 'DEBUG'],
         case_sensitive=False,
     ),
-    default='WARNING',
+    default='INFO',
     show_default=True,
     envvar='PUP_LOG_LEVEL',
 )

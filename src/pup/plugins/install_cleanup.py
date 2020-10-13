@@ -108,16 +108,6 @@ class Step:
                 file_path.unlink()
 
 
-    _DONT_COMPILE_NAMES = {
-        '__pycache__',
-        'EGG-INFO',
-    }
-
-    _DONT_COMPILE_SUFFIXES = {
-        '.dist-info',
-        '.egg-info',
-    }
-
     def _compile_lib(self, ctx, dsp):
 
         # Compiles both the Standard Library and Site Packages.
@@ -129,21 +119,14 @@ class Step:
             str(python_exe),
             '-m',
             'compileall',
-            '-l',
             '-f',
             '-q',
-            None
+            str(python_stdlib),
         ]
 
-        for lib_dir_path in python_stdlib.glob('**'):
-            if lib_dir_path.name in self._DONT_COMPILE_NAMES:
-                continue
-            if lib_dir_path.suffix in self._DONT_COMPILE_SUFFIXES:
-                continue
-            compile_cmd[-1] = str(lib_dir_path)
-            _log.info('Compiling %r...', str(lib_dir_path))
-            dsp.spawn(
-                compile_cmd,
-                out_callable=lambda line: _log.info('compile out: %s', line),
-                err_callable=lambda line: _log.info('compile err: %s', line),
-            )
+        _log.info('Compiling the Standard Library and site-packages...')
+        dsp.spawn(
+            compile_cmd,
+            out_callable=lambda line: _log.info('compile out: %s', line),
+            err_callable=lambda line: _log.info('compile err: %s', line),
+        )

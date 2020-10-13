@@ -132,7 +132,6 @@ class Step:
             '-l',
             '-f',
             '-q',
-            '-b',
             None
         ]
 

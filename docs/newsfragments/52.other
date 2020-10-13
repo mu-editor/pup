@@ -1,0 +1,1 @@
+Simpler log format when output is a TTY: no timestamps and no logger name.

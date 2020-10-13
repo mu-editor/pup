@@ -45,9 +45,9 @@ class Step:
 
 
         app_bundle_zip = self._create_app_bundle_zip(ctx, dsp)
-
-        self._request_notarization(ctx, dsp, app_bundle_zip, user, password)
-        self._wait_notarization(dsp)
+        request_id = self._request_notarization(ctx, dsp, app_bundle_zip, user, password)
+        self._wait_notarization(dsp, request_id)
+        self._staple_app_bundle(dsp)
 
 
     def _cli_command_path(self, command):
@@ -79,7 +79,7 @@ class Step:
         finally:
             os.chdir(orig_cwd)
 
-        return app_bundle_zip
+        return build_dir / app_bundle_zip
 
 
     def _request_notarization(self, ctx, dsp, app_bundle_zip, user, password):
@@ -94,8 +94,10 @@ class Step:
             ctx.application_id,
             '--username',
             user,
-            '-p',
+            '--password',
             password,
+            '--output-format',
+            'xml',
             '--file',
             app_bundle_zip,
         ]
@@ -103,8 +105,18 @@ class Step:
         dsp.spawn(
             cmd,
             out_callable=lambda line: _log.info('altool| %s', line),
-            err_callable=lambda line: _log.info('altool# %s', line),
+            err_callable=lambda line: _log.info('altool! %s', line),
         )
+
+
+    def _wait_notarization(self, dsp, request_id):
+
+        _log.info('TODO: wait notarization')
+
+
+    def _staple_app_bundle(self, dsp):
+
+        _log.info('TODO: staple app bundle')
 
 
     def _assess_notarization_result(self, dsp, app_bundle_path):
@@ -115,10 +127,10 @@ class Step:
             '-vvvv',
             str(app_bundle_path),
         ]
-        _log.info('Assessing signing result...')
+        _log.info('Assessing notarization result...')
         dsp.spawn(
             cmd,
-            out_callable=lambda line: _log.info('spctl out: %s', line),
-            err_callable=lambda line: _log.info('spctl err: %s', line),
+            out_callable=lambda line: _log.info('spctl| %s', line),
+            err_callable=lambda line: _log.info('spctl! %s', line),
         )
-        # TODO: Expect PIP_SIGNING_IDENTITY to be output? Warn if not?
+        # TODO: Expect notarized to be output?

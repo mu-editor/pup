@@ -51,6 +51,8 @@ class Step:
         self._sign_binaries(dsp, binaries_dir)
         self._sign(dsp, app_bundle_path)
 
+        self._assess_signing_result(dsp, app_bundle_path)
+
 
     def _cli_command_path(self, command):
 
@@ -102,3 +104,20 @@ class Step:
             out_callable=lambda line: _log.info('codesign out: %s', line),
             err_callable=lambda line: _log.info('codesign err: %s', line),
         )
+
+
+    def _assess_signing_result(self, dsp, app_bundle_path):
+
+        cmd = [
+            self._cli_command_path('spctl'),
+            '--assess',
+            '-vvvv',
+            str(app_bundle_path),
+        ]
+        _log.info('Assessing signing result...')
+        dsp.spawn(
+            cmd,
+            out_callable=lambda line: _log.info('spctl out: %s', line),
+            err_callable=lambda line: _log.info('spctl err: %s', line),
+        )
+        # TODO: Expect PIP_SIGNING_IDENTITY to be output? Warn if not?

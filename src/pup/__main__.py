@@ -9,7 +9,7 @@ import sys
 
 import click
 
-from . import __version__ as sw_version
+from . import __title__ as sw_title, __version__ as sw_version
 from . import api
 from . import logs
 
@@ -26,7 +26,7 @@ def command_wrapper(command_function):
     """
     @functools.wraps(command_function)
     def wrapper(*args, **kw):
-        _log.info('%s - starting with PID=%r', sw_version, os.getpid())
+        _log.info('%s %s - starting with PID=%r', sw_title, sw_version, os.getpid())
         try:
             exit_code = command_function(*args, **kw)
         except Exception as exc:
@@ -37,7 +37,7 @@ def command_wrapper(command_function):
             # KeyboardInterrupt exceptions (CTRL-C, SIGINT)
             exit_code = -2
         finally:
-            _log.info('%s - done', sw_version)
+            _log.info('%s %s - done', sw_title, sw_version)
             sys.exit(exit_code)
 
     return wrapper

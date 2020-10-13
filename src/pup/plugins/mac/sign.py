@@ -44,13 +44,19 @@ class Step:
         binaries_dir = (ctx.python_runtime_dir / ctx.python_rel_exe).parent
 
         self._entitlements = ilr.files(sign_resources) / 'entitlements.plist'
-        codesign = subprocess.check_output('which codesign', shell=True, text=True)
-        self._codesign = codesign.rstrip('\n')
+        self._codesign = self._cli_command_path('codesign')
 
         self._sign_framework_binaries(dsp, app_bundle_path)
         self._sign_shared_libs(dsp, app_bundle_path)
         self._sign_binaries(dsp, binaries_dir)
         self._sign(dsp, app_bundle_path)
+
+
+    def _cli_command_path(self, command):
+
+        shell_command = f'which "{command}"'
+        result = subprocess.check_output(shell_command, shell=True, text=True)
+        return result.rstrip('\n')
 
 
     def _sign_framework_binaries(self, dsp, app_bundle_path):

@@ -119,6 +119,7 @@ if __name__ == "__main__":
                 'mac.steps=pup.plugins.mac.steps:Steps',
                 'mac.app_bundle_template=pup.plugins.mac.app_bundle:Step',
                 'mac.sign_app_bundle=pup.plugins.mac.sign:Step',
+                'mac.notarize_app_bundle=pup.plugins.mac.notarize:Step',
                 'win.dirs=pup.plugins.win.dirs:Directories',
                 'win.steps=pup.plugins.win.steps:Steps',
                 'win.distribution_layout=pup.plugins.win.dist_layout:Step',

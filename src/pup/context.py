@@ -2,6 +2,9 @@
 Packaging Context.
 """
 
+from urllib import parse
+
+
 class Context:
 
     def __init__(self, *, src, launch_module, ignore_plugins, platform, python_version):
@@ -25,3 +28,23 @@ class Context:
 
         self.python_test_packages = None
         self.stdlib_platform_config = None
+
+
+    @property
+    def application_id(self):
+
+        """
+        Returns the application identifier built from the package's home_page
+        URL, consisting of two-sets of '.'-separated strings: the reverse DNS
+        host/domain part, followed by the in-order path components.
+
+        Example:
+        - home_page='https://example.com/a/path'
+        - bundle_id='com.example.a.path'
+        """
+
+        url_parts = parse.urlsplit(self.src_metadata.home_page)
+        return '.'.join((
+            '.'.join(reversed(url_parts.netloc.split('.'))),
+            '.'.join(filter(None, url_parts.path.split('/')))
+        ))

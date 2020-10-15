@@ -5,7 +5,6 @@ PUP Plugin implementing the 'mac.app-bundle-template' step.
 import logging
 import pathlib
 import shutil
-from urllib import parse
 
 import cookiecutter
 from cookiecutter import generate
@@ -44,12 +43,11 @@ class Step:
         build_dir = dsp.directories()['build']
         build_dir.mkdir(parents=True, exist_ok=True)
 
-
         tmpl_path = ilr.files(app_bundle_template)
         tmpl_data = {
             'cookiecutter': {
                 'app_bundle_name': ctx.src_metadata.name,
-                'bundle_identifier': self._bundle_id_from_context(ctx),
+                'bundle_identifier': ctx.application_id,
                 'version_string': ctx.src_metadata.version,
                 'copyright': self._copyright_from_context(ctx),
                 'launcher_name': ctx.src_metadata.name,
@@ -71,25 +69,6 @@ class Step:
         ctx.python_runtime_dir = (
             pathlib.Path(result_path) / 'Contents/Resources/Python'
         )
-
-
-    def _bundle_id_from_context(self, ctx):
-
-        # Generating application bundle_ids from the package's home_page URL
-        # ------------------------------------------------------------------
-        # Two sets of dot-separated strings:
-        # - Reverse DNS host/domain part of URL.
-        # - In order path components of URL.
-        #
-        # Example:
-        # - home_page='https://example.com/a/path'
-        # - bundle_id='com.example.a.path'
-
-        url_parts = parse.urlsplit(ctx.src_metadata.home_page)
-        return '.'.join((
-            '.'.join(reversed(url_parts.netloc.split('.'))),
-            '.'.join(filter(None, url_parts.path.split('/')))
-        ))
 
 
     def _copyright_from_context(self, ctx):

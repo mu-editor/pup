@@ -32,10 +32,17 @@ class Step:
 
     def __init__(self):
 
+        self._identity = None
         self._codesign = None
         self._entitlements = None
 
     def __call__(self, ctx, dsp):
+
+        try:
+            self._identity = os.environ['PUP_SIGNING_IDENTITY']
+        except KeyError as exc:
+            _log.error('Cannot sign: environment variable %s not defined.', str(exc))
+            return
 
         build_dir = dsp.directories()['build']
         app_bundle_name = ctx.src_metadata.name
@@ -88,7 +95,7 @@ class Step:
         cmd = [
             self._codesign,
             '--sign',
-            os.environ.get('PUP_SIGNING_IDENTITY', '-'),
+            self._identity,
             '--entitlements',
             str(self._entitlements),
             '--deep',
@@ -101,8 +108,8 @@ class Step:
         _log.info('Signing %r...', str(target))
         dsp.spawn(
             cmd,
-            out_callable=lambda line: _log.info('codesign out: %s', line),
-            err_callable=lambda line: _log.info('codesign err: %s', line),
+            out_callable=lambda line: _log.info('codesign| %s', line),
+            err_callable=lambda line: _log.info('codesign! %s', line),
         )
 
 
@@ -117,7 +124,11 @@ class Step:
         _log.info('Assessing signing result...')
         dsp.spawn(
             cmd,
-            out_callable=lambda line: _log.info('spctl out: %s', line),
-            err_callable=lambda line: _log.info('spctl err: %s', line),
+            out_callable=lambda line: _log.info('spctl| %s', line),
+            err_callable=lambda line: _log.info('spctl! %s', line),
         )
-        # TODO: Expect PIP_SIGNING_IDENTITY to be output? Warn if not?
+
+        # TODO: Expect `spctl` output to be along the lines of this?
+        #       build/pup/<app_bundle_name>: rejected
+        #       source=Unnotarized Developer ID
+        #       origin=<signing certificate cn>

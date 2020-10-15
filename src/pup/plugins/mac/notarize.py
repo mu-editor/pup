@@ -2,6 +2,7 @@
 PUP Plugin implementing the 'mac.notarize-app-bundle' step.
 """
 
+import contextlib
 import logging
 import os
 import subprocess
@@ -37,11 +38,16 @@ class Step:
 
     def _notarize(self, ctx, dsp, user, password):
 
+        build_dir = dsp.directories()['build']
+        app_bundle_name = ctx.src_metadata.name
+        app_bundle_path = build_dir / f'{app_bundle_name}.app'
 
-        app_bundle_zip = self._create_app_bundle_zip(ctx, dsp)
+        app_bundle_zip = self._create_app_bundle_zip(dsp, app_bundle_path)
         request_uuid = self._request_notarization(ctx, dsp, app_bundle_zip, user, password)
         self._wait_notarization(dsp, request_uuid, user, password)
-        self._staple_app_bundle(dsp)
+        self._staple_app_bundle(dsp, app_bundle_path)
+        self._assess_notarization_result(dsp, app_bundle_path)
+        app_bundle_zip.unlink()
 
 
     def _cli_command_path(self, command):
@@ -51,29 +57,30 @@ class Step:
         return result.rstrip('\n')
 
 
-    def _create_app_bundle_zip(self, ctx, dsp):
+    @contextlib.contextmanager
+    def _working_directory(self, directory):
 
-        build_dir = dsp.directories()['build']
-        app_bundle_name = f'{ctx.src_metadata.name}.app'
-        app_bundle_zip = f'{app_bundle_name}.zip'
-
-        zip_path = self._cli_command_path('zip')
-
-        orig_cwd = os.getcwd()
+        cwd = os.getcwd()
+        os.chdir(directory)
         try:
-            os.chdir(build_dir)
+            yield
+        finally:
+            os.chdir(cwd)
+
+
+    def _create_app_bundle_zip(self, dsp, app_bundle_path):
+
+        with self._working_directory(app_bundle_path.parent):
             dsp.spawn(
                 command=[
-                    zip_path,
+                    self._cli_command_path('zip'),
                     '-qyr',
-                    app_bundle_zip,
-                    str(app_bundle_name)
+                    f'{app_bundle_path.name}.zip',
+                    str(app_bundle_path.name),
                 ]
             )
-        finally:
-            os.chdir(orig_cwd)
 
-        return build_dir / app_bundle_zip
+        return app_bundle_path.with_suffix('.app.zip')
 
 
     def _parse_xml_plist(self, xml_payload):
@@ -82,7 +89,7 @@ class Step:
         """
         root_element = et.fromstring(xml_payload)
         xml_dict, *tail = root_element.findall('./dict')
-        if len(tail):
+        if tail:
             _log.warning('Multiple dicts in XML plist: %r', xml_payload)
         return self._parse_xml_dict(xml_dict)
 
@@ -90,7 +97,7 @@ class Step:
     def _parse_xml_dict(self, element):
         """
         Returns a `dict` built from recursively parsing an XML element tree
-        starting with a <dict> element, followed by key/value element pairs:
+        starting with a <dict> element, containing key+value element pairs:
         keys are the text within <key> elements, values are the text within
         the following elements (if such elements are <dict>, the function is
         called recursively).
@@ -107,6 +114,7 @@ class Step:
 
     def _request_notarization(self, ctx, dsp, app_bundle_zip, user, password):
 
+        _log.info('Submitting notarization request...')
         cmd = [
             self._cli_command_path('xcrun'),
             'altool',
@@ -123,7 +131,6 @@ class Step:
             app_bundle_zip,
         ]
         xml_output_lines = []
-        _log.info('Requesting notarization...')
         dsp.spawn(
             cmd,
             out_callable=xml_output_lines.append,
@@ -169,7 +176,7 @@ class Step:
             xml_payload = '\n'.join(xml_output_lines)
             _log.debug('xml_payload=%r', xml_payload)
             response = self._parse_xml_plist(xml_payload)
-            response_info = response['notarization-info'] 
+            response_info = response['notarization-info']
             try:
                 status = response_info['Status']
             except KeyError as exc:
@@ -199,23 +206,39 @@ class Step:
             )
 
 
-    def _staple_app_bundle(self, dsp):
+    def _staple_app_bundle(self, dsp, app_bundle_path):
 
-        _log.info('TODO: staple app bundle')
+        _log.info('Stapling...')
+        cmd = [
+            self._cli_command_path('xcrun'),
+            'stapler',
+            'staple',
+            app_bundle_path.name,
+        ]
+        with self._working_directory(app_bundle_path.parent):
+            dsp.spawn(
+                cmd,
+                out_callable=lambda line: _log.info('stapler| %s', line),
+                err_callable=lambda line: _log.info('stapler! %s', line),
+            )
 
 
     def _assess_notarization_result(self, dsp, app_bundle_path):
 
+        _log.info('Assessing notarization result...')
         cmd = [
             self._cli_command_path('spctl'),
             '--assess',
             '-vvvv',
             str(app_bundle_path),
         ]
-        _log.info('Assessing notarization result...')
         dsp.spawn(
             cmd,
             out_callable=lambda line: _log.info('spctl| %s', line),
             err_callable=lambda line: _log.info('spctl! %s', line),
         )
-        # TODO: Expect notarized to be output?
+
+        # TODO: Expect `spctl` output to be along the lines of this?
+        #       build/pup/<app_bundle_name>: accepted
+        #       source=Notarized Developer ID
+        #       origin=<signing certificate cn>

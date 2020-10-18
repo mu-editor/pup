@@ -1,11 +1,6 @@
 Development
 ===========
 
-.. important::
-
-   Copied over from another project. Needs review.
-
-
 ``pup`` is openly developed on `GitHub <https://github.com/mu-editor/pup>`_, following a process that strives to be:
 
 * As simple as possible, but not simpler.
@@ -56,24 +51,24 @@ The following `GitHub Milestones <https://github.com/mu-editor/pup/milestones>`_
 
 ==================  ================================================================================
 :guilabel:`NEXT`    Issues and Pull Requests that will be included in the next release.
-:guilabel:`DEFER`   Issues and Pull Requests that will be worked on, but will not be included in the next release.
+:guilabel:`LATER`   Issues and Pull Requests that will be worked on, but will not be included in the next release.
 :guilabel:`TBD`     Issues and Pull Requests that will not be worked on until future decision.
 ==================  ================================================================================
 
 .. note::
-    Unassigned Issues and Pull Requests will be assigned to the :guilabel:`TBD` milestone.
+    Unassigned Issues will be assigned to the :guilabel:`TBD` milestone.
 
 At release time:
 
 * The :guilabel:`NEXT` milestone is renamed to the release version and closed.
-* A new :guilabel:`NEXT` milestone is created, with no associated Issues or Pull Requests.
+* A new :guilabel:`NEXT` milestone is created, with no associated Issues.
 
 
 
 Issues and Labels
 ^^^^^^^^^^^^^^^^^
 
-All development issues will be `labelled <https://github.com/mu-editor/pup/labels>`_ one of:
+Development issues are used to describe, specify, discuss, evaluate, and track ideas on proposed changes to ``pup``, and will be `labelled <https://github.com/mu-editor/pup/labels>`_ one of:
 
 ======================= =================================================================================
 :guilabel:`enhancement` Describing a new feature or capability.
@@ -83,13 +78,18 @@ All development issues will be `labelled <https://github.com/mu-editor/pup/label
 ======================= =================================================================================
 
 
-.. note::
-    The key motivation for having mandatory labels in development issues is to simplify filtering support related ones which submitters will leave unlabelled.
+Non-labelled issues are assumed to be support-related.
+They describe user experiences in using ``pup``,
+and will generally fall into one of the
+*"it doesn't work for me"* or *"it should do this new thing"* groups.
+Triaging and in-issue will either close such issues or
+label and associate them with a milestone,
+integrating them into the development process.
 
 
 General requirements:
 
-* All issues must describe a single, actionable topic.
+* All issues should describe a single, actionable topic.
 
 * Complex issues should be split into simpler, possibly related, issues.
 
@@ -97,19 +97,21 @@ General requirements:
 
   * Must describe the use-case, benefits and tradeoffs.
 
-  * Should include sample code demonstrating the enhancement in action.
-
-  * Should take the `Checklist for Python library APIs <http://python.apichecklist.com>`_ into consideration.
+  * If applicable,
+    should include sample code/CLI usage
+    demonstrating the enhancement in action.
 
 * :guilabel:`bug` issues must:
 
   * Be explicitly reported against either the latest `PyPI released version <https://pypi.org/pypi/pup>`_ or the current `GitHub master branch <https://github.com/mu-editor/pup/tree/master>`_.
 
-  * Describe the steps to reproduce the bug, ideally with a minimal code sample.
+  * Describe the steps to reproduce the bug,
+    ideally with a minimal code/CLI usage sample.
 
   * Describe the expected and actual results.
 
-  * Include a reference to where the documentation is inconsistent with the actual results.
+  * Include a reference to where the documentation is inconsistent with the actual results,
+    or highlight the fact that the behaviour is non-documented.
 
 
 * :guilabel:`maintenance` issues:
@@ -117,23 +119,30 @@ General requirements:
   * Must describe the purpose, benefits and trade-offs.
 
 
-.. warning::
-    Open development issues not meeting these requirements will be either discarded and closed, or worked on, at the maintainer's discretion.
-
-
 
 Pull Requests
 ^^^^^^^^^^^^^
 
-Pull Requests are `tracked here <https://github.com/mu-editor/pup/pulls>`_ and:
+Pull Requests are implementation proposals for previously identified and agreed to be addressed issues.  They are `tracked here <https://github.com/mu-editor/pup/pulls>`_ and:
 
 * Must reference an existing, open issue, and preferably only one.
 * May totally or partially contribute to closing the referenced open issue.
 * Will not be merged if any of the GitHub checks fails.
 * Will not necessarily be merged if all of the GitHub checks pass.
-* Must be assigned to the same milestone as the referenced open issue.
-* May be labelled.
+* Will not be labelled or assigned to a milestone.
 
+.. note::
+
+   **Issues** vs **Pull Requests**
+
+   * Issues are used to describe, discuss, and specify ideas and concepts.
+   
+   * Pull Requests are used to propose, describe, and discuss
+     the implementation of previously agreed-upon ideas in Issues.
+
+   Please do not create Pull Requests
+   without prior discussion and agreement in the context of a related Issue.
+   It will make everybody's live easier!
 
 
 

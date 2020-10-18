@@ -1,5 +1,5 @@
-``pup`` | Python Mu Packager
-============================
+``pup`` | Pluggable Micro Packager
+==================================
 
 ``pup`` is (in the early stages of development and risks becoming) a packaging tool
 for GUI programs written in Python.

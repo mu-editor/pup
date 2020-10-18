@@ -88,6 +88,8 @@ To package an application, run:
 Packaging the Mu Editor on Windows
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+Run:
+
 .. code-block:: console
 
         > pup package --launch-module=mu <path-to-local-mu-git-repo-root>
@@ -107,13 +109,49 @@ Packaging the Mu Editor on Windows
 Packaging the Mu Editor on macOS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+Requirements:
+
+* Must be running macOS 10.14.6 (Mojave) or later.
+* Must have XCode 10.3 or later installed --
+  the Command Line Tools are not enough.
+* Must have an Apple Developer Certificate --
+  see `this article's step 4
+  <https://glyph.twistedmatrix.com/2018/01/shipping-pygame-mac-app.html>`_,
+  for guidance.
+* Must create an Application Specific Password --
+  see `this article <https://support.apple.com/en-us/HT204397>`_,
+  for guidance.
+
+Run:
+
 .. code-block:: console
 
         $ export PUP_SIGNING_IDENTITY=<signer>
         $ export PUP_NOTARIZE_USER=<user>
         $ export PUP_NOTARIZE_PASSWORD=<asp>
+
+Where:
+
+* ``<signer>`` is the 10-digit identifier on your Apple Developer Certificate's cname.
+* ``<user>`` is the email address associated to you Apple Developer Account.
+* ``<asp>`` is the Application Specific Password.
+
+
+Then run:
+
+.. code-block:: console
+
         $ pup package --launch-module=mu <path-to-local-mu-git-repo-root>
 
+Note:
+
+* One of the last packaging stages is notarization.
+* It will take a while --
+  no less than 3 minutes,
+  IME,
+  sometimes 10-15 minutes.
+* The logged messages should help understand that the "thing" is not "hung".
+* Just be patient, I guess! :)
 
 
 

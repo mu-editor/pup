@@ -9,7 +9,7 @@ its *raison d'être* is producing macOS and Windows native packages
 for distributing the `Mu Editor <https://codewith.mu/>`_
 to Python beginners around the world.
 As a by-product of that,
-it might become effective at packaging
+it will very likely become effective at packaging
 generic Python written GUI programs.
 If that ever becomes the case,
 then great.
@@ -23,85 +23,98 @@ for macOS and Windows distribution.
 
 
 
-Foreword
---------
+Capabilities
+------------
 
-As I write these words,
-I'm not really sure for how long ``pup`` will actually live --
-let me be clear:
-it's not that I don't think the `Mu Editor <https://codewith.mu/>`_,
-in particular,
-and the world of Python GUI applications in general
-don't need a simple and effective native packager,
-I honestly do;
-moreover,
-I do believe that there should be more diversity and more GUI applications
--- even if *ugly* (whatever that means!) --
-in contrast with the trends towards web-based ones,
-like we have been observing throughout the last decade or so.
+The current version of ``pup``,
+while still very limited and somewhat exploratory,
+can package,
+at least,
+the `Mu Editor <https://codewith.mu/>`_
+and `puppy <https://github.com/tmontes/puppy/>`_ into:
 
-As was saying, I'm not really sure for how long ``pup`` will live.
-Why?
-Mostly because ``pup`` is kind of a conceptual fork of
-`briefcase <https://pypi.org/project/briefcase/>`_,
-up to a point.
-I gave this idea lots of thought and figured out that,
-for the near-term future,
-creating ``pup`` would be the best option for packaging Mu.
-Later it its life,
-it may make sense to integrate its "tricks"
-into `briefcase <https://pypi.org/project/briefcase/>`_,
-which is a more generic and mature tool,
-with much higher aspirations.
+* Native Windows applications, bundled in relocatable directories.
+* Native macOS relocatable ``.app`` application bundles,
+  properly signed and notarized as required for distribution.
 
-The fact of the matter is that Mu itself is a very particular kind of GUI program:
-it is a program to create programs,
-a program that runs and debugs programs,
-a program that brings in third-party dependencies,
-a program that uploads code to micro-controllers,
-and so much more.
+It might work with any Python GUI application that:
 
-Mu is at a development stage
-where several things "must" happen somewhat fast enough:
-for one,
-robust support for bringing in third-party packages from PyPI,
-something that mostly works on Windows and fails miserably on macOS,
-already has a re-architected solution that now unfortunatelly fails
-when packaged natively --
-we could,
-of course,
-hack our way through the currently existing,
-somewhat brittle and inconsistent Mu packaging tools and scripts
-to fix that.
-Then,
-of course,
-we're one year (!!!) late
-to the macOS application notarization requirement race (party?).
-The end result is as expected:
-beginner programmers having wierd issues and unnecessary barriers
-with Mu on their computers.
-Completely the opposite of Mu's purpose!
+* Runs on Python 3.7 or 3.8.
+* Is ``pip``-installable (no need to be on PyPI, though).
+* Is launchable from the CLI with ``python -m <launch-module>``.
 
-Creating ``pup`` will allow the Mu team
-to fully decouple the packaging efforts
-from Mu's own development while,
-at the same time,
-simplifying the autonomous and hopefully fast-paced development
-of a fully automatable packaging tool for its own purposes.
-In the near term,
-the Holy Grail
-is for Nicholas
-to be able
-to type something like ``pup go`` on on his development environment
-and have it automatically produce the final Windows or macOS distribution artifacts:
-signed,
-notarized,
-with all the required "seals",
-and working as well as it works for any of us under our development systems:
-in other words,
-"works for me"-everywhere!
 
-"How hard can it be?" :)
+
+Installation
+------------
+
+``pup`` is distributed via `PyPI <https://pypi.org/pypi/pup>`_.
+Install it with:
+
+.. code-block:: console
+
+	$ pip install pup
+
+
+
+Generic Usage
+-------------
+
+To package an application, run:
+
+.. code-block:: console
+
+        $ pup package <pip-installable-source>
+
+
+* Assumes that the application is launchable with ``python -m <name>``,
+  where ``<name>`` is extracted from the wheel metadata of a wheel created
+  from ``<pip-installable-source>``.
+  If the name of the launch module does not match that,
+  the ``--launch-module <launch-module-name>`` CLI option should be provided.
+* In the first run,
+  ``pup`` will download a distributable Python Runtime from the
+  `Python Build Standalone <https://python-build-standalone.readthedocs.io/>`_
+  project.
+  Subsequent runs will use a locally cached version of that.
+* ``pup`` logs its progress to STDERR,
+  with fewer per-event details when it's a TTY.
+  The logging level defaults to ``INFO`` and can be changed
+  with either the ``--log-level`` CLI option,
+  or by setting the ``PUP_LOG_LEVEL`` environment variable.
+* The resulting artifact will be under ``./build/pup/``.
+
+
+Packaging the Mu Editor on Windows
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: console
+
+        > pup package --launch-module=mu <path-to-local-mu-git-repo-root>
+
+
+* The resulting packaged application will be the ``./build/pup/<name>-<version>/``
+  directory which contains a GUI-clickable script that launches the application.
+
+* Creating an ZIP archive of that directory and distributing it should work,
+  up to a point,
+  given that no code/package signing is implemented yet.
+
+
+
+
+
+Packaging the Mu Editor on macOS
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: console
+
+        $ export PUP_SIGNING_IDENTITY=<signer>
+        $ export PUP_NOTARIZE_USER=<user>
+        $ export PUP_NOTARIZE_PASSWORD=<asp>
+        $ pup package --launch-module=mu <path-to-local-mu-git-repo-root>
+
+
 
 
 
@@ -117,20 +130,8 @@ around behaviour, requirements, and internal design.
 Development moves forward
 on GitHub at https://github.com/mu-editor/pup/.
 
+
 .. marker-end-welcome-dont-remove
-
-
-
-Installation
-------------
-
-``pup`` is distributed via `PyPI <https://pypi.org/pypi/pup>`_.
-Install it with:
-
-.. code-block:: console
-
-	$ pip install pup
-
 
 
 Thanks
@@ -155,6 +156,13 @@ Thanks
   on top of which we plan to package redistributable Python GUI applications.
 
 - To Donald Stufft for letting us pick up the ``pup`` name in PyPI.
+
+- To Glyph Lefkowitz for the very useful,
+  high quality `Tips And Tricks for Shipping a PyGame App on the Mac
+  <https://glyph.twistedmatrix.com/2018/01/shipping-pygame-mac-app.html>`_
+  article,
+  and for his generous hands-on involvement in the first-steps of ``pup``'s take
+  on the subject `in this issue <https://github.com/mu-editor/pup/issues/43>`_.
 
 .. marker-end-thanks-dont-remove
 

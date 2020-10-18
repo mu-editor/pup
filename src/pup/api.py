@@ -1,5 +1,5 @@
 """
-Python Mu Packager API.
+Pluggable Micro Packager API.
 """
 
 import logging

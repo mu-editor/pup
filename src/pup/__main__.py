@@ -59,7 +59,7 @@ def command_wrapper(command_function):
 )
 def main(log_level):
     """
-    Python Mu Packager.
+    Pluggable Micro Packager.
     """
     logs.start(log_level)
 

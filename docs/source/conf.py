@@ -21,7 +21,7 @@ import pathlib
 import re
 
 
-project = 'Python Mu Packager'
+project = 'Pluggable Micro Packager'
 copyright = '2020, Tiago Montes'
 author = 'Tiago Montes'
 

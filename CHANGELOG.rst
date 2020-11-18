@@ -5,6 +5,15 @@ Python Mu Packager Change Log
 
 .. towncrier release notes start
 
+Pup 1.0.0a4 (2020-11-18)
+------------------------
+
+Bug Fixes
+^^^^^^^^^
+
+- Fixed `pup` packaging so that the required cookiecutter templates are bundled. (`#77 <https://github.com/mu-editor/pup/issues/77>`_)
+
+
 Pup 1.0.0a3 (2020-10-18)
 ------------------------
 

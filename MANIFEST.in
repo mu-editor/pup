@@ -1,0 +1,3 @@
+recursive-include src/pup/plugins/mac/app_bundle_template *
+recursive-include src/pup/plugins/win/dist_layout_template *
+global-exclude *.pyc

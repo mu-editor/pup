@@ -66,6 +66,9 @@ class Step:
         shutil.rmtree(result_path, ignore_errors=True)
         result_path = generate.generate_files(tmpl_path, tmpl_data, build_dir)
 
+        # Remove the .gitignore file in template (keeps empty dir in git).
+        (pathlib.Path(result_path) / 'Contents/Resources/.gitignore').unlink()
+
         ctx.python_runtime_dir = (
             pathlib.Path(result_path) / 'Contents/Resources/Python'
         )

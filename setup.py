@@ -125,5 +125,6 @@ if __name__ == "__main__":
                 'win.distribution_layout=pup.plugins.win.dist_layout:Step',
             ],
         },
+        include_package_data=True,
     )
 

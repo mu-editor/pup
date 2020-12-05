@@ -20,5 +20,5 @@ class Steps:
             'pup.install-cleanup',
             # 'sign-the-way-microsoft-needs',
             # 'create-a-clickable-thingie',
-            # 'pack-it-all-into-a-single-file-artifact',
+            'win.create-msi'
         )

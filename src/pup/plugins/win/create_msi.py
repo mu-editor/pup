@@ -44,11 +44,12 @@ class Step:
     def __call__(self, ctx, dsp):
 
         wix_root = self._ensure_wix(dsp)
-        wix_src_path = self._generate_wix_source(ctx, dsp)
+        wix_src_path = self._create_wix_source(ctx, dsp)
         self._create_wix_manifest(ctx, dsp, wix_root, wix_src_path)
         self._compile_wix_sources(ctx, dsp, wix_root, wix_src_path)
+        msi_file_path = self._link_wix_objects(ctx, dsp, wix_root, wix_src_path)
 
-        _log.warning(f'TODO: Run WiX light.')
+        _log.info('MSI file at %r.', str(msi_file_path))
 
 
     _WIX_BINARIES_URL = (
@@ -71,7 +72,7 @@ class Step:
         return wix_extract_dir
 
 
-    def _generate_wix_source(self, ctx, dsp):
+    def _create_wix_source(self, ctx, dsp):
 
         tmpl_path = ilr.files(msi_wxs_template)
         tmpl_data = {
@@ -129,8 +130,6 @@ class Step:
             '-out', str(wix_manifest_path),
         ]
 
-        _log.info('About to run %r.', ' '.join(cmd))
-
         dsp.spawn(
             cmd,
             out_callable=lambda line: _log.info('wix heat out: %s', line),
@@ -147,6 +146,7 @@ class Step:
 
             cmd = [
                 str(wix_root / 'candle.exe'),
+                '-nologo',
                 f'-dSourceDir={ctx.relocatable_root}',
             ]
             cmd.extend(str(wxs_path) for wxs_path in pathlib.Path().glob('*.wxs'))
@@ -158,3 +158,30 @@ class Step:
             )
         finally:
             os.chdir(cwd)
+
+
+    def _link_wix_objects(self, ctx, dsp, wix_root, wix_src_path):
+
+        dist_dir = dsp.directories()['dist']
+        msi_file_path = dist_dir / self._msi_filename(ctx)
+
+        cmd = [
+            str(wix_root / 'light.exe'),
+            '-nologo',
+            '-spdb',
+            '-o', str(msi_file_path),
+        ]
+        cmd.extend(str(wxs_path) for wxs_path in wix_src_path.glob('*.wixobj'))
+
+        dsp.spawn(
+            cmd,
+            out_callable=lambda line: _log.info('wix light out: %s', line),
+            err_callable=lambda line: _log.info('wix light err: %s', line),
+        )
+
+        return msi_file_path
+
+
+    def _msi_filename(self, ctx):
+
+        return f'{ctx.src_metadata.name} {ctx.src_metadata.version}.msi'

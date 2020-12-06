@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<?define ProductVersion = "{{ cookiecutter.msi_version }}" ?>
+<?define ProductUpgradeCode = "{{ cookiecutter.guid }}" ?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+   <Product
+            Id="*"
+            UpgradeCode="$(var.ProductUpgradeCode)"
+            Name="{{ cookiecutter.app_name }} {{ cookiecutter.version }}"
+            Version="$(var.ProductVersion)"
+            Manufacturer="{{ cookiecutter.author }}"
+            Language="1033">
+        <Package
+                InstallerVersion="200"
+                Compressed="yes"
+                Comments="Windows Installer Package"
+                InstallScope="perUser"
+        />
+
+        <Property Id="ALLUSERS" Value="2" />
+        <Property Id="MSIINSTALLPERUSER" Value="1" />
+
+        <Media Id="1" Cabinet="product.cab" EmbedCab="yes"/>
+
+<!--
+        <Icon Id="ProductIcon" SourceFile="{{ cookiecutter.app_name }}.ico" />
+
+        <Property Id="ARPPRODUCTICON" Value="ProductIcon" />
+-->
+
+        <Property Id="ARPURLINFOABOUT" Value="{{ cookiecutter.url }}" />
+        <Property Id="ARPCONTACT" Value="{{ cookiecutter.author_email }}" />
+        <Property Id="ARPNOREPAIR" Value="1" />
+        <Property Id="ARPNOMODIFY" Value="1" />
+
+        <Upgrade Id="$(var.ProductUpgradeCode)">
+            <UpgradeVersion
+                    Minimum="$(var.ProductVersion)"
+                    OnlyDetect="yes"
+                    Property="NEWERVERSIONDETECTED"
+            />
+            <UpgradeVersion
+                    Minimum="0.0.0"
+                    Maximum="$(var.ProductVersion)"
+                    IncludeMinimum="yes"
+                    IncludeMaximum="no"
+                    Property="OLDERVERSIONBEINGUPGRADED"
+            />
+        </Upgrade>
+
+        <Directory Id="TARGETDIR" Name="SourceDir">
+            <Directory Id="ProgramFilesFolder">
+                <Directory Id="{{ cookiecutter.launch_module }}_ROOTDIR" Name="{{ cookiecutter.app_name }}" />
+            </Directory>
+
+            <Directory Id="ProgramMenuFolder">
+                <Directory Id="ProgramMenuSubfolder" Name="{{ cookiecutter.app_name }}">
+                    <Component
+                            Id="ApplicationShortcuts"
+                            Guid="*">
+                        <Shortcut
+                                Id="ApplicationShortcut1"
+                                Name="{{ cookiecutter.app_name }}"
+                                Target="[{{ cookiecutter.launch_module }}_ROOTDIR]python\pythonw.exe"
+                                WorkingDirectory="{{ cookiecutter.launch_module }}_ROOTDIR"
+                                Arguments="-m {{ cookiecutter.launch_module }}" />
+                        <RegistryValue
+                                Root="HKCU"
+                                Key="Software\{{ cookiecutter.author }}\{{ cookiecutter.app_name }}"
+                                Name="installed"
+                                Type="integer"
+                                Value="1"
+                                KeyPath="yes" />
+                        <RemoveFolder Id="ProgramMenuSubfolder" On="uninstall"/>
+                    </Component>
+                </Directory>
+            </Directory>
+        </Directory>
+
+        <InstallExecuteSequence>
+            <RemoveExistingProducts After="InstallValidate"/>
+        </InstallExecuteSequence>
+
+        <Feature Id="DefaultFeature" Level="1">
+            <ComponentGroupRef Id="{{ cookiecutter.launch_module }}_COMPONENTS" />
+            <ComponentRef Id="ApplicationShortcuts"/>
+        </Feature>
+
+    </Product>
+</Wix>

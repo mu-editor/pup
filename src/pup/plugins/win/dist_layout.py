@@ -64,6 +64,7 @@ class Step:
         shutil.rmtree(result_path, ignore_errors=True)
         result_path = generate.generate_files(tmpl_path, tmpl_data, build_dir)
 
+        ctx.relocatable_root = pathlib.Path(result_path)
         ctx.python_runtime_dir = pathlib.Path(result_path) / 'Python'
 
 

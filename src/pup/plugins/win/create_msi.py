@@ -3,8 +3,10 @@ PUP Plugin implementing the 'win.create-msi' step.
 """
 
 import logging
+import os
 import pathlib
 import shutil
+import uuid
 import zipfile
 
 import cookiecutter
@@ -15,15 +17,11 @@ try:
 except ImportError:
     import importlib.resources as ilr
 
-from . import msi_wsx_template
+from . import msi_wxs_template
 
 
 
 _log = logging.getLogger(__name__)
-
-
-
-_WIX_BINARIES_URL = 'https://github.com/wixtoolset/wix3/releases/download/wix3112rtm/wix311-binaries.zip'
 
 
 
@@ -45,34 +43,22 @@ class Step:
 
     def __call__(self, ctx, dsp):
 
-        wix_install_root = self._ensure_wix(dsp)
+        wix_root = self._ensure_wix(dsp)
+        wix_src_path = self._generate_wix_source(ctx, dsp)
+        self._create_wix_manifest(ctx, dsp, wix_root, wix_src_path)
+        self._compile_wix_sources(ctx, dsp, wix_root, wix_src_path)
+
+        _log.warning(f'TODO: Run WiX light.')
 
 
-        build_dir = dsp.directories()['build']
-
-
-        tmpl_path = ilr.files(msi_wsx_template)
-        tmpl_data = {
-            'cookiecutter': {
-                'app_name': ctx.src_metadata.name,
-                'version': ctx.src_metadata.version,
-            }
-        }
-
-        # "Generate + Remove + Generate" motivation: cookiecutter either fails
-        # if the output path exists, or overwrites it. However, it does not
-        # remove pre-existing files that are no longer templated. Thus, the
-        # "proper" way to ensure output is consistent without deleting the
-        # whole build directory is to "Generate + Remove + Generate again".
-
-        result_path = generate.generate_files(tmpl_path, tmpl_data, build_dir, overwrite_if_exists=True)
-        shutil.rmtree(result_path, ignore_errors=True)
-        result_path = generate.generate_files(tmpl_path, tmpl_data, build_dir)
-
+    _WIX_BINARIES_URL = (
+        'https://github.com/wixtoolset/wix3'
+        '/releases/download/wix3112rtm/wix311-binaries.zip'
+    )
 
     def _ensure_wix(self, dsp):
 
-        wix_bin_zip = dsp.download(_WIX_BINARIES_URL)
+        wix_bin_zip = dsp.download(self._WIX_BINARIES_URL)
         wix_extract_dir = pathlib.Path(wix_bin_zip).with_suffix('.extracted')
 
         if wix_extract_dir.exists():
@@ -83,3 +69,92 @@ class Step:
             zf.extractall(path=wix_extract_dir)
 
         return wix_extract_dir
+
+
+    def _generate_wix_source(self, ctx, dsp):
+
+        tmpl_path = ilr.files(msi_wxs_template)
+        tmpl_data = {
+            'cookiecutter': {
+                'app_name': ctx.src_metadata.name,
+                'version': ctx.src_metadata.version,
+                'author': ctx.src_metadata.author,
+                'author_email': ctx.src_metadata.author_email,
+                'url': ctx.src_metadata.home_page,
+                'launch_module': self._launch_module_from_context(ctx),
+                'guid': self._upgrade_code_guid(ctx),
+            }
+        }
+
+        # "Generate + Remove + Generate" motivation: cookiecutter either fails
+        # if the output path exists, or overwrites it. However, it does not
+        # remove pre-existing files that are no longer templated. Thus, the
+        # "proper" way to ensure output is consistent without deleting the
+        # whole build directory is to "Generate + Remove + Generate again".
+
+        build_dir = dsp.directories()['build']
+        result_path = generate.generate_files(tmpl_path, tmpl_data, build_dir, overwrite_if_exists=True)
+        shutil.rmtree(result_path, ignore_errors=True)
+        result_path = generate.generate_files(tmpl_path, tmpl_data, build_dir)
+
+        return pathlib.Path(result_path)
+
+
+    def _launch_module_from_context(self, ctx):
+
+        return ctx.launch_module if ctx.launch_module else ctx.src_metadata.name
+
+
+    def _upgrade_code_guid(self, ctx):
+
+        return str(uuid.uuid5(uuid.NAMESPACE_URL, ctx.src_metadata.home_page))
+
+
+    def _create_wix_manifest(self, ctx, dsp, wix_root, wix_src_path):
+
+        wix_manifest_path = wix_src_path / 'manifest.wxs'
+        cmd = [
+            str(wix_root / 'heat.exe'),
+            'dir',
+            str(ctx.relocatable_root),
+            '-nologo',
+            '-gg',
+            '-sfrag',
+            '-sreg',
+            '-srd',
+            '-scom',
+            '-dr', f'{ctx.src_metadata.name}_ROOTDIR',
+            '-cg', f'{ctx.src_metadata.name}_COMPONENTS',
+            '-var', 'var.SourceDir',
+            '-out', str(wix_manifest_path),
+        ]
+
+        _log.info('About to run %r.', ' '.join(cmd))
+
+        dsp.spawn(
+            cmd,
+            out_callable=lambda line: _log.info('wix heat out: %s', line),
+            err_callable=lambda line: _log.info('wix heat err: %s', line),
+        )
+
+
+    def _compile_wix_sources(self, ctx, dsp, wix_root, wix_src_path):
+
+        # Must change CWD because candle.exe outputs to it. :/
+        cwd = os.getcwd()
+        try:
+            os.chdir(str(wix_src_path))
+
+            cmd = [
+                str(wix_root / 'candle.exe'),
+                f'-dSourceDir={ctx.relocatable_root}',
+            ]
+            cmd.extend(str(wxs_path) for wxs_path in pathlib.Path().glob('*.wxs'))
+
+            dsp.spawn(
+                cmd,
+                out_callable=lambda line: _log.info('wix candle out: %s', line),
+                err_callable=lambda line: _log.info('wix candle err: %s', line),
+            )
+        finally:
+            os.chdir(cwd)

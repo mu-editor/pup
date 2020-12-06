@@ -5,6 +5,7 @@ PUP Plugin implementing the 'win.create-msi' step.
 import logging
 import os
 import pathlib
+import re
 import shutil
 import uuid
 import zipfile
@@ -79,6 +80,7 @@ class Step:
             'cookiecutter': {
                 'app_name': ctx.src_metadata.name,
                 'version': ctx.src_metadata.version,
+                'msi_version': self._msi_version(ctx.src_metadata.version),
                 'author': ctx.src_metadata.author,
                 'author_email': ctx.src_metadata.author_email,
                 'url': ctx.src_metadata.home_page,
@@ -101,6 +103,70 @@ class Step:
         return pathlib.Path(result_path)
 
 
+    # Copied from PEP 440
+    _VERSION_PATTERN = r"""
+        v?
+        (?:
+            (?:(?P<epoch>[0-9]+)!)?                           # epoch
+            (?P<release>[0-9]+(?:\.[0-9]+)*)                  # release segment
+            (?P<pre>                                          # pre-release
+                [-_\.]?
+                (?P<pre_l>(a|b|c|rc|alpha|beta|pre|preview))
+                [-_\.]?
+                (?P<pre_n>[0-9]+)?
+            )?
+            (?P<post>                                         # post release
+                (?:-(?P<post_n1>[0-9]+))
+                |
+                (?:
+                    [-_\.]?
+                    (?P<post_l>post|rev|r)
+                    [-_\.]?
+                    (?P<post_n2>[0-9]+)?
+                )
+            )?
+            (?P<dev>                                          # dev release
+                [-_\.]?
+                (?P<dev_l>dev)
+                [-_\.]?
+                (?P<dev_n>[0-9]+)?
+            )?
+        )
+        (?:\+(?P<local>[a-z0-9]+(?:[-_\.][a-z0-9]+)*))?       # local version
+    """
+
+    _VERSION_RE = re.compile(
+        r"^\s*" + _VERSION_PATTERN + r"\s*$",
+        re.VERBOSE | re.IGNORECASE,
+    )
+
+    def _msi_version(self, version):
+
+        # MSI versions are not as flexible as PEP 440's.
+        # Let's adapt the version to three dot-separated numbers.
+
+        result = self._VERSION_RE.match(version)
+        pep440_release = result.group('release')
+
+        numbers_only = pep440_release == version
+        nums = pep440_release.split('.')
+        num_count = len(nums)
+
+        if num_count < 3:
+            nums.extend(('0', '0'))
+
+        msi_version = '.'.join(nums[:3])
+
+        if not numbers_only or num_count != 3:
+            _log.warning(
+                'Version %r not MSI supported: using %r.',
+                version,
+                msi_version,
+            )
+
+        return msi_version
+
+
     def _launch_module_from_context(self, ctx):
 
         return ctx.launch_module if ctx.launch_module else ctx.src_metadata.name
@@ -113,6 +179,7 @@ class Step:
 
     def _create_wix_manifest(self, ctx, dsp, wix_root, wix_src_path):
 
+        launch_module = self._launch_module_from_context(ctx)
         wix_manifest_path = wix_src_path / 'manifest.wxs'
         cmd = [
             str(wix_root / 'heat.exe'),
@@ -124,8 +191,8 @@ class Step:
             '-sreg',
             '-srd',
             '-scom',
-            '-dr', f'{ctx.src_metadata.name}_ROOTDIR',
-            '-cg', f'{ctx.src_metadata.name}_COMPONENTS',
+            '-dr', f'{launch_module}_ROOTDIR',
+            '-cg', f'{launch_module}_COMPONENTS',
             '-var', 'var.SourceDir',
             '-out', str(wix_manifest_path),
         ]

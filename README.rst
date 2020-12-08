@@ -35,7 +35,7 @@ and `puppy <https://github.com/tmontes/puppy/>`_ into distributable:
 
 * Native Windows application MSI installer files.
 
-  Minimally featured, with no GUI.
+  Minimally featured, user-installable, with no GUI.
   They do add an entry to the Windows Start menu,
   however,
   even though no custom icon is used yet.

@@ -5,6 +5,42 @@ Python Mu Packager Change Log
 
 .. towncrier release notes start
 
+Pup 1.0.0a5 (2020-12-08)
+------------------------
+
+Enhancements
+^^^^^^^^^^^^
+
+- Minmally usable macOS DMG files are now produced:
+  no icons,
+  no customization yet. (`#66 <https://github.com/mu-editor/pup/issues/66>`_)
+- Minimally usable Windows MSI files are now produced.
+  They are user-installable,
+  do not include a GUI,
+  and add a single Start Menu entry,
+  for now,
+  with no custom icon.
+  Its implementation depends on the `WiX toolset <https://wixtoolset.org>`_,
+  which is automatically downloaded and cached for subsequent usage. (`#82 <https://github.com/mu-editor/pup/issues/82>`_)
+- Updated the documentation to reflect the new capabilities. (`#94 <https://github.com/mu-editor/pup/issues/94>`_)
+
+
+Bug Fixes
+^^^^^^^^^
+
+- Running the Windows ``.vbs`` launcher from a directory other than the one containing it,
+  in a CLI,
+  no longer fails. (`#48 <https://github.com/mu-editor/pup/issues/48>`_)
+
+
+Other Changes
+^^^^^^^^^^^^^
+
+- Updated PyPI classifiers: no longer planning but in alpha.
+  For now we only support Python 3.7 and 3.8. (`#81 <https://github.com/mu-editor/pup/issues/81>`_)
+- Some third party direct dependency versions were updated. (`#89 <https://github.com/mu-editor/pup/issues/89>`_)
+
+
 Pup 1.0.0a4 (2020-11-18)
 ------------------------
 

@@ -28,14 +28,14 @@ CLASSIFIERS = [
     "Topic :: System :: Software Distribution",
 ]
 INSTALL_REQUIRES = [
-    "importlib-metadata==1.7.0;python_version<'3.8'",
+    "importlib-metadata==3.1.1;python_version<'3.8'",
     "click==7.1.2",
-    "httpx==0.14.3",
-    "wheel==0.35.1",
-    "pkginfo==1.5.0.1",
-    "importlib-resources==3.0.0;python_version<'3.9'",
+    "httpx==0.16.1",
+    "wheel==0.36.1",
+    "pkginfo==1.6.1",
+    "importlib-resources==3.3.0;python_version<'3.9'",
     "cookiecutter==1.7.2",
-    "zstandard==0.14.0",
+    "zstandard==0.14.1",
     "dmgbuild==1.4.2",
 ]
 EXTRAS_REQUIRE = {

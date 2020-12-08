@@ -36,6 +36,7 @@ INSTALL_REQUIRES = [
     "importlib-resources==3.0.0;python_version<'3.9'",
     "cookiecutter==1.7.2",
     "zstandard==0.14.0",
+    "dmgbuild==1.4.2",
 ]
 EXTRAS_REQUIRE = {
     "docs": [
@@ -118,6 +119,7 @@ if __name__ == "__main__":
                 'mac.app_bundle_template=pup.plugins.mac.app_bundle:Step',
                 'mac.sign_app_bundle=pup.plugins.mac.sign:Step',
                 'mac.notarize_app_bundle=pup.plugins.mac.notarize:Step',
+                'mac.create_dmg=pup.plugins.mac.create_dmg:Step',
                 'win.dirs=pup.plugins.win.dirs:Directories',
                 'win.steps=pup.plugins.win.steps:Steps',
                 'win.distribution_layout=pup.plugins.win.dist_layout:Step',

@@ -20,6 +20,5 @@ class Steps:
             'pup.install-cleanup',
             'mac.sign-app-bundle',
             'mac.notarize-app-bundle',
-            # 'mac.notarize-app-bundle',
-            # 'mac.create-dmg',
+            'mac.create-dmg',
         )

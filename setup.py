@@ -12,7 +12,7 @@ NAME = "pup"
 META_PATH = os.path.join("src", "pup", "__init__.py")
 KEYWORDS = ["packaging", "gui", "applications"]
 CLASSIFIERS = [
-    "Development Status :: 1 - Planning",
+    "Development Status :: 3 - Alpha",
     "Environment :: Console",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
@@ -21,10 +21,8 @@ CLASSIFIERS = [
     "Operating System :: Microsoft :: Windows",
     "Operating System :: POSIX :: Linux",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.6",
     "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: System :: Installation/Setup",
     "Topic :: System :: Software Distribution",

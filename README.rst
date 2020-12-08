@@ -31,11 +31,24 @@ while still very limited and somewhat exploratory,
 can package,
 at least,
 the `Mu Editor <https://codewith.mu/>`_
-and `puppy <https://github.com/tmontes/puppy/>`_ into:
+and `puppy <https://github.com/tmontes/puppy/>`_ into distributable:
 
-* Native Windows applications, bundled in relocatable directories.
-* Native macOS relocatable ``.app`` application bundles,
+* Native Windows application MSI installer files.
+
+  Minimally featured, with no GUI.
+  They do add an entry to the Windows Start menu,
+  however,
+  even though no custom icon is used yet.
+  As a byproduct of the process,
+  a relocatable directory holding the aplication is produced too,
+  paving the way for producing "portable" Windows applications.
+
+* Native macOS DMG application distribution files.
+
+  The hold the relocatable ``.app`` application bundle,
   properly signed and notarized as required for distribution.
+  The DMG files are also minimally featured,
+  and do not include custom icons yet.
 
 It might work with any Python GUI application that:
 
@@ -72,17 +85,28 @@ To package an application, run:
   from ``<pip-installable-source>``.
   If the name of the launch module does not match that,
   the ``--launch-module <launch-module-name>`` CLI option should be provided.
+
 * In the first run,
   ``pup`` will download a distributable Python Runtime from the
   `Python Build Standalone <https://python-build-standalone.readthedocs.io/>`_
   project.
   Subsequent runs will use a locally cached version of that.
+
+* On Windows,
+  again in the first run,
+  ``pup`` will download the `WiX toolset <https://wixtoolset.org>`_,
+  used to create MSI files.
+  Subsequent runs will use a locally cached version of that, too.
+
 * ``pup`` logs its progress to STDERR,
   with fewer per-event details when it's a TTY.
   The logging level defaults to ``INFO`` and can be changed
   with either the ``--log-level`` CLI option,
   or by setting the ``PUP_LOG_LEVEL`` environment variable.
-* The resulting artifact will be under ``./build/pup/``.
+
+* Intermediate artifacts are created under ``./build/pup/``.
+
+* The final artifacts are delivered to ``./dist/``.
 
 
 Packaging the Mu Editor on Windows
@@ -95,11 +119,15 @@ Run:
         > pup package --launch-module=mu <path-to-local-mu-git-repo-root>
 
 
-* The resulting packaged application will be the ``./build/pup/<name>-<version>/``
-  directory which contains a GUI-clickable script that launches the application.
+* The resulting MSI file will be ``./dist/<name> <version>.msi``.
 
-* Creating an ZIP archive of that directory and distributing it should work,
-  up to a point,
+* A byproduct of that is the ``./build/pup/<name> <version>/`` relocatable directory,
+  containing a GUI-clickable script that launches Mu.
+  Creating a ZIP file from it for distribution
+  results in a minimally working "portable" Windows application.
+
+* In either case,
+  distribution will have limitations
   given that no code/package signing is implemented yet.
 
 
@@ -154,6 +182,12 @@ Note:
 * Just be patient, I guess! :)
 
 
+Once completed:
+
+* The resulting DMG file will be ``./dist/<name> <version>.dmg``.
+
+* A byproduct of that is the ``./build/pup/<name>.app/`` relocatable application bundle.
+  Archiving it into a ZIP file, for distribution, should be perfectly fine.
 
 
 More

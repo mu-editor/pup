@@ -124,6 +124,7 @@ if __name__ == "__main__":
                 'win.steps=pup.plugins.win.steps:Steps',
                 'win.distribution_layout=pup.plugins.win.dist_layout:Step',
                 'win.create_msi=pup.plugins.win.create_msi:Step',
+                'win.sign_binaries=pup.plugins.win.sign_binaries:Step',
             ],
         },
         include_package_data=True,

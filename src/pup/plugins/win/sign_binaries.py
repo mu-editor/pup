@@ -7,16 +7,6 @@ import os
 import pathlib
 import platform
 
-import cookiecutter
-from cookiecutter import generate
-try:
-    # Python < 3.9
-    import importlib_resources as ilr
-except ImportError:
-    import importlib.resources as ilr
-
-from . import msi_wxs_template
-
 
 
 _log = logging.getLogger(__name__)
@@ -78,7 +68,7 @@ class Step:
             if k.upper().startswith('PROGRAMFILES')
         ]
 
-        # Expected to be under a ../bin/<version>/ directory.
+        # Expected to be under a "../bin/<version>/" directory.
         signtool_paths = [
             path
             for pf in program_files
@@ -123,6 +113,7 @@ class Step:
             '/q',
             '/n', self._identity,
             '/fd', 'SHA256',
+            # TODO: Do not hardcode this URL, grab it from an env var.
             '/tr', 'http://timestamp.digicert.com',
             '/td', 'SHA256',
             str(path)
@@ -130,6 +121,6 @@ class Step:
         _log.info('Signing %r...', str(path))
         dsp.spawn(
             cmd,
-            out_callable=lambda line: _log.info('signtool.exe| %s', line),
-            err_callable=lambda line: _log.info('signtool.exe! %s', line),
+            out_callable=lambda line: _log.info('signtool.exe out: %s', line),
+            err_callable=lambda line: _log.info('signtool.exe err: %s', line),
         )

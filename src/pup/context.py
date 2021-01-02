@@ -31,6 +31,8 @@ class Context:
         self.python_test_packages = None
         self.stdlib_platform_config = None
 
+        self.final_artifact = None
+
 
     @property
     def application_id(self):

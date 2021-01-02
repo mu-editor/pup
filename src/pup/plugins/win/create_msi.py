@@ -50,6 +50,7 @@ class Step:
         self._compile_wix_sources(ctx, dsp, wix_root, wix_src_path)
         msi_file_path = self._link_wix_objects(ctx, dsp, wix_root, wix_src_path)
 
+        ctx.final_artifact = msi_file_path
         _log.info('MSI file at %r.', str(msi_file_path))
 
 

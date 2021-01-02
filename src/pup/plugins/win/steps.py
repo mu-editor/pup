@@ -18,7 +18,7 @@ class Steps:
             'pup.python-runtime',
             'pup.pip-install',
             'pup.install-cleanup',
-            # 'sign-the-way-microsoft-needs',
-            # 'create-a-clickable-thingie',
-            'win.create-msi'
+            'win.sign-binaries',
+            'win.create-msi',
+            'win.sign-msi',
         )

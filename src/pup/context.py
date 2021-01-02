@@ -11,7 +11,7 @@ class Context:
 
         self.src = src
         self.launch_module = launch_module
-        self.nice_name = nice_name
+        self._nice_name = nice_name
 
         self.src_metadata = None
 
@@ -36,8 +36,15 @@ class Context:
 
 
     @property
-    def application_id(self):
+    def nice_name(self):
+        """
+        User facing packaged name.
+        """
+        return self._nice_name or self.src_metadata.name
 
+
+    @property
+    def application_id(self):
         """
         Returns the application identifier built from the package's home_page
         URL, consisting of two-sets of '.'-separated strings: the reverse DNS

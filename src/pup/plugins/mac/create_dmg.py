@@ -38,24 +38,23 @@ class Step:
 
     def __call__(self, ctx, dsp):
 
-        app_name = ctx.nice_name or ctx.src_metadata.name
-        volume_name = f'{app_name} {ctx.src_metadata.version}'
+        volume_name = f'{ctx.nice_name} {ctx.src_metadata.version}'
         filename = f'{volume_name}.dmg'
 
-        settings_path = self._create_dmgbuild_settings(dsp, app_name, volume_name, filename)
+        settings_path = self._create_dmgbuild_settings(ctx, dsp, volume_name, filename)
         self._create_dmg_file(ctx, dsp, settings_path)
         self._deliver_dmg_file(dsp, settings_path, filename)
 
 
-    def _create_dmgbuild_settings(self, dsp, app_name, volume_name, filename):
+    def _create_dmgbuild_settings(self, ctx, dsp, volume_name, filename):
 
         tmpl_path = ilr.files(dmgbuild_settings_template)
         tmpl_data = {
             'cookiecutter': {
-                'app_name': app_name,
+                'app_name': ctx.nice_name,
                 'volume_name': volume_name,
                 'filename': filename,
-                'app_bundle_name': f'{app_name}.app',
+                'app_bundle_name': f'{ctx.nice_name}.app',
             }
         }
 

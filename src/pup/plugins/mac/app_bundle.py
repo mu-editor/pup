@@ -43,16 +43,14 @@ class Step:
         build_dir = dsp.directories()['build']
         build_dir.mkdir(parents=True, exist_ok=True)
 
-        app_name = ctx.nice_name or ctx.src_metadata.name
-
         tmpl_path = ilr.files(app_bundle_template)
         tmpl_data = {
             'cookiecutter': {
-                'app_bundle_name': app_name,
+                'app_bundle_name': ctx.nice_name,
                 'bundle_identifier': ctx.application_id,
                 'version_string': ctx.src_metadata.version,
                 'copyright': self._copyright_from_context(ctx),
-                'launcher_name': app_name,
+                'launcher_name': ctx.nice_name,
                 'python_version_suffix': ctx.tgt_python_version_suffix,
                 'launch_module': self._launch_module_from_context(ctx),
             }

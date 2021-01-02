@@ -7,10 +7,11 @@ from urllib import parse
 
 class Context:
 
-    def __init__(self, *, src, launch_module, ignore_plugins, platform, python_version):
+    def __init__(self, *, src, launch_module, nice_name, ignore_plugins, platform, python_version):
 
         self.src = src
         self.launch_module = launch_module
+        self.nice_name = nice_name
 
         self.src_metadata = None
 

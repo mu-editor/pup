@@ -79,7 +79,7 @@ class Step:
         tmpl_path = ilr.files(msi_wxs_template)
         tmpl_data = {
             'cookiecutter': {
-                'app_name': ctx.src_metadata.name,
+                'app_name': ctx.nice_name,
                 'version': ctx.src_metadata.version,
                 'msi_version': self._msi_version(ctx.src_metadata.version),
                 'author': ctx.src_metadata.author,
@@ -252,4 +252,4 @@ class Step:
 
     def _msi_filename(self, ctx):
 
-        return f'{ctx.src_metadata.name} {ctx.src_metadata.version}.msi'
+        return f'{ctx.nice_name} {ctx.src_metadata.version}.msi'

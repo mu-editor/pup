@@ -13,7 +13,7 @@ _log = logging.getLogger(__name__)
 
 
 
-class Step:
+class _Signer:
 
     """
     Signs executables and shared libraries to be distributed
@@ -39,16 +39,9 @@ class Step:
         try:
             self._identity = os.environ['PUP_SIGNING_IDENTITY']
         except KeyError as exc:
-            _log.error('Cannot sign: environment variable %s not defined.', str(exc))
-            return
+            raise RuntimeError(f'environment variable {exc} not defined') from None
 
-        try:
-            self._signtool = self._find_signtool(ctx, dsp)
-        except RuntimeError as exc:
-            _log.error('Cannot sign: %s.', exc)
-            return
-
-        self._sign_binaries(ctx, dsp)
+        self._signtool = self._find_signtool(ctx, dsp)
 
 
     _SIGNTOOL_DIR_FROM_PYTHON_ARCH = {
@@ -98,14 +91,7 @@ class Step:
         return signtool_path
 
 
-    def _sign_binaries(self, ctx, dsp):
-
-        for extension in ('exe', 'dll', 'pyd'):
-            for path in ctx.relocatable_root.glob(f'**/*.{extension}'):
-                self._sign_one_file(dsp, path)
-
-
-    def _sign_one_file(self, dsp, path):
+    def sign_one_file(self, dsp, path):
 
         cmd = [
             str(self._signtool),
@@ -124,3 +110,36 @@ class Step:
             out_callable=lambda line: _log.info('signtool.exe out: %s', line),
             err_callable=lambda line: _log.info('signtool.exe err: %s', line),
         )
+
+
+
+class SignBinaries(_Signer):
+
+    def __call__(self, ctx, dsp):
+
+        try:
+            super().__call__(ctx, dsp)
+        except RuntimeError as exc:
+            _log.error('cannot sign: %s.', exc)
+
+        self._sign_binaries(ctx, dsp)
+
+
+    def _sign_binaries(self, ctx, dsp):
+
+        for extension in ('exe', 'dll', 'pyd'):
+            for path in ctx.relocatable_root.glob(f'**/*.{extension}'):
+                self.sign_one_file(dsp, path)
+
+
+
+class SignMSI(_Signer):
+
+    def __call__(self, ctx, dsp):
+
+        try:
+            super().__call__(ctx, dsp)
+        except RuntimeError as exc:
+            _log.error('cannot sign: %s.', exc)
+
+        self.sign_one_file(dsp, ctx.final_artifact.absolute())

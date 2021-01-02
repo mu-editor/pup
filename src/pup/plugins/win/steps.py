@@ -20,4 +20,5 @@ class Steps:
             'pup.install-cleanup',
             'win.sign-binaries',
             'win.create-msi',
+            'win.sign-msi',
         )

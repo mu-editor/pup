@@ -38,7 +38,8 @@ class Step:
 
     def __call__(self, ctx, dsp):
 
-        volume_name = f'{ctx.src_metadata.name} {ctx.src_metadata.version}'
+        app_name = ctx.nice_name or ctx.src_metadata.name
+        volume_name = f'{app_name} {ctx.src_metadata.version}'
         filename = f'{volume_name}.dmg'
 
         settings_path = self._create_dmgbuild_settings(ctx, dsp, volume_name, filename)

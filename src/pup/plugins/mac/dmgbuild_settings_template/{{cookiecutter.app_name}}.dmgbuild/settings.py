@@ -1,6 +1,10 @@
 volume_name = '{{cookiecutter.volume_name}}'
 filename = '{{cookiecutter.filename}}'
 
+{% if cookiecutter.icon_path %}
+icon = '{{cookiecutter.icon_path}}'
+{% endif %}
+
 app_bundle = '{{cookiecutter.app_bundle_name}}'
 
 files = [

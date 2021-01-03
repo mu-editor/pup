@@ -21,11 +21,9 @@
 
         <Media Id="1" Cabinet="product.cab" EmbedCab="yes"/>
 
-<!--
-        <Icon Id="ProductIcon" SourceFile="{{ cookiecutter.app_name }}.ico" />
+        <Icon Id="ProductIcon" SourceFile="{{ cookiecutter.icon_path }}" />
 
         <Property Id="ARPPRODUCTICON" Value="ProductIcon" />
--->
 
         <Property Id="ARPURLINFOABOUT" Value="{{ cookiecutter.url }}" />
         <Property Id="ARPCONTACT" Value="{{ cookiecutter.author_email }}" />
@@ -60,6 +58,7 @@
                         <Shortcut
                                 Id="ApplicationShortcut1"
                                 Name="{{ cookiecutter.app_name }}"
+                                Icon="ProductIcon"
                                 Target="[{{ cookiecutter.launch_module }}_ROOTDIR]python\pythonw.exe"
                                 WorkingDirectory="{{ cookiecutter.launch_module }}_ROOTDIR"
                                 Arguments="-m {{ cookiecutter.launch_module }}" />

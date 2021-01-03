@@ -69,6 +69,13 @@ class Step:
         # Remove the .gitignore file in template (keeps empty dir in git).
         (pathlib.Path(result_path) / 'Contents/Resources/.gitignore').unlink()
 
+        # Copy any given icon file into the bundle.
+        if ctx.icon_path:
+            shutil.copyfile(
+                ctx.icon_path,
+                pathlib.Path(result_path) / 'Contents/Resources/Icon.icns'
+            )
+
         ctx.python_runtime_dir = (
             pathlib.Path(result_path) / 'Contents/Resources/Python'
         )

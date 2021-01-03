@@ -121,6 +121,7 @@ class SignBinaries(_Signer):
             super().__call__(ctx, dsp)
         except RuntimeError as exc:
             _log.error('cannot sign: %s.', exc)
+            return
 
         self._sign_binaries(ctx, dsp)
 
@@ -141,5 +142,6 @@ class SignMSI(_Signer):
             super().__call__(ctx, dsp)
         except RuntimeError as exc:
             _log.error('cannot sign: %s.', exc)
+            return
 
         self.sign_one_file(dsp, ctx.final_artifact.absolute())

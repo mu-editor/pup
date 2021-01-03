@@ -2,16 +2,21 @@
 Packaging Context.
 """
 
+import pathlib
 from urllib import parse
 
 
 class Context:
 
-    def __init__(self, *, src, launch_module, nice_name, ignore_plugins, platform, python_version):
+    def __init__(self, *, src, launch_module, nice_name, icon_path, ignore_plugins, platform, python_version):
 
         self.src = src
         self.launch_module = launch_module
         self._nice_name = nice_name
+        self.icon_path = pathlib.Path(icon_path).absolute() if icon_path else None
+
+        if icon_path and not self.icon_path.exists():
+            raise EnvironmentError(f'Non-existent icon path {icon_path!r}.')
 
         self.src_metadata = None
 

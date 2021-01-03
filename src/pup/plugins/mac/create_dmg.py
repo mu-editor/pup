@@ -54,6 +54,7 @@ class Step:
                 'app_name': ctx.nice_name,
                 'volume_name': volume_name,
                 'filename': filename,
+                'icon_path': ctx.icon_path,
                 'app_bundle_name': f'{ctx.nice_name}.app',
             }
         }

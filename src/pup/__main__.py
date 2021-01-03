@@ -69,9 +69,10 @@ def main(log_level):
 @click.option('--ignore-plugin', 'ignore_plugins', multiple=True)
 @click.option('--launch-module')
 @click.option('--nice-name')
+@click.option('--icon-path')
 @click.argument('src')
 @command_wrapper
-def package(src, ignore_plugins, launch_module, nice_name):
+def package(src, ignore_plugins, launch_module, nice_name, icon_path):
     """
     Packages the GUI application in the given pip-installable source.
     """
@@ -80,4 +81,5 @@ def package(src, ignore_plugins, launch_module, nice_name):
         ignore_plugins=ignore_plugins,
         launch_module=launch_module,
         nice_name=nice_name,
+        icon_path=icon_path,
     )

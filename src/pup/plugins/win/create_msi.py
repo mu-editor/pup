@@ -82,6 +82,7 @@ class Step:
                 'app_name': ctx.nice_name,
                 'version': ctx.src_metadata.version,
                 'msi_version': self._msi_version(ctx.src_metadata.version),
+                'icon_path': ctx.icon_path,
                 'author': ctx.src_metadata.author,
                 'author_email': ctx.src_metadata.author_email,
                 'url': ctx.src_metadata.home_page,

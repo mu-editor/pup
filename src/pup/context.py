@@ -13,9 +13,9 @@ class Context:
         self.src = src
         self.launch_module = launch_module
         self._nice_name = nice_name
-        self.icon_path = pathlib.Path(icon_path).absolute()
+        self.icon_path = pathlib.Path(icon_path).absolute() if icon_path else None
 
-        if not self.icon_path.exists():
+        if icon_path and not self.icon_path.exists():
             raise EnvironmentError(f'Non-existent icon path {icon_path!r}.')
 
         self.src_metadata = None

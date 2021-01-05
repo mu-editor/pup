@@ -31,7 +31,6 @@
         <Property Id="ARPURLINFOABOUT" Value="{{ cookiecutter.url }}" />
         <Property Id="ARPCONTACT" Value="{{ cookiecutter.author_email }}" />
         <Property Id="ARPNOREPAIR" Value="1" />
-        <Property Id="ARPNOMODIFY" Value="1" />
 
         <Upgrade Id="$(var.ProductUpgradeCode)">
             <UpgradeVersion
@@ -88,6 +87,8 @@
             <ComponentGroupRef Id="{{ cookiecutter.launch_module }}_COMPONENTS" />
             <ComponentRef Id="ApplicationShortcuts"/>
         </Feature>
+
+        <UIRef Id="WixUI_Minimal" />
 
     </Product>
 </Wix>

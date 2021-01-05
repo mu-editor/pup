@@ -237,6 +237,7 @@ class Step:
         cmd = [
             str(wix_root / 'light.exe'),
             '-nologo',
+            '-ext', 'WixUIExtension',
             '-spdb',
             '-o', str(msi_file_path),
         ]

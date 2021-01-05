@@ -88,10 +88,11 @@
             <ComponentRef Id="ApplicationShortcuts"/>
         </Feature>
 
-        <UIRef Id="WixUI_Minimal" />
-
         {% if cookiecutter.rtf_license_path %}
+
+        <UIRef Id="WixUI_Minimal" />
         <WixVariable Id="WixUILicenseRtf" Value="{{ cookiecutter.rtf_license_path }}" />
+
         {% endif %}
 
     </Product>

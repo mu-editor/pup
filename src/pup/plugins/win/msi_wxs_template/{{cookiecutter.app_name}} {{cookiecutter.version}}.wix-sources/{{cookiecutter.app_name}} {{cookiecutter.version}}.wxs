@@ -90,5 +90,9 @@
 
         <UIRef Id="WixUI_Minimal" />
 
+        {% if cookiecutter.rtf_license_path %}
+        <WixVariable Id="WixUILicenseRtf" Value="{{ cookiecutter.rtf_license_path }}" />
+        {% endif %}
+
     </Product>
 </Wix>

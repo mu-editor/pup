@@ -8,15 +8,30 @@ from urllib import parse
 
 class Context:
 
-    def __init__(self, *, src, launch_module, nice_name, icon_path, ignore_plugins, platform, python_version):
+    def __init__(
+        self,
+        *,
+        src,
+        launch_module,
+        nice_name,
+        icon_path,
+        license_path,
+        ignore_plugins,
+        platform,
+        python_version,
+    ):
 
         self.src = src
         self.launch_module = launch_module
         self._nice_name = nice_name
         self.icon_path = pathlib.Path(icon_path).absolute() if icon_path else None
+        self.license_path = pathlib.Path(license_path).absolute() if license_path else None
 
         if icon_path and not self.icon_path.exists():
             raise EnvironmentError(f'Non-existent icon path {icon_path!r}.')
+
+        if license_path and not self.license_path.exists():
+            raise EnvironmentError(f'Non-existent license path {license_path!r}.')
 
         self.src_metadata = None
 

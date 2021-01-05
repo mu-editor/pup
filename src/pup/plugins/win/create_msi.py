@@ -76,6 +76,10 @@ class Step:
 
     def _create_wix_source(self, ctx, dsp):
 
+        build_dir = dsp.directories()['build']
+
+        rtf_license_path = self._create_rtf_from_text(ctx.license_path, build_dir)
+
         tmpl_path = ilr.files(msi_wxs_template)
         tmpl_data = {
             'cookiecutter': {
@@ -83,6 +87,7 @@ class Step:
                 'version': ctx.src_metadata.version,
                 'msi_version': self._msi_version(ctx.src_metadata.version),
                 'icon_path': ctx.icon_path,
+                'rtf_license_path': rtf_license_path,
                 'author': ctx.src_metadata.author,
                 'author_email': ctx.src_metadata.author_email,
                 'url': ctx.src_metadata.home_page,
@@ -97,12 +102,52 @@ class Step:
         # "proper" way to ensure output is consistent without deleting the
         # whole build directory is to "Generate + Remove + Generate again".
 
-        build_dir = dsp.directories()['build']
         result_path = generate.generate_files(tmpl_path, tmpl_data, build_dir, overwrite_if_exists=True)
         shutil.rmtree(result_path, ignore_errors=True)
         result_path = generate.generate_files(tmpl_path, tmpl_data, build_dir)
 
         return pathlib.Path(result_path)
+
+
+    def _create_rtf_from_text(self, license_path, build_dir):
+
+        # Horrible hack inspired by https://stackoverflow.com/questions/10725438/converting-txt-to-rtf
+
+        if not license_path:
+            return None
+
+        rtf_path = build_dir / license_path.with_suffix('.rtf').name
+
+        try:
+            with open(rtf_path, 'wt', encoding='ASCII') as dst:
+                dst.write(r'{\rtf1\ansi\pard')
+                dst.write('\n')
+                with open(license_path, 'rt', encoding='ASCII') as src:
+                    for line in src:
+                        dst.write(
+                            line.replace(
+                                '\\',
+                                '\\\\',
+                            ).replace(
+                                '{',
+                                '\{'
+                            ).replace(
+                                '}',
+                                '\}',
+                            )
+                        )
+                        dst.write('\n')
+                        dst.write(r'\par')
+                        dst.write('\n')
+                dst.write(r'}')
+        except UnicodeDecodeError:
+            _log.error('could not read %r as ASCII', str(license_path))
+            return None
+        except OSError as exc:
+            _log.error('could not convert %r to RTF: %s', str(license_path), exc)
+            return None
+
+        return rtf_path
 
 
     # Copied from PEP 440
@@ -237,6 +282,7 @@ class Step:
         cmd = [
             str(wix_root / 'light.exe'),
             '-nologo',
+            '-ext', 'WixUIExtension',
             '-spdb',
             '-o', str(msi_file_path),
         ]

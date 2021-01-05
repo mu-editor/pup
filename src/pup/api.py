@@ -15,13 +15,21 @@ _log.addHandler(logging.NullHandler())
 
 
 
-def _context(ignore_plugins, src=None, launch_module=None, nice_name=None, icon_path=None):
+def _context(
+    ignore_plugins,
+    src=None,
+    launch_module=None,
+    nice_name=None,
+    icon_path=None,
+    license_path=None,
+):
 
     return context.Context(
         src=src,
         launch_module=launch_module,
         nice_name=nice_name,
         icon_path=icon_path,
+        license_path=license_path,
         ignore_plugins=ignore_plugins,
         platform=sys.platform,
         python_version=sys.version_info,
@@ -29,11 +37,19 @@ def _context(ignore_plugins, src=None, launch_module=None, nice_name=None, icon_
 
 
 
-def package(src, *, ignore_plugins=(), launch_module=None, nice_name=None, icon_path=None):
+def package(
+    src,
+    *,
+    ignore_plugins=(),
+    launch_module=None,
+    nice_name=None,
+    icon_path=None,
+    license_path=None,
+):
 
     _log.info('Package %r: starting.', src)
 
-    ctx = _context(ignore_plugins, src, launch_module, nice_name, icon_path)
+    ctx = _context(ignore_plugins, src, launch_module, nice_name, icon_path, license_path)
     dsp = dispatcher.Dispatcher(ctx)
 
     dsp.collect_src_metadata()

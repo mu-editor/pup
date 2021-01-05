@@ -24,3 +24,12 @@ icon_locations = {
     'Applications': (500, 120),
     app_bundle: (140, 120),
 }
+
+{% if cookiecutter.license_path %}
+license = {
+    'default-language': 'en_US',
+    'licenses': {
+         'en_US': '{{ cookiecutter.license_path }}',
+     },
+}
+{% endif %}

@@ -28,15 +28,15 @@ CLASSIFIERS = [
     "Topic :: System :: Software Distribution",
 ]
 INSTALL_REQUIRES = [
-    "importlib-metadata==3.1.1;python_version<'3.8'",
+    "importlib-metadata==3.3.0;python_version<'3.8'",
     "click==7.1.2",
     "httpx==0.16.1",
-    "wheel==0.36.1",
+    "wheel==0.36.2",
     "pkginfo==1.6.1",
-    "importlib-resources==3.3.0;python_version<'3.9'",
+    "importlib-resources==4.1.1;python_version<'3.9'",
     "cookiecutter==1.7.2",
-    "zstandard==0.14.1",
-    "dmgbuild==1.4.2",
+    "zstandard==0.15.1",
+    "dmgbuild==1.4.2;sys_platform=='darwin'",
 ]
 EXTRAS_REQUIRE = {
     "docs": [

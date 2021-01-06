@@ -379,7 +379,7 @@ Thanks
   on top of which ``pup`` packages redistributable Python GUI applications.
 
 - To Donald Stufft,
-  for letting us pick up the ``pup`` name in `PyPI <https://pypi.org/project/pup/>`_.
+  for letting us pick up the ``pup`` name in `PyPI <https://pypi.org/project/pup/>`__.
 
 - To Glyph Lefkowitz, for the very useful,
   high quality `Tips And Tricks for Shipping a PyGame App on the Mac
@@ -391,7 +391,7 @@ Thanks
 - To Alastair Houghton, for `dmgbuild <https://pypi.org/project/dmgbuild/>`_,
   that ``pup`` uses to create macOS DMG files.
 
-- To the `WiX Toolset <https://wixtoolset.org/>`_ developers, maintainers,
+- To the `WiX Toolset <https://wixtoolset.org/>`__ developers, maintainers,
   contributors, and sponsors:
   not sure how ``pup`` would go about building Windows MSI installers without it.
 

@@ -361,30 +361,39 @@ Thanks
 
 .. marker-start-thanks-dont-remove
 
-- Nicholas Tollervey for the amazing `Mu Editor <https://codewith.mu/>`_.
+- To Nicholas Tollervey, for the amazing `Mu Editor <https://codewith.mu/>`_.
 
-- The Mu contributors I've been having the privilege of working more directly with,
+- To the Mu Editor contributors
+  I've been having the privilege of working more directly with,
   Carlos Pereira Atencio, Martin Dybdal, and Tim Golden, as well as the others
   whom I haven't met yet but whose contributions I highly respect.
 
-- To Russell Keith-Magee for the inspiring `BeeWare <https://beeware.org>`_ project
+- To Russell Keith-Magee, for the inspiring `BeeWare <https://beeware.org>`_ project
   and, in particular, for `briefcase <https://pypi.org/project/briefcase/>`_ that
   being used as the packaging tool for Mu on macOS as of this writing, serves as a
   great inspiration to ``pup``.
 
-- To Gregory Szorc for the incredible
+- To Gregory Szorc, for the incredible
   `Python Standalone Builds <https://python-build-standalone.readthedocs.io/>`_
   project,
-  on top of which we plan to package redistributable Python GUI applications.
+  on top of which ``pup`` packages redistributable Python GUI applications.
 
-- To Donald Stufft for letting us pick up the ``pup`` name in PyPI.
+- To Donald Stufft,
+  for letting us pick up the ``pup`` name in `PyPI <https://pypi.org/project/pup/>`_.
 
-- To Glyph Lefkowitz for the very useful,
+- To Glyph Lefkowitz, for the very useful,
   high quality `Tips And Tricks for Shipping a PyGame App on the Mac
   <https://glyph.twistedmatrix.com/2018/01/shipping-pygame-mac-app.html>`_
   article,
   and for his generous hands-on involvement in the first-steps of ``pup``'s take
   on the subject `in this issue <https://github.com/mu-editor/pup/issues/43>`_.
+
+- To Alastair Houghton, for `dmgbuild <https://pypi.org/project/dmgbuild/>`_,
+  that ``pup`` uses to create macOS DMG files.
+
+- To the `WiX Toolset <https://wixtoolset.org/>`_ developers, maintainers,
+  contributors, and sponsors:
+  not sure how ``pup`` would go about building Windows MSI installers without it.
 
 .. marker-end-thanks-dont-remove
 

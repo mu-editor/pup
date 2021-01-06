@@ -132,7 +132,7 @@ Packaging Options
   created from ``<pip-install-src>``,
   that very often does not match the exact product spelling,
   as communicated to end-users.
-  
+
 
 * Use ``--icon-path=<icon-path>``
   to include a custom icon in the packaging process.
@@ -222,6 +222,9 @@ Other than the locally cached files,
 
 
 
+-------------------------
+
+
 Packaging the Mu Editor on Windows
 ----------------------------------
 
@@ -253,7 +256,16 @@ Then, assuming the current working directory is Mu Editor's repository root, run
               --license-path=.\LICENSE
               .
 
-*Note: The command is line-wrapped for readability, but must be input as a single line.*
+Note:
+
+* The command is line-wrapped for readability, but must be input as a single line.
+* One of the last packaging stages is signing.
+* It will take a while as there are many files to be signed,
+  but progress is continuously displayed,
+  with the defaul log level.
+
+
+Once completed:
 
 * The resulting MSI file will be ``./dist/Mu Editor <version>.msi``.
 
@@ -310,9 +322,9 @@ Note:
 * One of the last packaging stages is notarization.
 * It will take a while --
   no less than 3 minutes,
-  in my experience,
+  IME,
   sometimes 10-15 minutes.
-* The logged messages should help understand that the "thing" is not "hung".
+* The logged messages should help understand that the "thing" is not hung.
 * Just be patient, I guess! :)
 
 

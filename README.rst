@@ -1,17 +1,16 @@
 ``pup`` | Pluggable Micro Packager
 ==================================
 
-``pup`` is (in the early stages of development and risks becoming) a packaging tool
-for GUI programs written in Python.
+``pup`` is (in the early stages of becoming) a packaging tool for Python GUI programs.
 
 Fundamentally,
 its *raison d'être* is producing macOS and Windows native packages
 for distributing the `Mu Editor <https://codewith.mu/>`_
 to Python beginners around the world.
 As a by-product of that,
-it will very likely become effective at packaging
+it may very likely be effective at packaging
 generic Python written GUI programs.
-If that ever becomes the case,
+If that ever is the case,
 then great.
 Otherwise,
 that's fine too.
@@ -33,28 +32,40 @@ at least,
 the `Mu Editor <https://codewith.mu/>`_
 and `puppy <https://github.com/tmontes/puppy/>`_ into distributable:
 
-* Native Windows application MSI installer files.
+* **Windows MSI installer files**
 
-  Minimally featured, user-installable, with no GUI.
-  They do add an entry to the Windows Start menu,
-  however,
-  even though no custom icon is used yet.
-  As a byproduct of the process,
-  a relocatable directory holding the aplication is produced too,
-  paving the way for producing "portable" Windows applications.
+  Minimally featured, user-installable,
+  with an optional License Agreement GUI,
+  adding an entry to the Windows Start Menu,
+  with an optional custom icon.
 
-* Native macOS DMG application distribution files.
+  The packaged binary files can be signed,
+  as well as the final MSI file.
 
-  The hold the relocatable ``.app`` application bundle,
-  properly signed and notarized as required for distribution.
-  The DMG files are also minimally featured,
-  and do not include custom icons yet.
+  As a side-effect of the process,
+  a relocatable directory holding the aplication is produced,
+  paving the way for the creation "portable" Windows applications.
 
-It might work with any Python GUI application that:
+* **macOS DMG files**
 
-* Runs on Python 3.7 or 3.8.
+  Holding the relocatable ``.app`` application bundle,
+  with an optional custom icon,
+  properly signed and notarized as required for distribution,
+
+  Including an optional License Agreement GUI
+  and custom volume icon.
+
+
+As of this writing,
+``pup`` should be able to package any Python GUI application that:
+
+* Runs on Python 3.7 or 3.8, on macOS or Windows.
 * Is ``pip``-installable (no need to be on PyPI, though).
 * Is launchable from the CLI with ``python -m <launch-module>``.
+
+No specific efforts have been put forth to ensure that that is the case,
+however,
+so YMMV.
 
 
 
@@ -77,71 +88,201 @@ To package an application, run:
 
 .. code-block:: console
 
-        $ pup package <pip-installable-source>
+        $ pup package <pip-install-src>
+
+Where:
+
+* ``<pip-install-src>`` is the argument
+  in the ``pip install <pip-install-src>`` command
+  to install the application on the local Python environment.
+
+  In general,
+  if it's ``pip``-installable then it's probably ``pup``-packageable.
 
 
-* Assumes that the application is launchable with ``python -m <name>``,
-  where ``<name>`` is extracted from the wheel metadata of a wheel created
-  from ``<pip-installable-source>``.
-  If the name of the launch module does not match that,
-  the ``--launch-module <launch-module-name>`` CLI option should be provided.
+This usage pattern
+assumes that the application GUI is launchable with ``python -m <name>``,
+where ``<name>`` is extracted
+from the metadata of a wheel created from ``<pip-install-src>``.
+If that is not the case,
+``pup`` can be told otherwise.
+Read on.
 
-* In the first run,
-  ``pup`` will download a distributable Python Runtime from the
+When completed,
+the final distributable artifact will be placed under ``./dist/``.
+
+
+Packaging Options
+~~~~~~~~~~~~~~~~~
+
+* Use ``--launch-module=<name>``
+  to set the module name
+  that should be used to launch the application GUI,
+  as with the ``python -m <name>`` command.
+
+* Use ``--nice-name=<name>``
+  to set a "nice name" for the application
+  to be used used throughout the packaging process:
+  in file and directory names,
+  for macOS's application bundle and DMG file names,
+  and for the Windows Start Menu entry.
+
+  When omitted,
+  that name is obtained from the metadata of a wheel
+  created from ``<pip-install-src>``,
+  that very often does not match the exact product spelling,
+  as communicated to end-users.
+
+
+* Use ``--icon-path=<icon-path>``
+  to include a custom icon in the packaging process.
+
+  On macOS the given file should be an
+  `ICNS <https://en.wikipedia.org/wiki/Apple_Icon_Image_format>`_ file
+  which will be used as the icon for both the packaged application bundle
+  and the DMG file volume icon.
+
+
+  On Windows the file should be an
+  `ICO <https://en.wikipedia.org/wiki/ICO_(file_format)>`_ file
+  which will be used on the Windows Start Menu entry and
+  on the Windows Programs and Features listing.
+
+* Use ``--license-path=<license-path>`` to bundle the given license text
+  and require users to accept it before installation.
+
+  The given ``<license-path>`` must be an ASCII-encoded text file.
+
+
+Signing
+~~~~~~~
+
+Signing is optional and varies slightly between platforms.
+
+``pup`` will only sign the application for distribution
+when all of the following conditions are true.
+On macOS,
+``pup`` will also complete the Apple required notarization process:
+for that,
+the packaging system must be online and
+able to connect to Apple's notarization services
+over the internet.
+
+**macOS**
+
+* XCode 10.3 or later must be installed
+  -- the Command Line Tools are not enough.
+
+* The following environment variables must be set:
+
+  * ``PUP_SIGNING_IDENTITY``:
+    10-digit identifier on the Apple Developer Certificate.
+  * ``PUP_NOTARIZE_USER``:
+    email address for the Apple Developer Account.
+  * ``PUP_NOTARIZE_PASSWORD``:
+    Application Specific Password.
+
+
+**Windows**
+
+* The Windows SDK must be installed,
+  providing the ``signtool.exe`` utility.
+
+* The following environment variable must be set:
+
+  * ``PUP_SIGNING_IDENTITY``:
+    *cname* of the code signing certificate.
+
+
+Behaviour Notes
+~~~~~~~~~~~~~~~
+In the first run,
+``pup`` downloads one or more files,
+which are cached locally for later use:
+
+* A relocatable Python Runtime from the
   `Python Build Standalone <https://python-build-standalone.readthedocs.io/>`_
   project.
-  Subsequent runs will use a locally cached version of that.
 
 * On Windows,
-  again in the first run,
-  ``pup`` will download the `WiX toolset <https://wixtoolset.org>`_,
+  the `WiX toolset <https://wixtoolset.org>`_,
   used to create MSI files.
-  Subsequent runs will use a locally cached version of that, too.
 
-* ``pup`` logs its progress to STDERR,
-  with fewer per-event details when it's a TTY.
-  The logging level defaults to ``INFO`` and can be changed
-  with either the ``--log-level`` CLI option,
-  or by setting the ``PUP_LOG_LEVEL`` environment variable.
+``pup`` logs its progress to STDERR,
+with fewer per-event details when it's a TTY.
+The logging level defaults to ``INFO`` and can be changed
+with either the ``--log-level`` CLI option,
+or by setting the ``PUP_LOG_LEVEL`` environment variable.
 
-* Intermediate artifacts are created under ``./build/pup/``.
+Other than the locally cached files,
+``pup`` creates files under:
 
-* The final artifacts are delivered to ``./dist/``.
+* ``./build/pup/`` containing all intermediate artifacts..
+* ``./dist/`` where the final distributable artifact is delivered..
+
+
+
+-------------------------
 
 
 Packaging the Mu Editor on Windows
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+----------------------------------
+
+Requirements for signing:
+
+* The Windows SDK must be installed.
+* A code signing certificate must be available under Windows' *certmgr* utility.
 
 Run:
 
 .. code-block:: console
 
-        > pup package --launch-module=mu <path-to-local-mu-git-repo-root>
+        > set PUP_SIGNING_IDENTITY=<signer>
 
 
-* The resulting MSI file will be ``./dist/<name> <version>.msi``.
+Where:
 
-* A byproduct of that is the ``./build/pup/<name> <version>/`` relocatable directory,
+* ``<signer>`` is the *cname* attribute of the code signing certificate.
+
+
+Then, assuming the current working directory is Mu Editor's repository root, run:
+
+.. code-block:: console
+
+        > pup package
+              --launch-module=mu
+              --nice-name="Mu Editor"
+              --icon-path=.\package\icons\win_icon.ico
+              --license-path=.\LICENSE
+              .
+
+Note:
+
+* The command is line-wrapped for readability, but must be input as a single line.
+* One of the last packaging stages is signing.
+* It will take a while as there are many files to be signed,
+  but progress is continuously displayed,
+  with the defaul log level.
+
+
+Once completed:
+
+* The resulting MSI file will be ``./dist/Mu Editor <version>.msi``.
+
+* A by-product of that is the ``./build/pup/Mu Editor <version>/`` relocatable directory,
   containing a GUI-clickable script that launches Mu.
   Creating a ZIP file from it for distribution
   results in a minimally working "portable" Windows application.
-
-* In either case,
-  distribution will have limitations
-  given that no code/package signing is implemented yet.
-
 
 
 
 
 Packaging the Mu Editor on macOS
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--------------------------------
 
-Requirements:
+Requirements for signing and notarization:
 
-* Must be running macOS 10.14.6 (Mojave) or later.
-* Must have XCode 10.3 or later installed --
-  the Command Line Tools are not enough.
+* Must have XCode 10.3 or later installed.
 * Must have an Apple Developer Certificate --
   see `this article's step 4
   <https://glyph.twistedmatrix.com/2018/01/shipping-pygame-mac-app.html>`_,
@@ -165,11 +306,16 @@ Where:
 * ``<asp>`` is the Application Specific Password.
 
 
-Then run:
+Then, assuming the current working directory is Mu Editor's repository root, run:
 
 .. code-block:: console
 
-        $ pup package --launch-module=mu <path-to-local-mu-git-repo-root>
+        $ pup package \
+              --launch-module=mu \
+              --nice-name="Mu Editor" \
+              --icon-path=./package/icons/mac_icon.icns \
+              --license-path=./LICENSE \
+              .
 
 Note:
 
@@ -178,7 +324,7 @@ Note:
   no less than 3 minutes,
   IME,
   sometimes 10-15 minutes.
-* The logged messages should help understand that the "thing" is not "hung".
+* The logged messages should help understand that the "thing" is not hung.
 * Just be patient, I guess! :)
 
 
@@ -186,7 +332,8 @@ Once completed:
 
 * The resulting DMG file will be ``./dist/<name> <version>.dmg``.
 
-* A byproduct of that is the ``./build/pup/<name>.app/`` relocatable application bundle.
+* A by-product of that is
+  the ``./build/pup/Mu Editor.app/`` relocatable application bundle.
   Archiving it into a ZIP file, for distribution, should be perfectly fine.
 
 
@@ -198,7 +345,10 @@ refer to the `online documentation <https://pup.readthedocs.io/>`_:
 at this early stage,
 it is mostly a collection
 of thoughts and ideas
-around behaviour, requirements, and internal design.
+around behaviour,
+requirements,
+and very very rough internal design.
+
 Development moves forward
 on GitHub at https://github.com/mu-editor/pup/.
 
@@ -211,30 +361,39 @@ Thanks
 
 .. marker-start-thanks-dont-remove
 
-- Nicholas Tollervey for the amazing `Mu Editor <https://codewith.mu/>`_.
+- To Nicholas Tollervey, for the amazing `Mu Editor <https://codewith.mu/>`_.
 
-- The Mu contributors I've been having the privilege of working more directly with,
+- To the Mu Editor contributors
+  I've been having the privilege of working more directly with,
   Carlos Pereira Atencio, Martin Dybdal, and Tim Golden, as well as the others
   whom I haven't met yet but whose contributions I highly respect.
 
-- To Russell Keith-Magee for the inspiring `BeeWare <https://beeware.org>`_ project
+- To Russell Keith-Magee, for the inspiring `BeeWare <https://beeware.org>`_ project
   and, in particular, for `briefcase <https://pypi.org/project/briefcase/>`_ that
   being used as the packaging tool for Mu on macOS as of this writing, serves as a
   great inspiration to ``pup``.
 
-- To Gregory Szorc for the incredible
+- To Gregory Szorc, for the incredible
   `Python Standalone Builds <https://python-build-standalone.readthedocs.io/>`_
   project,
-  on top of which we plan to package redistributable Python GUI applications.
+  on top of which ``pup`` packages redistributable Python GUI applications.
 
-- To Donald Stufft for letting us pick up the ``pup`` name in PyPI.
+- To Donald Stufft,
+  for letting us pick up the ``pup`` name in `PyPI <https://pypi.org/project/pup/>`_.
 
-- To Glyph Lefkowitz for the very useful,
+- To Glyph Lefkowitz, for the very useful,
   high quality `Tips And Tricks for Shipping a PyGame App on the Mac
   <https://glyph.twistedmatrix.com/2018/01/shipping-pygame-mac-app.html>`_
   article,
   and for his generous hands-on involvement in the first-steps of ``pup``'s take
   on the subject `in this issue <https://github.com/mu-editor/pup/issues/43>`_.
+
+- To Alastair Houghton, for `dmgbuild <https://pypi.org/project/dmgbuild/>`_,
+  that ``pup`` uses to create macOS DMG files.
+
+- To the `WiX Toolset <https://wixtoolset.org/>`_ developers, maintainers,
+  contributors, and sponsors:
+  not sure how ``pup`` would go about building Windows MSI installers without it.
 
 .. marker-end-thanks-dont-remove
 

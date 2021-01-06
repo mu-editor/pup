@@ -1,5 +1,5 @@
 Contents
-========
+--------
 
 .. toctree::
    :maxdepth: 1
@@ -11,5 +11,4 @@ Contents
    about
    changelog
    development
-   iat
 

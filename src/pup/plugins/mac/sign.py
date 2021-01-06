@@ -45,7 +45,7 @@ class Step:
             return
 
         build_dir = dsp.directories()['build']
-        app_bundle_name = ctx.src_metadata.name
+        app_bundle_name = ctx.nice_name
         app_bundle_path = build_dir / f'{app_bundle_name}.app'
 
         binaries_dir = (ctx.python_runtime_dir / ctx.python_rel_exe).parent

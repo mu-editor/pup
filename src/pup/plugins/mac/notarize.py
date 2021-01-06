@@ -39,7 +39,7 @@ class Step:
     def _notarize(self, ctx, dsp, user, password):
 
         build_dir = dsp.directories()['build']
-        app_bundle_name = ctx.src_metadata.name
+        app_bundle_name = ctx.nice_name
         app_bundle_path = build_dir / f'{app_bundle_name}.app'
 
         app_bundle_zip = self._create_app_bundle_zip(dsp, app_bundle_path)

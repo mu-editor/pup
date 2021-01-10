@@ -5,6 +5,15 @@ Python Mu Packager Change Log
 
 .. towncrier release notes start
 
+Pup 1.0.0a7 (2021-01-10)
+------------------------
+
+Bug Fixes
+^^^^^^^^^
+
+- PyPI distributed ``pup`` failed miserably because it did not include all of its own bundled templates -- now fixed. (`#118 <https://github.com/mu-editor/pup/issues/118>`_)
+
+
 Pup 1.0.0a6 (2021-01-06)
 ------------------------
 

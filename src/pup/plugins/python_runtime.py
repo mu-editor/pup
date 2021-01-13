@@ -4,6 +4,7 @@ PUP Plugin implementing the 'pup.python-runtime' step.
 
 import json
 import logging
+import os
 import pathlib
 import tarfile
 import tempfile as tf
@@ -46,7 +47,10 @@ class Step:
 
     def __call__(self, ctx, dsp):
 
-        url = self._pbs_url(ctx.tgt_platform, ctx.tgt_python_version_suffix)
+        url = os.environ.get(
+            'PUP_PSB_URL',
+            self._pbs_url(ctx.tgt_platform, ctx.tgt_python_version_suffix)
+        )
         pbs_artifact = dsp.download(url)
 
         python_runtime_dir = ctx.python_runtime_dir

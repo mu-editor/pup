@@ -1,0 +1,1 @@
+macOS DMG creation no longer fails when ``pup`` is installed into a virtual environment but invoked without activating it.

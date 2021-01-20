@@ -6,6 +6,7 @@ import logging
 import os
 import pathlib
 import shutil
+import sysconfig
 
 import cookiecutter
 from cookiecutter import generate
@@ -84,7 +85,7 @@ class Step:
             os.chdir(str(settings_path))
 
             cmd = [
-                'dmgbuild',
+                os.path.join(sysconfig.get_path('scripts'), 'dmgbuild'),
                 '-s', 'settings.py',
                 # Both overridden in the settings file.
                 'volume-name',

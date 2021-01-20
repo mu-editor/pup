@@ -48,7 +48,7 @@ class Step:
     def __call__(self, ctx, dsp):
 
         url = os.environ.get(
-            'PUP_PSB_URL',
+            'PUP_PBS_URL',
             self._pbs_url(ctx.tgt_platform, ctx.tgt_python_version_suffix)
         )
         pbs_artifact = dsp.download(url)

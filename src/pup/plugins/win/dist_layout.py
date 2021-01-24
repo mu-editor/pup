@@ -64,7 +64,10 @@ class Step:
         result_path = generate.generate_files(tmpl_path, tmpl_data, build_dir)
 
         ctx.relocatable_root = pathlib.Path(result_path)
-        ctx.python_runtime_dir = pathlib.Path(result_path) / 'Python'
+
+        new_python_runtime_dir = pathlib.Path(result_path) / 'Python'
+        ctx.python_runtime_dir.replace(new_python_runtime_dir)
+        ctx.python_runtime_dir = new_python_runtime_dir
 
 
     def _launch_module_from_context(self, ctx):

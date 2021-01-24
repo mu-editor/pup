@@ -76,9 +76,9 @@ class Step:
                 pathlib.Path(result_path) / 'Contents/Resources/Icon.icns'
             )
 
-        ctx.python_runtime_dir = (
-            pathlib.Path(result_path) / 'Contents/Resources/Python'
-        )
+        new_python_runtime_dir = pathlib.Path(result_path) / 'Contents/Resources/Python'
+        ctx.python_runtime_dir.replace(new_python_runtime_dir)
+        ctx.python_runtime_dir = new_python_runtime_dir
 
 
     def _copyright_from_context(self, ctx):

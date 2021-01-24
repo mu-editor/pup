@@ -14,8 +14,8 @@ class Steps:
 
     def __call__(self, ctx, _dsp):
         return (
-            'mac.app-bundle-template',
             'pup.python-runtime',
+            'mac.app-bundle-template',
             'pup.pip-install',
             'pup.install-cleanup',
             'mac.sign-app-bundle',

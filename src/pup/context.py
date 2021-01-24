@@ -49,9 +49,6 @@ class Context:
         self.python_rel_stdlib = None
         self.python_rel_site_packages = None
 
-        self.python_test_packages = None
-        self.stdlib_platform_config = None
-
         self.final_artifact = None
 
 

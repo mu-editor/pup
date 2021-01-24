@@ -51,7 +51,8 @@ class Step:
                 'version_string': ctx.src_metadata.version,
                 'copyright': self._copyright_from_context(ctx),
                 'launcher_name': ctx.nice_name,
-                'python_version_suffix': ctx.tgt_python_version_suffix,
+                'tcl_library': str(ctx.python_rel_tcl_library),
+                'python_rel_exe': str(ctx.python_rel_exe),
                 'launch_module': self._launch_module_from_context(ctx),
             }
         }

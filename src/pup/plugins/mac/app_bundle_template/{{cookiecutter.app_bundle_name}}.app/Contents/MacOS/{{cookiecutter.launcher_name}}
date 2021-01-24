@@ -1,3 +1,4 @@
 #!/bin/sh
 
-exec "$(dirname "$0")/../Resources/Python/bin/python{{cookiecutter.python_version_suffix}}" -m {{cookiecutter.launch_module}} "$@"
+export TCL_LIBRARY="$(dirname "$0")/../Resources/Python/{{cookiecutter.tcl_library}}"
+exec "$(dirname "$0")/../Resources/Python/{{cookiecutter.python_rel_exe}}" -m {{cookiecutter.launch_module}} "$@"

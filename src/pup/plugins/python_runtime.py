@@ -71,6 +71,18 @@ class Step:
         ctx.python_rel_stdlib = self._relative(pbs_py_paths['stdlib'], pbs_data)
         ctx.python_rel_site_packages = self._relative(pbs_py_paths['purelib'], pbs_data)
 
+        # Find `init.tcl` path (macOS needs the TCL_LIBRARY env var set).
+        tcl_library_path = pbs_py_dir / pbs_py_json['tcl_library_path']
+        init_tcl_path = None
+        for candidate_path in pbs_py_json['tcl_library_paths']:
+            init_tcl_path = tcl_library_path / candidate_path / 'init.tcl'
+            if init_tcl_path.exists():
+                break
+        ctx.python_rel_tcl_library = self._relative(
+            self._relative(init_tcl_path.parent, pbs_py_dir),
+            pbs_data,
+        )
+
 
     def _ensure_build_dir(self, dsp):
 

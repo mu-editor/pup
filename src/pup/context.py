@@ -48,6 +48,7 @@ class Context:
         self.python_rel_scripts = None
         self.python_rel_stdlib = None
         self.python_rel_site_packages = None
+        self.python_rel_tcl_library = None
 
         self.final_artifact = None
 

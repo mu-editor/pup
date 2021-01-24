@@ -1,5 +1,5 @@
 """
-PUP Plugin defining macOS packaging stages.
+PUP Plugin defining Windows packaging stages.
 """
 
 
@@ -14,8 +14,8 @@ class Steps:
 
     def __call__(self, ctx, _dsp):
         return (
-            'win.distribution-layout',
             'pup.python-runtime',
+            'win.distribution-layout',
             'pup.pip-install',
             'pup.install-cleanup',
             'win.sign-binaries',

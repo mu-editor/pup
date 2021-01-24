@@ -24,30 +24,10 @@ class Step:
 
     def __call__(self, ctx, dsp):
 
-        self._delete_test_packages(ctx)
-        self._delete_platform_config(ctx)
         self._delete_unneeded_scripts(ctx)
         self._delete_unneeded_paths(ctx)
         self._delete_unneeded_files(ctx)
         self._compile_lib(ctx, dsp)
-
-
-    def _delete_test_packages(self, ctx):
-
-        _log.info('Deleting Standard Library test packages...')
-        for test_package in ctx.python_test_packages:
-            test_package_path = test_package.replace('.', '/')
-            shutil.rmtree(
-                str(ctx.python_runtime_dir / ctx.python_rel_stdlib / test_package_path),
-                ignore_errors=True,
-            )
-
-
-    def _delete_platform_config(self, ctx):
-
-        if not ctx.stdlib_platform_config:
-            return
-        shutil.rmtree(str(ctx.python_runtime_dir / ctx.stdlib_platform_config), ignore_errors=True)
 
 
     def _delete_unneeded_scripts(self, ctx):

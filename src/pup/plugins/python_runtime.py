@@ -6,6 +6,7 @@ import json
 import logging
 import os
 import pathlib
+import shutil
 import tarfile
 import tempfile as tf
 
@@ -47,45 +48,44 @@ class Step:
 
     def __call__(self, ctx, dsp):
 
-        url = os.environ.get(
-            'PUP_PBS_URL',
-            self._pbs_url(ctx.tgt_platform, ctx.tgt_python_version_suffix)
-        )
-        pbs_artifact = dsp.download(url)
+        build_dir = self._ensure_build_dir(dsp)
+        pbs_dir = build_dir / 'pbs'
 
-        python_runtime_dir = ctx.python_runtime_dir
-        runtime_parent_dir = python_runtime_dir.parent
-        with tf.TemporaryDirectory(prefix='pup-', dir=runtime_parent_dir) as td:
+        pbs_artifact = self._get_pbs_artifact(ctx, dsp)
+        self._extract_zstd_file(pbs_artifact, pbs_dir)
 
-            td = pathlib.Path(td)
-            self._extract_zstd_file(pbs_artifact, td)
+        pbs_py_dir = pbs_dir / 'python'
+        pbs_py_json = self._load_pbs_python_json(pbs_py_dir / 'PYTHON.json')
 
-            pbs_py = td / 'python'
-            pbs_py_json = self._load_pbs_python_json(pbs_py / 'PYTHON.json')
+        pbs_py_paths = pbs_py_json['python_paths']
+        pbs_data = pbs_py_paths['data']
 
-            pbs_py_paths = pbs_py_json['python_paths']
-            pbs_data = pbs_py_paths['data']
-            (pbs_py / pbs_data).replace(python_runtime_dir)
+        # Delete unneeded things.
+        self._delete_test_packages(pbs_py_dir, pbs_py_json)
+        self._delete_platform_config(pbs_py_dir, pbs_py_json)
 
-        # Track Python Runtime executable.
+        # Track key Python Runtime paths.
+        ctx.python_runtime_dir = pbs_py_dir / pbs_data
         ctx.python_rel_exe = self._relative(pbs_py_json['python_exe'], pbs_data)
-
-        # Track Python Runtime paths than need cleaning up later.
         ctx.python_rel_scripts = self._relative(pbs_py_paths['scripts'], pbs_data)
         ctx.python_rel_stdlib = self._relative(pbs_py_paths['stdlib'], pbs_data)
         ctx.python_rel_site_packages = self._relative(pbs_py_paths['purelib'], pbs_data)
 
-        ctx.python_test_packages = pbs_py_json['python_stdlib_test_packages']
-        ctx.stdlib_platform_config = self._relative(
-            pbs_py_json.get('python_stdlib_platform_config'),
-            pbs_data,
+
+    def _ensure_build_dir(self, dsp):
+
+        build_dir = dsp.directories()['build']
+        build_dir.mkdir(parents=True, exist_ok=True)
+        return build_dir
+
+
+    def _get_pbs_artifact(self, ctx, dsp):
+
+        url = os.environ.get(
+            'PUP_PBS_URL',
+            self._pbs_url(ctx.tgt_platform, ctx.tgt_python_version_suffix)
         )
-        
-
-
-    def _relative(self, path, base):
-
-        return pathlib.Path(path).relative_to(base) if path else None
+        return dsp.download(url)
 
 
     def _pbs_url(self, platform, py_version):
@@ -109,3 +109,32 @@ class Step:
 
         with open(filename, 'rt', encoding='utf8') as input_file:
             return json.load(input_file)
+
+    def _delete_tree(self, path):
+
+        delete = str(path)
+        _log.debug('Deleting %r...', delete)
+        shutil.rmtree(delete, ignore_errors=True)
+
+
+    def _delete_test_packages(self, pbs_py_dir, pbs_py_json):
+
+        _log.info('Deleting Standard Library test packages...')
+        stdlib_path = pbs_py_json['python_paths']['stdlib']
+        for test_package in pbs_py_json['python_stdlib_test_packages']:
+            test_package_path = test_package.replace('.', '/')
+            self._delete_tree(pbs_py_dir / stdlib_path / test_package_path)
+
+
+    def _delete_platform_config(self, pbs_py_dir, pbs_py_json):
+
+        _log.info('Deleting Platform Config files...')
+        stdlib_platform_config = pbs_py_json.get('python_stdlib_platform_config')
+        if not stdlib_platform_config:
+            return
+        self._delete_tree(pbs_py_dir / stdlib_platform_config)
+
+
+    def _relative(self, path, base):
+
+        return pathlib.Path(path).relative_to(base) if path else None

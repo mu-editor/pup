@@ -5,6 +5,28 @@ Python Mu Packager Change Log
 
 .. towncrier release notes start
 
+Pup 1.0.0a8 (2021-01-24)
+------------------------
+
+Enhancements
+^^^^^^^^^^^^
+
+- The Python Build Standalone package to be used can now be overridden via the PUP_PBS_URL environment variable -- for now this is a stop gap capability to support packaging 32-bit Windows applications using, for example, `<https://github.com/indygreg/python-build-standalone/releases/download/20200822/cpython-3.7.9-i686-pc-windows-msvc-shared-pgo-20200823T0159.tar.zst>`_. (`#125 <https://github.com/mu-editor/pup/issues/125>`_)
+
+
+Bug Fixes
+^^^^^^^^^
+
+- macOS packaged applications failed running ``tkinter`` and ``turtle`` code when such code was running under a virtual environment -- much like what Mu Editor does. Now fixed. (`#122 <https://github.com/mu-editor/pup/issues/122>`_)
+- macOS DMG creation failed when ``pup`` was installed into a virtual environment but invoked without activating it. Now fixed. (`#125 <https://github.com/mu-editor/pup/issues/125>`_)
+
+
+Other Changes
+^^^^^^^^^^^^^
+
+- Changed the packaging sequence. (`#128 <https://github.com/mu-editor/pup/issues/128>`_)
+
+
 Pup 1.0.0a7 (2021-01-10)
 ------------------------
 

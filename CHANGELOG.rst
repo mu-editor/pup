@@ -5,13 +5,39 @@ Python Mu Packager Change Log
 
 .. towncrier release notes start
 
+Pup 1.0.0a9 (2021-02-06)
+------------------------
+
+Enhancements
+^^^^^^^^^^^^
+
+- On macOS,
+  ``pup`` now signs shared libraries
+  bundled in wheel files
+  that the application itself bundles,
+  as is the case of the Mu Editor
+  -- this is required for notarization. (`#140 <https://github.com/mu-editor/pup/issues/140>`_)
+
+
+Bug Fixes
+^^^^^^^^^
+
+- An ``entitlements.plist`` file,
+  required for the macOS signing process,
+  is now bundled.
+  Previous versions unintentionally failed to do that,
+  preventing the successful signature
+  and subsequent notarization
+  of packaged applications on macOS. (`#138 <https://github.com/mu-editor/pup/issues/138>`_)
+
+
 Pup 1.0.0a8 (2021-01-24)
 ------------------------
 
 Enhancements
 ^^^^^^^^^^^^
 
-- The Python Build Standalone package to be used can now be overridden via the PUP_PBS_URL environment variable -- for now this is a stop gap capability to support packaging 32-bit Windows applications using, for example, `<https://github.com/indygreg/python-build-standalone/releases/download/20200822/cpython-3.7.9-i686-pc-windows-msvc-shared-pgo-20200823T0159.tar.zst>`_. (`#125 <https://github.com/mu-editor/pup/issues/125>`_)
+- The Python Build Standalone package to be used can now be overridden via the ``PUP_PBS_URL`` environment variable -- for now this is a stop gap capability to support packaging 32-bit Windows applications using, for example, `<https://github.com/indygreg/python-build-standalone/releases/download/20200822/cpython-3.7.9-i686-pc-windows-msvc-shared-pgo-20200823T0159.tar.zst>`_. (`#125 <https://github.com/mu-editor/pup/issues/125>`_)
 
 
 Bug Fixes

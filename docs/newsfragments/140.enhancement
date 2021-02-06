@@ -1,0 +1,6 @@
+On macOS,
+``pup`` now signs shared libraries
+bundled in wheel files
+that the application itself may bundle,
+as is the case of the Mu Editor
+-- this is required for notarization.

@@ -4,7 +4,9 @@ PUP Plugin implementing the 'mac.sign-app-bundle' step.
 
 import logging
 import os
+import pathlib
 import subprocess
+import tempfile
 
 try:
     # Python < 3.9
@@ -56,6 +58,7 @@ class Step:
         self._sign_framework_binaries(dsp, app_bundle_path)
         self._sign_shared_libs(dsp, app_bundle_path)
         self._sign_binaries(dsp, binaries_dir)
+        self._sign_bundled_wheels(dsp, app_bundle_path)
         self._sign(dsp, app_bundle_path)
 
         self._assess_signing_result(dsp, app_bundle_path)
@@ -76,10 +79,10 @@ class Step:
                     self._sign(dsp, file_path)
 
 
-    def _sign_shared_libs(self, dsp, app_bundle_path):
+    def _sign_shared_libs(self, dsp, base_path):
 
         for glob in ('*.so', '*.dylib'):
-            for shlib_path in app_bundle_path.glob(f'**/{glob}'):
+            for shlib_path in base_path.glob(f'**/{glob}'):
                 self._sign(dsp, shlib_path)
 
 
@@ -88,6 +91,39 @@ class Step:
         for file_path in binaries_dir.glob('*'):
             if file_path.is_file() and not file_path.is_symlink():
                 self._sign(dsp, file_path)
+
+
+    def _sign_bundled_wheels(self, dsp, app_bundle_path):
+
+        for wheel_path in app_bundle_path.glob('**/*.whl'):
+            self._sign_wheel(dsp, wheel_path)
+
+
+    def _sign_wheel(self, dsp, wheel_path):
+
+        _log.info('Signing %r contents...', str(wheel_path))
+        build_dir = dsp.directories()['build']
+        with tempfile.TemporaryDirectory(prefix='sign-wheel-', dir=build_dir) as td:
+            dsp.spawn([
+                self._cli_command_path('unzip'),
+                str(wheel_path),
+                '-d',
+                td,
+            ])
+            self._sign_shared_libs(dsp, pathlib.Path(td))
+            cwd = os.getcwd()
+            # Must get absolute path before os.chdir.
+            wheel_path_absolute = wheel_path.absolute()
+            try:
+                os.chdir(td)
+                dsp.spawn([
+                    self._cli_command_path('zip'),
+                    '-qyr',
+                    str(wheel_path_absolute),
+                    '.',
+                ])
+            finally:
+                os.chdir(cwd)
 
 
     def _sign(self, dsp, target):
@@ -132,3 +168,10 @@ class Step:
         #       build/pup/<app_bundle_name>: rejected
         #       source=Unnotarized Developer ID
         #       origin=<signing certificate cn>
+
+
+    def _cli_command_path(self, command):
+
+        shell_command = f'which "{command}"'
+        result = subprocess.check_output(shell_command, shell=True, text=True)
+        return result.rstrip('\n')

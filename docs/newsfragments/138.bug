@@ -1,7 +1,0 @@
-An ``entitlements.plist`` file,
-required for the macOS signing process,
-is now bundled.
-Previously distributed versions unintentionally failed to do that,
-preventing the successful signature
-and subsequent notarization
-of packaged applications on macOS.

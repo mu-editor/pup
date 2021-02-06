@@ -1,5 +1,6 @@
 recursive-include src/pup/plugins/mac/app_bundle_template *
 recursive-include src/pup/plugins/mac/dmgbuild_settings_template *
+recursive-include src/pup/plugins/mac/sign_resources *
 recursive-include src/pup/plugins/win/dist_layout_template *
 recursive-include src/pup/plugins/win/msi_wxs_template *
 global-exclude *.pyc

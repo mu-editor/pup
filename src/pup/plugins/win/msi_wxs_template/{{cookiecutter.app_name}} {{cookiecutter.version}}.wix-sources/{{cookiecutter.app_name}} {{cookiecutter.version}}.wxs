@@ -102,6 +102,7 @@
         {% endif %}
 
         <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="Launch {{ cookiecutter.app_name }}" />
+        <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOX" Value="1" />
         <CustomAction Id="LaunchApplication"
                       Impersonate="yes"
                       FileKey="{{ cookiecutter.pythonw_exe_file_id }}"

@@ -260,14 +260,9 @@ class Step:
 
     def _get_manifest_file_id(self, manifest_path, filename):
 
-        ns = dict([
-            node
-            for _, node in et.iterparse(manifest_path, events=['start-ns'])
-        ])
-
         tree = et.parse(manifest_path)
         root = tree.getroot()
-        for element in root.iterfind('.//File', ns):
+        for element in root.iterfind('.//{http://schemas.microsoft.com/wix/2006/wi}File'):
             if element.attrib.get('Source', '').endswith(filename):
                 return element.attrib['Id']
         raise RuntimeError(f'No {filename!r} file in {str(manifest_path)!r}.')

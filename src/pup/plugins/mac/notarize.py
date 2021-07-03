@@ -5,7 +5,7 @@ PUP Plugin implementing the 'mac.notarize-app-bundle' step.
 import contextlib
 import logging
 import os
-import subprocess
+import shutil
 import time
 import xml.etree.ElementTree as et
 
@@ -50,13 +50,6 @@ class Step:
         app_bundle_zip.unlink()
 
 
-    def _cli_command_path(self, command):
-
-        shell_command = f'which "{command}"'
-        result = subprocess.check_output(shell_command, shell=True, text=True)
-        return result.rstrip('\n')
-
-
     @contextlib.contextmanager
     def _working_directory(self, directory):
 
@@ -73,7 +66,7 @@ class Step:
         with self._working_directory(app_bundle_path.parent):
             dsp.spawn(
                 command=[
-                    self._cli_command_path('zip'),
+                    shutil.which('zip'),
                     '-qyr',
                     f'{app_bundle_path.name}.zip',
                     str(app_bundle_path.name),
@@ -116,7 +109,7 @@ class Step:
 
         _log.info('Submitting notarization request...')
         cmd = [
-            self._cli_command_path('xcrun'),
+            shutil.which('xcrun'),
             'altool',
             '--notarize-app',
             '--primary-bundle-id',
@@ -152,7 +145,7 @@ class Step:
     def _wait_notarization(self, dsp, request_uuid, user, password, delay=60, tolerance=600):
 
         cmd = [
-            self._cli_command_path('xcrun'),
+            shutil.which('xcrun'),
             'altool',
             '--notarization-info',
             request_uuid,
@@ -210,7 +203,7 @@ class Step:
 
         _log.info('Stapling...')
         cmd = [
-            self._cli_command_path('xcrun'),
+            shutil.which('xcrun'),
             'stapler',
             'staple',
             app_bundle_path.name,
@@ -227,7 +220,7 @@ class Step:
 
         _log.info('Assessing notarization result...')
         cmd = [
-            self._cli_command_path('spctl'),
+            shutil.which('spctl'),
             '--assess',
             '-vvvv',
             str(app_bundle_path),

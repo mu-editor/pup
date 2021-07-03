@@ -1,0 +1,1 @@
+macOS sign and notarize code cleanup: no need to reinvent ``shutil.which``.

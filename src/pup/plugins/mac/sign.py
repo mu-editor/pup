@@ -55,10 +55,8 @@ class Step:
         self._entitlements = ilr.files(sign_resources) / 'entitlements.plist'
         self._codesign = self._cli_command_path('codesign')
 
-        self._sign_framework_binaries(dsp, app_bundle_path)
-        self._sign_shared_libs(dsp, app_bundle_path)
         self._sign_binaries(dsp, binaries_dir)
-        self._sign_bundled_wheels(dsp, app_bundle_path)
+        self._sign_libraries(dsp, app_bundle_path)
         self._sign(dsp, app_bundle_path)
 
         self._assess_signing_result(dsp, app_bundle_path)
@@ -71,9 +69,24 @@ class Step:
         return result.rstrip('\n')
 
 
-    def _sign_framework_binaries(self, dsp, app_bundle_path):
+    def _sign_binaries(self, dsp, binaries_dir):
 
-        for framework_path in app_bundle_path.glob('**/*.framework'):
+        for file_path in binaries_dir.glob('*'):
+            if file_path.is_file() and not file_path.is_symlink():
+                self._sign(dsp, file_path)
+
+
+    def _sign_libraries(self, dsp, base_path):
+
+        self._sign_framework(dsp, base_path)
+        self._sign_shared_libs(dsp, base_path)
+        self._sign_bundled_zips(dsp, base_path)
+        self._sign_bundled_zips(dsp, base_path, extension='whl')
+
+
+    def _sign_framework(self, dsp, base_path):
+
+        for framework_path in base_path.glob('**/*.framework'):
             for file_path in framework_path.glob('**/*'):
                 if file_path.is_file() and not file_path.is_symlink():
                     self._sign(dsp, file_path)
@@ -86,40 +99,33 @@ class Step:
                 self._sign(dsp, shlib_path)
 
 
-    def _sign_binaries(self, dsp, binaries_dir):
+    def _sign_bundled_zips(self, dsp, base_path, extension='zip'):
 
-        for file_path in binaries_dir.glob('*'):
-            if file_path.is_file() and not file_path.is_symlink():
-                self._sign(dsp, file_path)
-
-
-    def _sign_bundled_wheels(self, dsp, app_bundle_path):
-
-        for wheel_path in app_bundle_path.glob('**/*.whl'):
-            self._sign_wheel(dsp, wheel_path)
+        for zip_path in base_path.glob(f'**/*.{extension}'):
+            self._sign_zip_contents(dsp, zip_path)
 
 
-    def _sign_wheel(self, dsp, wheel_path):
+    def _sign_zip_contents(self, dsp, zip_path):
 
-        _log.info('Signing %r contents...', str(wheel_path))
+        _log.info('Signing %r contents...', str(zip_path))
         build_dir = dsp.directories()['build']
-        with tempfile.TemporaryDirectory(prefix='sign-wheel-', dir=build_dir) as td:
+        with tempfile.TemporaryDirectory(prefix='sign-zip-', dir=build_dir) as td:
             dsp.spawn([
                 self._cli_command_path('unzip'),
-                str(wheel_path),
+                str(zip_path),
                 '-d',
                 td,
             ])
-            self._sign_shared_libs(dsp, pathlib.Path(td))
+            self._sign_libraries(dsp, pathlib.Path(td))
             cwd = os.getcwd()
             # Must get absolute path before os.chdir.
-            wheel_path_absolute = wheel_path.absolute()
+            zip_path_absolute = zip_path.absolute()
             try:
                 os.chdir(td)
                 dsp.spawn([
                     self._cli_command_path('zip'),
                     '-qyr',
-                    str(wheel_path_absolute),
+                    str(zip_path_absolute),
                     '.',
                 ])
             finally:

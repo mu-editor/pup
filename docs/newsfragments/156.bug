@@ -1,0 +1,1 @@
+Fixed macOS signing of bundled files to support Mu Editor 1.0.0b5 that ships Python wheels within a ZIP file. The signing process now recurses into both wheel and ZIP files.

@@ -5,6 +5,21 @@ Python Mu Packager Change Log
 
 .. towncrier release notes start
 
+Pup 1.0.0a10 (2021-07-04)
+-------------------------
+
+Bug Fixes
+^^^^^^^^^
+
+- Fixed macOS signing of bundled files to support Mu Editor 1.0.0b5 that ships Python wheels within a ZIP file. The signing process now recurses into both wheel and ZIP files. (`#156 <https://github.com/mu-editor/pup/issues/156>`_)
+
+
+Other Changes
+^^^^^^^^^^^^^
+
+- macOS sign and notarize code cleanup: no need to reinvent ``shutil.which``. (`#141 <https://github.com/mu-editor/pup/issues/141>`_)
+
+
 Pup 1.0.0a9 (2021-02-06)
 ------------------------
 

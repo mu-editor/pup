@@ -5,7 +5,7 @@ PUP Plugin implementing the 'mac.sign-app-bundle' step.
 import logging
 import os
 import pathlib
-import subprocess
+import shutil
 import tempfile
 
 try:
@@ -53,20 +53,13 @@ class Step:
         binaries_dir = (ctx.python_runtime_dir / ctx.python_rel_exe).parent
 
         self._entitlements = ilr.files(sign_resources) / 'entitlements.plist'
-        self._codesign = self._cli_command_path('codesign')
+        self._codesign = shutil.which('codesign')
 
         self._sign_binaries(dsp, binaries_dir)
         self._sign_libraries(dsp, app_bundle_path)
         self._sign(dsp, app_bundle_path)
 
         self._assess_signing_result(dsp, app_bundle_path)
-
-
-    def _cli_command_path(self, command):
-
-        shell_command = f'which "{command}"'
-        result = subprocess.check_output(shell_command, shell=True, text=True)
-        return result.rstrip('\n')
 
 
     def _sign_binaries(self, dsp, binaries_dir):
@@ -111,7 +104,7 @@ class Step:
         build_dir = dsp.directories()['build']
         with tempfile.TemporaryDirectory(prefix='sign-zip-', dir=build_dir) as td:
             dsp.spawn([
-                self._cli_command_path('unzip'),
+                shutil.which('unzip'),
                 str(zip_path),
                 '-d',
                 td,
@@ -123,7 +116,7 @@ class Step:
             try:
                 os.chdir(td)
                 dsp.spawn([
-                    self._cli_command_path('zip'),
+                    shutil.which('zip'),
                     '-qyr',
                     str(zip_path_absolute),
                     '.',
@@ -158,7 +151,7 @@ class Step:
     def _assess_signing_result(self, dsp, app_bundle_path):
 
         cmd = [
-            self._cli_command_path('spctl'),
+            shutil.which('spctl'),
             '--assess',
             '-vvvv',
             str(app_bundle_path),
@@ -174,10 +167,3 @@ class Step:
         #       build/pup/<app_bundle_name>: rejected
         #       source=Unnotarized Developer ID
         #       origin=<signing certificate cn>
-
-
-    def _cli_command_path(self, command):
-
-        shell_command = f'which "{command}"'
-        result = subprocess.check_output(shell_command, shell=True, text=True)
-        return result.rstrip('\n')

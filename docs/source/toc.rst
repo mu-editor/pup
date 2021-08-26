@@ -2,8 +2,9 @@ Contents
 --------
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
 
+   platform_notes/index
    foreword
    thoughts
    design

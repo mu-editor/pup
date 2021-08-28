@@ -12,6 +12,12 @@ Two different user interfaces are used:
 
 The minimal UI is used when the ``--license-path`` CLI option is omitted.
 
+The installation process adds a single,
+top-level Start Menu entry,
+named after the program,
+using ``--nice-name``, if given,
+and the icon from ``--icon-path``.
+
 
 Versions
 ~~~~~~~~

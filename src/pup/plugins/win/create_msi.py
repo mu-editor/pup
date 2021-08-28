@@ -8,6 +8,7 @@ import pathlib
 import re
 import shutil
 import uuid
+import xml.etree.ElementTree as et
 import zipfile
 
 import cookiecutter
@@ -44,9 +45,17 @@ class Step:
 
     def __call__(self, ctx, dsp):
 
+        build_dir = dsp.directories()['build']
+
         wix_root = self._ensure_wix(dsp)
-        wix_src_path = self._create_wix_source(ctx, dsp)
-        self._create_wix_manifest(ctx, dsp, wix_root, wix_src_path)
+
+        manifest_path = build_dir / 'manifest.wxs'
+        self._create_wix_manifest(ctx, dsp, wix_root, manifest_path)
+        pythonw_exe_file_id = self._get_manifest_file_id(manifest_path, 'pythonw.exe')
+
+        wix_src_path = self._create_wix_source(ctx, dsp, build_dir, pythonw_exe_file_id)
+        manifest_path.replace(wix_src_path / manifest_path.name)
+
         self._compile_wix_sources(ctx, dsp, wix_root, wix_src_path)
         msi_file_path = self._link_wix_objects(ctx, dsp, wix_root, wix_src_path)
 
@@ -74,9 +83,7 @@ class Step:
         return wix_extract_dir
 
 
-    def _create_wix_source(self, ctx, dsp):
-
-        build_dir = dsp.directories()['build']
+    def _create_wix_source(self, ctx, dsp, build_dir, pythonw_exe_file_id):
 
         rtf_license_path = self._create_rtf_from_text(ctx.license_path, build_dir)
 
@@ -93,6 +100,7 @@ class Step:
                 'url': ctx.src_metadata.home_page,
                 'launch_module': self._launch_module_from_context(ctx),
                 'guid': self._upgrade_code_guid(ctx),
+                'pythonw_exe_file_id': pythonw_exe_file_id,
             }
         }
 
@@ -224,10 +232,9 @@ class Step:
         return str(uuid.uuid5(uuid.NAMESPACE_URL, ctx.src_metadata.home_page))
 
 
-    def _create_wix_manifest(self, ctx, dsp, wix_root, wix_src_path):
+    def _create_wix_manifest(self, ctx, dsp, wix_root, manifest_path):
 
         launch_module = self._launch_module_from_context(ctx)
-        wix_manifest_path = wix_src_path / 'manifest.wxs'
         cmd = [
             str(wix_root / 'heat.exe'),
             'dir',
@@ -241,7 +248,7 @@ class Step:
             '-dr', f'{launch_module}_ROOTDIR',
             '-cg', f'{launch_module}_COMPONENTS',
             '-var', 'var.SourceDir',
-            '-out', str(wix_manifest_path),
+            '-out', str(manifest_path),
         ]
 
         dsp.spawn(
@@ -249,6 +256,16 @@ class Step:
             out_callable=lambda line: _log.info('wix heat out: %s', line),
             err_callable=lambda line: _log.info('wix heat err: %s', line),
         )
+
+
+    def _get_manifest_file_id(self, manifest_path, filename):
+
+        tree = et.parse(manifest_path)
+        root = tree.getroot()
+        for element in root.iterfind('.//{http://schemas.microsoft.com/wix/2006/wi}File'):
+            if element.attrib.get('Source', '').endswith(filename):
+                return element.attrib['Id']
+        raise RuntimeError(f'No {filename!r} file in {str(manifest_path)!r}.')
 
 
     def _compile_wix_sources(self, ctx, dsp, wix_root, wix_src_path):
@@ -283,6 +300,7 @@ class Step:
             str(wix_root / 'light.exe'),
             '-nologo',
             '-ext', 'WixUIExtension',
+            '-ext', 'WixUtilExtension',
             '-spdb',
             '-o', str(msi_file_path),
         ]

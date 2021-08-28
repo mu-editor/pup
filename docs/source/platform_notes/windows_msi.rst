@@ -1,6 +1,18 @@
 Windows MSI
 -----------
 
+Capabilities
+~~~~~~~~~~~~
+
+Two different user interfaces are used:
+
+  * Minimal, with a single progress bar, by default.
+  * Multi-step, displaying the license text, requiring it to be accepted
+    before continuing, supporting post-install auto-launch.
+
+The minimal UI is used when the ``--license-path`` CLI option is omitted.
+
+
 Versions
 ~~~~~~~~
 

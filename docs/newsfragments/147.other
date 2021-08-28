@@ -1,0 +1,3 @@
+Windows MSI installation now adds a single top-level entry to the Start Menu,
+whereas before a directory containing the program launching entry was created:
+less is more.

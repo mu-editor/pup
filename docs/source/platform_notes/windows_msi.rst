@@ -19,6 +19,20 @@ using ``--nice-name``, if given,
 and the icon from ``--icon-path``.
 
 
+Per-User vs Per-Machine Installs
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+``pup`` created MSI files are user-installable by default.
+
+Per-machine installation is possible,
+using a CLI with elevated privileges,
+by running:
+
+.. code-block:: none
+
+   $ msiexec /i <msi-file>" MSIINSTALLPERUSER=""
+
+
 Versions
 ~~~~~~~~
 

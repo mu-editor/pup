@@ -37,6 +37,7 @@ INSTALL_REQUIRES = [
     "cookiecutter==1.7.2",
     "zstandard==0.15.1",
     "dmgbuild==1.4.2;sys_platform=='darwin'",
+    "Pillow==8.3.2",
 ]
 EXTRAS_REQUIRE = {
     "docs": [

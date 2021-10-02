@@ -96,6 +96,11 @@
 
         <WixVariable Id="WixUILicenseRtf" Value="{{ cookiecutter.rtf_license_path }}" />
 
+            {% if cookiecutter.icon_path %}
+            <WixVariable Id="WixUIBannerBmp" Value="{{ cookiecutter.ui_banner_path }}" />
+            <WixVariable Id="WixUIDialogBmp" Value="{{ cookiecutter.ui_dialog_path }}" />
+            {% endif %}
+
         {% endif %}
 
         <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="Launch {{ cookiecutter.app_name }}" />

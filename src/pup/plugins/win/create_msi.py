@@ -19,6 +19,8 @@ try:
 except ImportError:
     import importlib.resources as ilr
 
+from PIL import Image
+
 from . import msi_wxs_template
 
 
@@ -85,6 +87,7 @@ class Step:
 
     def _create_wix_source(self, ctx, dsp, build_dir, pythonw_exe_file_id):
 
+        banner_path, dialog_path = self._create_ui_bitmaps(ctx.icon_path, build_dir)
         rtf_license_path = self._create_rtf_from_text(ctx.license_path, build_dir)
 
         tmpl_path = ilr.files(msi_wxs_template)
@@ -94,6 +97,8 @@ class Step:
                 'version': ctx.src_metadata.version,
                 'msi_version': self._msi_version(ctx.src_metadata.version),
                 'icon_path': ctx.icon_path,
+                'ui_banner_path': banner_path,
+                'ui_dialog_path': dialog_path,
                 'rtf_license_path': rtf_license_path,
                 'author': ctx.src_metadata.author,
                 'author_email': ctx.src_metadata.author_email,
@@ -115,6 +120,30 @@ class Step:
         result_path = generate.generate_files(tmpl_path, tmpl_data, build_dir)
 
         return pathlib.Path(result_path)
+
+
+    def _create_ui_bitmaps(self, icon_path, build_dir):
+
+        if not icon_path:
+            return None, None
+
+        icon = Image.open(icon_path)
+
+        banner = Image.new('RGBA', (493, 58), 'white')
+        icon_48 = icon.resize((48, 48))
+        banner.alpha_composite(icon_48, (437, 6))
+        banner_path = build_dir / 'msi_ui_banner.bmp'
+        banner.save(banner_path)
+
+        dialog = Image.new('RGBA', (493, 312), 'white')
+        left = Image.new('RGBA', (164, 312), (240, 240, 240, 255))
+        dialog.alpha_composite(left, (0, 0))
+        icon_64 = icon.resize((64, 64))
+        dialog.alpha_composite(icon_64, (83, 17))
+        dialog_path = build_dir / 'msi_ui_full.bmp'
+        dialog.save(dialog_path)
+
+        return banner_path, dialog_path
 
 
     def _create_rtf_from_text(self, license_path, build_dir):

@@ -118,6 +118,7 @@ if __name__ == "__main__":
                 'mac.dirs=pup.plugins.mac.dirs:Directories',
                 'mac.steps=pup.plugins.mac.steps:Steps',
                 'mac.app_bundle_template=pup.plugins.mac.app_bundle:Step',
+                'mac.launcher=pup.plugins.mac.launcher:Step',
                 'mac.sign_app_bundle=pup.plugins.mac.sign:Step',
                 'mac.notarize_app_bundle=pup.plugins.mac.notarize:Step',
                 'mac.create_dmg=pup.plugins.mac.create_dmg:Step',

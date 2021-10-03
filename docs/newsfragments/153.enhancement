@@ -1,4 +1,0 @@
-macOS launcher is now a native executable, compiled at packaging time.
-This leads to a cleaner user experience when macOS asks if the application should be allowed to access files or other HW devices: with the previous bash-script based solution the user would be asked about ``/bin/bash``. Users are now asked about the proper application name.
-
-Additionally, the main menu should now display the correct application name, instead of ``pythonX.Y`` as before.

@@ -1,3 +1,0 @@
-Documented Windows MSI limitations regarding non-final PEP-440 versions,
-like ``1.1.0b2`` or ``1.1.0rc1``,
-and the implications it has on the end-user software upgrade process.

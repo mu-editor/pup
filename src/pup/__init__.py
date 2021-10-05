@@ -2,7 +2,7 @@
 Pluggable Micro Packager
 """
 
-__version__ = '1.0.0a11'
+__version__ = '1.0.0a12'
 
 __title__ = 'pup'
 __description__ = 'Pluggable Micro Packager'

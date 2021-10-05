@@ -5,6 +5,18 @@ Python Mu Packager Change Log
 
 .. towncrier release notes start
 
+Pup 1.0.0a12 (2021-10-05)
+-------------------------
+
+Bug Fixes
+^^^^^^^^^
+
+- With the new binary launcher in release 1.0.0a11,
+  macOS packaged applications are no longer backwards compatible:
+  applications packaged in 10.15 do not launch on 10.14, for example.
+  This is an attempt at fixing that. (`#177 <https://github.com/mu-editor/pup/issues/177>`_)
+
+
 Pup 1.0.0a11 (2021-10-03)
 -------------------------
 

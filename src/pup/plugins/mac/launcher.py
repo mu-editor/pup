@@ -31,6 +31,7 @@ class Step:
             os.chdir(launcher_path)
             dsp.spawn([
                 shutil.which('clang'),
+                '-mmacosx-version-min=10.9',
                 '-o',
                 ctx.nice_name,
                 'launcher.c',

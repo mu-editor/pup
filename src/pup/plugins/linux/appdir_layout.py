@@ -37,6 +37,7 @@ class Step:
                 'nice_name': ctx.nice_name,
                 'launch_module': self._launch_module_from_context(ctx),
                 'python_exe': ctx.python_rel_exe.name,
+                'tcl_library': ctx.python_rel_tcl_library,
                 'categories': 'Education',
             }
         }

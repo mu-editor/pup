@@ -37,6 +37,7 @@ class Step:
                 'nice_name': ctx.nice_name,
                 'launch_module': self._launch_module_from_context(ctx),
                 'python_exe': ctx.python_rel_exe.name,
+                'categories': 'Education',
             }
         }
 
@@ -44,6 +45,12 @@ class Step:
         shutil.rmtree(result_path, ignore_errors=True)
         result_path = generate.generate_files(tmpl_path, tmpl_data, build_dir)
 
+        # Copy any given icon file into the bundle.
+        if ctx.icon_path:
+            shutil.copyfile(
+                ctx.icon_path,
+                pathlib.Path(result_path) / f'{ctx.nice_name}.png',
+            )
         # Ensure AppRun is executable.
         (pathlib.Path(result_path) / 'AppRun').chmod(0o555)
 

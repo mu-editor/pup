@@ -20,5 +20,5 @@ class Directories:
     def __call__(self, ctx, _dsp):
         return {
             **dirs.DIRS,
-            'cache': pathlib.Path.home() / '.local' / 'caches' / 'pup',
+            'cache': pathlib.Path.home() / '.local' / 'share' / 'pup',
         }

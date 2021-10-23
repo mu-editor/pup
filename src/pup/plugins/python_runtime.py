@@ -26,6 +26,9 @@ _PYTHON_BUILD_STANDALONE_URLs = {
         '3.7': 'https://github.com/indygreg/python-build-standalone/releases/download/20200822/cpython-3.7.9-x86_64-pc-windows-msvc-shared-pgo-20200823T0118.tar.zst',
         '3.8': 'https://github.com/indygreg/python-build-standalone/releases/download/20210724/cpython-3.8.11-x86_64-pc-windows-msvc-shared-pgo-20210724T1424.tar.zst',
     },
+    'linux': {
+        '3.8': 'https://github.com/indygreg/python-build-standalone/releases/download/20211012/cpython-3.8.12-x86_64-unknown-linux-gnu-pgo-20211011T1926.tar.zst',
+    },
 }
 
 
@@ -40,8 +43,7 @@ class Step:
     @staticmethod
     def usable_in(ctx):
         return (
-            (ctx.pkg_platform == 'darwin') or
-            (ctx.pkg_platform == 'win32')
+            ctx.pkg_platform in ('darwin', 'win32', 'linux')
         ) and (
             (ctx.pkg_platform == ctx.tgt_platform)
         )

@@ -1,0 +1,6 @@
+#!/bin/sh
+
+THIS_DIR="$(dirname "$(readlink -f "${0}")")"
+export TCL_LIBRARY="${THIS_DIR}/usr/{{cookiecutter.tcl_library}}"
+
+exec "${THIS_DIR}/usr/bin/{{cookiecutter.python_exe}}" -m {{cookiecutter.launch_module}}

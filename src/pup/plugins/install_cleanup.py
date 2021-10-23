@@ -16,8 +16,7 @@ class Step:
     @staticmethod
     def usable_in(ctx):
         return (
-            (ctx.pkg_platform == 'darwin') or
-            (ctx.pkg_platform == 'win32')
+            ctx.pkg_platform in ('darwin', 'win32', 'linux')
         ) and (
             (ctx.pkg_platform == ctx.tgt_platform)
         )

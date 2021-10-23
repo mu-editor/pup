@@ -1,0 +1,4 @@
+Preliminary support for x86-64 Linux AppImage packaging:
+requires ``--icon-path`` with a PNG image and,
+for now,
+sets the category to "Education" in the bundled ``.desktop`` file.

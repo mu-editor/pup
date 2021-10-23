@@ -1,0 +1,5 @@
+[Desktop Entry]
+Name={{cookiecutter.nice_name}}
+Exec={{cookiecutter.python_exe}} -m {{cookiecutter.launch_module}}
+Icon={{cookiecutter.nice_name}}
+Type=Application

@@ -1,0 +1,4 @@
+#!/bin/sh
+
+THIS_DIR="$(dirname "$(readlink -f "${0}")")"
+exec "${THIS_DIR}/usr/bin/{{cookiecutter.python_exe}}" -m {{cookiecutter.launch_module}}

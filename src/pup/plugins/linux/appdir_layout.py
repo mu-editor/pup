@@ -1,5 +1,16 @@
 import logging
+import pathlib
+import shutil
 
+import cookiecutter
+from cookiecutter import generate
+try:
+    # Python < 3.9
+    import importlib_resources as ilr
+except ImportError:
+    import importlib.resources as ilr
+
+from . import appdir_template
 
 
 _log = logging.getLogger(__name__)
@@ -20,4 +31,31 @@ class Step:
         build_dir = dsp.directories()['build']
         build_dir.mkdir(parents=True, exist_ok=True)
 
-        raise NotImplementedError('yet!')
+        tmpl_path = ilr.files(appdir_template)
+        tmpl_data = {
+            'cookiecutter': {
+                'nice_name': ctx.nice_name,
+                'launch_module': self._launch_module_from_context(ctx),
+                'python_exe': ctx.python_rel_exe.name,
+            }
+        }
+
+        result_path = generate.generate_files(tmpl_path, tmpl_data, build_dir, overwrite_if_exists=True)
+        shutil.rmtree(result_path, ignore_errors=True)
+        result_path = generate.generate_files(tmpl_path, tmpl_data, build_dir)
+
+        # Ensure AppRun is executable.
+        (pathlib.Path(result_path) / 'AppRun').chmod(0o555)
+
+        # Remove the .gitignore file in template (keeps empty dir in git).
+        (pathlib.Path(result_path) / 'usr/.gitignore').unlink()
+
+        new_python_runtime_dir = pathlib.Path(result_path) / 'usr'
+        ctx.python_runtime_dir.replace(new_python_runtime_dir)
+        ctx.python_runtime_dir = new_python_runtime_dir
+
+
+
+    def _launch_module_from_context(self, ctx):
+
+        return ctx.launch_module if ctx.launch_module else ctx.src_metadata.name

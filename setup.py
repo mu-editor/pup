@@ -128,6 +128,7 @@ if __name__ == "__main__":
                 'win.create_msi=pup.plugins.win.create_msi:Step',
                 'win.sign_binaries=pup.plugins.win.signer:SignBinaries',
                 'win.sign_msi=pup.plugins.win.signer:SignMSI',
+                'linux.dirs=pup.plugins.linux.dirs:Directories',
                 'linux.steps=pup.plugins.linux.steps:Steps',
                 'linux.appdir_layout=pup.plugins.linux.appdir_layout:Step',
                 'linux.appdir_create=pup.plugins.linux.appdir_create:Step',

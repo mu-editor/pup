@@ -36,7 +36,7 @@ int main() {
     putenv(tcl_lib_env);
 
     snprintf(python_path, PATH_BUFFER_SIZE, "%s/../Resources/Python/bin/%s", launcher_dir, nice_name);
-    char * args[] = {nice_name, "-m" , "{{cookiecutter.launch_module}}"};
+    char * args[] = {nice_name, "-m" , "{{cookiecutter.launch_module}}", NULL};
     if ( execv(python_path, args) ) {
         fprintf(stderr, "execv(\"%s\") failed: %s.\n", python_path, strerror(errno));
     }

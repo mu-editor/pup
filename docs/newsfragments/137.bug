@@ -1,0 +1,4 @@
+Packaging directly from PyPI now works.
+Up until now,
+the code wrongly took the source project to be
+a ``pip``-installable project on the filesystem.

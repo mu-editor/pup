@@ -55,11 +55,18 @@ and `puppy <https://github.com/tmontes/puppy/>`_ into distributable:
   Including an optional License Agreement GUI
   and custom volume icon.
 
+* **Linux AppImage files**
+
+  Preliminary support:
+  limited to Python 3.8 on x86_64 systems,
+  with the Desktop Entry's Categories hard-coded to "Education".
+
 
 As of this writing,
 ``pup`` should be able to package any Python GUI application that:
 
-* Runs on Python 3.7 or 3.8, on macOS or Windows.
+* Runs on Python 3.7, on macOS or Windows.
+* Runs on Python 3.8, on macOS, Linux or Windows.
 * Is ``pip``-installable (no need to be on PyPI, though).
 * Is launchable from the CLI with ``python -m <launch-module>``.
 
@@ -142,6 +149,8 @@ Packaging Options
   which will be used as the icon for both the packaged application bundle
   and the DMG file volume icon.
 
+  On Linux the file should be a PNG file
+  which will be used as the icon for the running application.
 
   On Windows the file should be an
   `ICO <https://en.wikipedia.org/wiki/ICO_(file_format)>`_ file

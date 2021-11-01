@@ -5,6 +5,30 @@ Python Mu Packager Change Log
 
 .. towncrier release notes start
 
+Pup 1.0.0a13 (2021-11-01)
+-------------------------
+
+Enhancements
+^^^^^^^^^^^^
+
+- Preliminary support for x86-64 Linux AppImage packaging:
+  requires ``--icon-path`` with a PNG image and,
+  for now,
+  sets the category to "Education" in the bundled ``.desktop`` file. (`#150 <https://github.com/mu-editor/pup/issues/150>`_)
+
+
+Bug Fixes
+^^^^^^^^^
+
+- Packaging directly from PyPI now works.
+  Up until now,
+  the code wrongly took the source project to be
+  a ``pip``-installable project on the filesystem. (`#137 <https://github.com/mu-editor/pup/issues/137>`_)
+- The macOS binary launcher introduced in release 1.0.0a11
+  failed on Apple Silicon systems.
+  Now fixed. (`#185 <https://github.com/mu-editor/pup/issues/185>`_)
+
+
 Pup 1.0.0a12 (2021-10-05)
 -------------------------
 

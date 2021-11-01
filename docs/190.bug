@@ -1,0 +1,2 @@
+Bundle Linux AppImage template with pup,
+otherwise packaging fails.

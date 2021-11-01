@@ -1,3 +1,0 @@
-The macOS binary launcher introduced in release 1.0.0a11
-failed on Apple Silicon systems.
-Now fixed.

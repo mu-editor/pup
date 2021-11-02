@@ -5,6 +5,17 @@ Python Mu Packager Change Log
 
 .. towncrier release notes start
 
+Pup 1.0.0a14 (2021-11-02)
+-------------------------
+
+Bug Fixes
+^^^^^^^^^
+
+- Bundle Linux AppImage template with pup,
+  otherwise packaging fails. (`#190 <https://github.com/mu-editor/pup/issues/190>`_)
+
+
+
 Pup 1.0.0a13 (2021-11-01)
 -------------------------
 

@@ -104,6 +104,7 @@ class Step:
                 'author_email': ctx.src_metadata.author_email,
                 'url': ctx.src_metadata.home_page,
                 'launch_module': self._launch_module_from_context(ctx),
+                'launch_pyflags': ' '.join(pyflag for pyflag in ctx.launch_pyflags),
                 'guid': self._upgrade_code_guid(ctx),
                 'pythonw_exe_file_id': pythonw_exe_file_id,
             }

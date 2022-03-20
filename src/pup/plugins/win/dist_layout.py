@@ -50,6 +50,7 @@ class Step:
                 'app_name': ctx.nice_name,
                 'version': ctx.src_metadata.version,
                 'launch_module': self._launch_module_from_context(ctx),
+                'launch_pyflags': ' '.join(pyflag for pyflag in ctx.launch_pyflags),
             }
         }
 

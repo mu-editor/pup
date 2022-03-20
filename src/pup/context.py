@@ -24,7 +24,7 @@ class Context:
 
         self.src = src
         self.launch_module = launch_module
-        self.launch_pyflags = launch_pyflags
+        self.launch_pyflags = tuple(pyflag for pyflag in launch_pyflags if pyflag)
         self._nice_name = nice_name
         self.icon_path = pathlib.Path(icon_path).absolute() if icon_path else None
         self.license_path = pathlib.Path(license_path).absolute() if license_path else None

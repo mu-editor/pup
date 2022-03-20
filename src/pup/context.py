@@ -13,6 +13,7 @@ class Context:
         *,
         src,
         launch_module,
+        launch_pyflags,
         nice_name,
         icon_path,
         license_path,
@@ -23,6 +24,7 @@ class Context:
 
         self.src = src
         self.launch_module = launch_module
+        self.launch_pyflags = launch_pyflags
         self._nice_name = nice_name
         self.icon_path = pathlib.Path(icon_path).absolute() if icon_path else None
         self.license_path = pathlib.Path(license_path).absolute() if license_path else None

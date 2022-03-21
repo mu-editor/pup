@@ -140,7 +140,6 @@ Packaging Options
   that very often does not match the exact product spelling,
   as communicated to end-users.
 
-
 * Use ``--icon-path=<icon-path>``
   to include a custom icon in the packaging process.
 
@@ -149,7 +148,8 @@ Packaging Options
   which will be used as the icon for both the packaged application bundle
   and the DMG file volume icon.
 
-  On Linux the file should be a PNG file
+  On Linux the file should be a
+  `PNG <https://en.wikipedia.org/wiki/Portable_Network_Graphics>`_ file
   which will be used as the icon for the running application.
 
   On Windows the file should be an
@@ -158,7 +158,8 @@ Packaging Options
   on the Windows Programs and Features listing.
 
 * Use ``--license-path=<license-path>`` to bundle the given license text
-  and require users to accept it before installation.
+  and require users to accept it before installation
+  (not currently supported on Linux AppImage).
 
   The given ``<license-path>`` must be an ASCII-encoded text file.
 

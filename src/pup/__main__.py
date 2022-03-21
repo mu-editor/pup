@@ -68,12 +68,13 @@ def main(log_level):
 @main.command()
 @click.option('--ignore-plugin', 'ignore_plugins', multiple=True)
 @click.option('--launch-module')
+@click.option('--launch-pyflag', 'launch_pyflags', multiple=True, default=['-I',])
 @click.option('--nice-name')
 @click.option('--icon-path')
 @click.option('--license-path')
 @click.argument('src')
 @command_wrapper
-def package(src, ignore_plugins, launch_module, nice_name, icon_path, license_path):
+def package(src, ignore_plugins, launch_module, launch_pyflags, nice_name, icon_path, license_path):
     """
     Packages the GUI application in the given pip-installable source.
     """
@@ -81,6 +82,7 @@ def package(src, ignore_plugins, launch_module, nice_name, icon_path, license_pa
         src,
         ignore_plugins=ignore_plugins,
         launch_module=launch_module,
+        launch_pyflags=launch_pyflags,
         nice_name=nice_name,
         icon_path=icon_path,
         license_path=license_path,

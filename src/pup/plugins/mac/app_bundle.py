@@ -53,6 +53,7 @@ class Step:
                 'copyright': self._copyright_from_context(ctx),
                 'launcher_name': ctx.nice_name,
                 'launch_module': self._launch_module_from_context(ctx),
+                'launch_pyflags': ''.join(f'"{pyflag}",' for pyflag in ctx.launch_pyflags),
             }
         }
 

@@ -64,7 +64,7 @@
                             {% endif %}
                             Target="[{{ cookiecutter.launch_module }}_ROOTDIR]python\pythonw.exe"
                             WorkingDirectory="{{ cookiecutter.launch_module }}_ROOTDIR"
-                            Arguments="-m {{ cookiecutter.launch_module }}" />
+                            Arguments="{{ cookiecutter.launch_pyflags }} -m {{ cookiecutter.launch_module }}" />
                     <RegistryValue
                             Root="HKCU"
                             Key="Software\{{ cookiecutter.author }}\{{ cookiecutter.app_name }}"
@@ -108,7 +108,7 @@
         <CustomAction Id="LaunchApplication"
                       Impersonate="yes"
                       FileKey="{{ cookiecutter.pythonw_exe_file_id }}"
-                      ExeCommand="-m {{ cookiecutter.launch_module }}"
+                      ExeCommand="{{ cookiecutter.launch_pyflags }} -m {{ cookiecutter.launch_module }}"
                       Return="asyncNoWait"
                       />
 

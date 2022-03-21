@@ -19,6 +19,7 @@ def _context(
     ignore_plugins,
     src=None,
     launch_module=None,
+    launch_pyflags=None,
     nice_name=None,
     icon_path=None,
     license_path=None,
@@ -27,6 +28,7 @@ def _context(
     return context.Context(
         src=src,
         launch_module=launch_module,
+        launch_pyflags=launch_pyflags,
         nice_name=nice_name,
         icon_path=icon_path,
         license_path=license_path,
@@ -42,6 +44,7 @@ def package(
     *,
     ignore_plugins=(),
     launch_module=None,
+    launch_pyflags=None,
     nice_name=None,
     icon_path=None,
     license_path=None,
@@ -49,7 +52,7 @@ def package(
 
     _log.info('Package %r: starting.', src)
 
-    ctx = _context(ignore_plugins, src, launch_module, nice_name, icon_path, license_path)
+    ctx = _context(ignore_plugins, src, launch_module, launch_pyflags, nice_name, icon_path, license_path)
     dsp = dispatcher.Dispatcher(ctx)
 
     dsp.collect_src_metadata()

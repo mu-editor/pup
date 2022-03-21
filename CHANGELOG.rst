@@ -5,6 +5,17 @@ Python Mu Packager Change Log
 
 .. towncrier release notes start
 
+Pup 1.0.0a15 (2022-03-21)
+-------------------------
+
+Bug Fixes
+^^^^^^^^^
+
+- Packaged applications are now launched with the ``-I`` Python CLI flag.
+  This isolates them from the users' site packages directory and environment.
+  Can be overridden with the new ``--launch-pyflag`` packaging option. (`#195 <https://github.com/mu-editor/pup/issues/195>`_)
+
+
 Pup 1.0.0a14 (2021-11-02)
 -------------------------
 

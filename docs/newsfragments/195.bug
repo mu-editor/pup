@@ -1,3 +1,0 @@
-Package applications are now launched with the ``-I`` Python CLI flag.
-This isolates them from the users' site packages directory and environment.
-Can be overridden with the new ``--launch-pyflag`` packaging option.

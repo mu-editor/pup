@@ -162,6 +162,10 @@ Packaging Options
 
   The given ``<license-path>`` must be an ASCII-encoded text file.
 
+* Use ``--launch-pyflag=<flag>`` to override the default ``-I``
+  `Python launch flag <https://docs.python.org/3/using/cmdline.html#cmdoption-I>`_
+  (repeat for each flag to be used or set ``<flag>`` to the empty string to use none).
+
 
 Signing
 ~~~~~~~

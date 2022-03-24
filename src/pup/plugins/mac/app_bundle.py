@@ -46,14 +46,14 @@ class Step:
         tmpl_path = ilr.files(app_bundle_template)
         tmpl_data = {
             'cookiecutter': {
+                'nice_name': ctx.nice_name,
                 'app_bundle_name': ctx.nice_name,
                 'bundle_identifier': ctx.application_id,
                 'version_string': ctx.src_metadata.version,
                 'copyright': self._copyright_from_context(ctx),
                 'launcher_name': ctx.nice_name,
-                'tcl_library': str(ctx.python_rel_tcl_library),
-                'python_rel_exe': str(ctx.python_rel_exe),
                 'launch_module': self._launch_module_from_context(ctx),
+                'launch_pyflags': ''.join(f'"{pyflag}",' for pyflag in ctx.launch_pyflags),
             }
         }
 

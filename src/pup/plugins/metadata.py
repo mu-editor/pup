@@ -79,8 +79,12 @@ class Step:
 
     def _create_wheel(self, src, work_dir, dsp):
 
-        src_abs = os.path.abspath(src)
-        cmd = [sys.executable, '-m', 'pip', 'wheel', '--no-deps', src_abs]
+        if os.path.exists(src):
+            src = os.path.abspath(src)
+            _log.info(f'Packaging local project at {src!r}.')
+        else:
+            _log.info('Packaging from PyPI.')
+        cmd = [sys.executable, '-m', 'pip', 'wheel', '--no-deps', src]
         
         _log.info('About to run %r.', ' '.join(cmd))
 

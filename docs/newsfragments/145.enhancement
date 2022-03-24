@@ -1,5 +1,0 @@
-The Windows MSI installation process
-can now launch the installed program when done.
-Limitation:
-only works if a license is included to be displayed and accepted,
-which serves the near-term use case for Mu Editor.

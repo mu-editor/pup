@@ -16,8 +16,7 @@ class Step:
     @staticmethod
     def usable_in(ctx):
         return (
-            (ctx.pkg_platform == 'darwin') or
-            (ctx.pkg_platform == 'win32')
+            ctx.pkg_platform in ('darwin', 'win32', 'linux')
         ) and (
             (ctx.pkg_platform == ctx.tgt_platform)
         )
@@ -40,8 +39,7 @@ class Step:
                 continue
             if file_path.is_dir():
                 shutil.rmtree(str(file_path), ignore_errors=True)
-            elif not file_path.is_symlink() or file_path.resolve() != python_exe:
-                # Delete any file that doesn't symlink to the Python executable.
+            else:
                 file_path.unlink()
 
 

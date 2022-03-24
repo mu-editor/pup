@@ -37,7 +37,7 @@ class Step:
     def _download(self, url, dirname, filename):
 
         if not dirname.exists():
-            dirname.mkdir()
+            dirname.mkdir(parents=True)
 
         file = dirname / filename
 

@@ -55,11 +55,18 @@ and `puppy <https://github.com/tmontes/puppy/>`_ into distributable:
   Including an optional License Agreement GUI
   and custom volume icon.
 
+* **Linux AppImage files**
+
+  Preliminary support:
+  limited to Python 3.8 on x86_64 systems,
+  with the Desktop Entry's Categories hard-coded to "Education".
+
 
 As of this writing,
 ``pup`` should be able to package any Python GUI application that:
 
-* Runs on Python 3.7 or 3.8, on macOS or Windows.
+* Runs on Python 3.7, on macOS or Windows.
+* Runs on Python 3.8, on macOS, Linux or Windows.
 * Is ``pip``-installable (no need to be on PyPI, though).
 * Is launchable from the CLI with ``python -m <launch-module>``.
 
@@ -133,7 +140,6 @@ Packaging Options
   that very often does not match the exact product spelling,
   as communicated to end-users.
 
-
 * Use ``--icon-path=<icon-path>``
   to include a custom icon in the packaging process.
 
@@ -142,6 +148,9 @@ Packaging Options
   which will be used as the icon for both the packaged application bundle
   and the DMG file volume icon.
 
+  On Linux the file should be a
+  `PNG <https://en.wikipedia.org/wiki/Portable_Network_Graphics>`_ file
+  which will be used as the icon for the running application.
 
   On Windows the file should be an
   `ICO <https://en.wikipedia.org/wiki/ICO_(file_format)>`_ file
@@ -149,9 +158,14 @@ Packaging Options
   on the Windows Programs and Features listing.
 
 * Use ``--license-path=<license-path>`` to bundle the given license text
-  and require users to accept it before installation.
+  and require users to accept it before installation
+  (not currently supported on Linux AppImage).
 
   The given ``<license-path>`` must be an ASCII-encoded text file.
+
+* Use ``--launch-pyflag=<flag>`` to override the default ``-I``
+  `Python launch flag <https://docs.python.org/3/using/cmdline.html#cmdoption-I>`_
+  (repeat for each flag to be used or set ``<flag>`` to the empty string to use none).
 
 
 Signing

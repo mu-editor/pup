@@ -5,6 +5,96 @@ Python Mu Packager Change Log
 
 .. towncrier release notes start
 
+Pup 1.0.0a15 (2022-03-21)
+-------------------------
+
+Bug Fixes
+^^^^^^^^^
+
+- Packaged applications are now launched with the ``-I`` Python CLI flag.
+  This isolates them from the users' site packages directory and environment.
+  Can be overridden with the new ``--launch-pyflag`` packaging option. (`#195 <https://github.com/mu-editor/pup/issues/195>`_)
+
+
+Pup 1.0.0a14 (2021-11-02)
+-------------------------
+
+Bug Fixes
+^^^^^^^^^
+
+- Bundle Linux AppImage template with pup,
+  otherwise packaging fails. (`#190 <https://github.com/mu-editor/pup/issues/190>`_)
+
+
+
+Pup 1.0.0a13 (2021-11-01)
+-------------------------
+
+Enhancements
+^^^^^^^^^^^^
+
+- Preliminary support for x86-64 Linux AppImage packaging:
+  requires ``--icon-path`` with a PNG image and,
+  for now,
+  sets the category to "Education" in the bundled ``.desktop`` file. (`#150 <https://github.com/mu-editor/pup/issues/150>`_)
+
+
+Bug Fixes
+^^^^^^^^^
+
+- Packaging directly from PyPI now works.
+  Up until now,
+  the code wrongly took the source project to be
+  a ``pip``-installable project on the filesystem. (`#137 <https://github.com/mu-editor/pup/issues/137>`_)
+- The macOS binary launcher introduced in release 1.0.0a11
+  failed on Apple Silicon systems.
+  Now fixed. (`#185 <https://github.com/mu-editor/pup/issues/185>`_)
+
+
+Pup 1.0.0a12 (2021-10-05)
+-------------------------
+
+Bug Fixes
+^^^^^^^^^
+
+- With the new binary launcher in release 1.0.0a11,
+  macOS packaged applications are no longer backwards compatible:
+  applications packaged in 10.15 do not launch on 10.14, for example.
+  This is an attempt at fixing that. (`#177 <https://github.com/mu-editor/pup/issues/177>`_)
+
+
+Pup 1.0.0a11 (2021-10-03)
+-------------------------
+
+Enhancements
+^^^^^^^^^^^^
+
+- The Windows MSI installer UI now includes auto-generated bitmaps
+  displaying the packaged application icon. (`#103 <https://github.com/mu-editor/pup/issues/103>`_)
+- The Windows MSI installation process
+  can now launch the installed program when done.
+  Limitation:
+  only works if a license is included to be displayed and accepted,
+  which serves the near-term use case for Mu Editor. (`#145 <https://github.com/mu-editor/pup/issues/145>`_)
+- Documented how to attain Windows MSI per-machine installs. (`#151 <https://github.com/mu-editor/pup/issues/151>`_)
+- macOS launcher is now a native executable, compiled at packaging time.
+  This leads to a cleaner user experience when macOS asks if the application should be allowed to access files or other HW devices: with the previous bash-script based solution the user would be asked about ``/bin/bash``. Users are now asked about the proper application name.
+
+  Additionally, the main menu should now display the correct application name, instead of ``pythonX.Y`` as before. (`#153 <https://github.com/mu-editor/pup/issues/153>`_)
+
+
+Other Changes
+^^^^^^^^^^^^^
+
+- Windows MSI installation now adds a single top-level entry to the Start Menu,
+  whereas before a directory containing the program launching entry was created:
+  less is more. (`#147 <https://github.com/mu-editor/pup/issues/147>`_)
+- Documented Windows MSI limitations regarding non-final PEP-440 versions,
+  like ``1.1.0b2`` or ``1.1.0rc1``,
+  and the implications it has on the end-user software upgrade process. (`#155 <https://github.com/mu-editor/pup/issues/155>`_)
+- Updated the default Python Standalone 3.8 bundle from 3.8.5 to 3.8.11. (`#169 <https://github.com/mu-editor/pup/issues/169>`_)
+
+
 Pup 1.0.0a10 (2021-07-04)
 -------------------------
 

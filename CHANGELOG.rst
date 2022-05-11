@@ -5,6 +5,22 @@ Python Mu Packager Change Log
 
 .. towncrier release notes start
 
+Pup 1.0.0a16 (2022-05-11)
+-------------------------
+
+Enhancements
+^^^^^^^^^^^^
+
+- Added support for Python 3.9 and 3.10, linking to the most recent Python Build Standalone release that works effortlessly.
+  Also updated the Python Build Standalone releases for Python 3.8. (`#202 <https://github.com/mu-editor/pup/issues/202>`_)
+
+
+Bug Fixes
+^^^^^^^^^
+
+- Fixed Linux AppDir packaging under Docker containers. (`#201 <https://github.com/mu-editor/pup/issues/201>`_)
+
+
 Pup 1.0.0a15 (2022-03-21)
 -------------------------
 

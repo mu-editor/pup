@@ -1,0 +1,2 @@
+Added support for Python 3.9 and 3.10, linking to the most recent Python Build Standalone release that works effortlessly.
+Also updated the Python Build Standalone releases for Python 3.8.

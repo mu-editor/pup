@@ -77,4 +77,4 @@ class Step:
         # The embedded entry point:
         appimage_tool = appimage_tool_dir / 'squashfs-root' / 'AppRun'
 
-        return appimage_tool
+        return appimage_tool.absolute()

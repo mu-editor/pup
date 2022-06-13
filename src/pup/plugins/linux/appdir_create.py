@@ -42,9 +42,9 @@ class Step:
             os.chdir(cwd)
 
 
-    _APPIMAGE_TOOL_URL =(
-        'https://github.com/AppImage/AppImageKit/'
-        '/releases/download/13/appimagetool-x86_64.AppImage'
+    _APPIMAGE_TOOL_URL = os.environ.get(
+        'PUP_AIT_URL',
+        'https://github.com/AppImage/AppImageKit/releases/download/13/appimagetool-x86_64.AppImage',
     )
 
     def _ensure_appimage_tool(self, dsp, build_dir):

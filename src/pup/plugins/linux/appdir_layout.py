@@ -39,7 +39,7 @@ class Step:
                 'launch_pyflags': ' '.join(ctx.launch_pyflags),
                 'python_exe': ctx.python_rel_exe.name,
                 'tcl_library': ctx.python_rel_tcl_library,
-                'categories': 'Education',
+                'categories': 'Education;',
             }
         }
 

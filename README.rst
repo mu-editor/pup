@@ -143,8 +143,9 @@ Packaging Options
 * Use ``--icon-path=<icon-path>``
   to include a custom icon in the packaging process.
 
-  On macOS the given file should be an
-  `ICNS <https://en.wikipedia.org/wiki/Apple_Icon_Image_format>`_ file
+  On macOS the given file can be either an
+  `ICNS <https://en.wikipedia.org/wiki/Apple_Icon_Image_format>`_ or
+  `PNG <https://en.wikipedia.org/wiki/Portable_Network_Graphics>`_ file
   which will be used as the icon for both the packaged application bundle
   and the DMG file volume icon.
 

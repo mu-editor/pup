@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <rect id="back" x="77" y="76" width="871" height="871" style="fill:white;"/>
+    <g id="border" transform="matrix(1,0,0,1,0,-22)">
+        <path d="M976,71C976,71 666.667,54 512,54C357.333,54 48,71 48,71C48,71 32,379.333 32,534C32,688.667 50,998 50,998C50,998 357.333,1014 512,1014C666.667,1014 976,998 976,998C976,998 992,688.667 992,534C992,379.333 976,71 976,71ZM912,134C912,134 645.333,118 512,118C378.667,118 112,134 112,134C112,134 96,400.667 96,534C96,667.333 112,934 112,934C112,934 378.667,950 512,950C645.333,950 912,934 912,934C912,934 928,667.333 928,534C928,400.667 912,134 912,134Z"/>
+    </g>
+    <g id="snake" transform="matrix(1,0,0,1,-6,0)">
+        <path d="M205,1024L253,284L831,282L847,528L493,528L437,1024L205,1024ZM647,453L648,345L761,345L767,454L647,453Z" style="fill:rgb(201,56,39);"/>
+    </g>
+</svg>

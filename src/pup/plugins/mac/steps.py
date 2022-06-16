@@ -14,6 +14,7 @@ class Steps:
 
     def __call__(self, ctx, _dsp):
         return (
+            'mac.icon-from-png',
             'pup.python-runtime',
             'mac.app-bundle-template',
             'pup.pip-install',

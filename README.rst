@@ -153,8 +153,9 @@ Packaging Options
   `PNG <https://en.wikipedia.org/wiki/Portable_Network_Graphics>`_ file
   which will be used as the icon for the running application.
 
-  On Windows the file should be an
-  `ICO <https://en.wikipedia.org/wiki/ICO_(file_format)>`_ file
+  On Windows the file can be either an
+  `ICO <https://en.wikipedia.org/wiki/ICO_(file_format)>`_ or
+  `PNG <https://en.wikipedia.org/wiki/Portable_Network_Graphics>`_ file
   which will be used on the Windows Start Menu entry and
   on the Windows Programs and Features listing.
 

@@ -14,6 +14,7 @@ class Steps:
 
     def __call__(self, ctx, _dsp):
         return (
+            'win.icon-from-png',
             'pup.python-runtime',
             'win.distribution-layout',
             'pup.pip-install',

@@ -106,17 +106,17 @@ class Step:
 
         url = os.environ.get(
             'PUP_PBS_URL',
-            self._pbs_url(ctx.tgt_platform, ctx.tgt_python_version_suffix)
+            self._pbs_url(ctx.tgt_platform, ctx.tgt_python_version)
         )
         return dsp.download(url)
 
 
-    def _pbs_url(self, platform, py_version):
+    def _pbs_url(self, platform, python_version):
 
         try:
-            return _PYTHON_BUILD_STANDALONE_URLs[platform][py_version]
+            return _PYTHON_BUILD_STANDALONE_URLs[platform][python_version]
         except KeyError:
-            raise RuntimeError(f'No {platform} Python runtime for Python {py_version}.')
+            raise RuntimeError(f'No {platform} runtime for Python {python_version}.')
 
 
     def _extract_zstd_file(self, filename, target_dir):

@@ -67,6 +67,7 @@ def main(log_level):
 
 @main.command()
 @click.option('--ignore-plugin', 'ignore_plugins', multiple=True)
+@click.option('--python-version', default='.'.join(map(str, sys.version_info[:2])))
 @click.option('--launch-module')
 @click.option('--launch-pyflag', 'launch_pyflags', multiple=True, default=['-I',])
 @click.option('--nice-name')
@@ -74,13 +75,14 @@ def main(log_level):
 @click.option('--license-path')
 @click.argument('src')
 @command_wrapper
-def package(src, ignore_plugins, launch_module, launch_pyflags, nice_name, icon_path, license_path):
+def package(src, ignore_plugins, python_version, launch_module, launch_pyflags, nice_name, icon_path, license_path):
     """
     Packages the GUI application in the given pip-installable source.
     """
     return api.package(
         src,
         ignore_plugins=ignore_plugins,
+        python_version=python_version,
         launch_module=launch_module,
         launch_pyflags=launch_pyflags,
         nice_name=nice_name,

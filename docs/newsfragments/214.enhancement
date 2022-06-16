@@ -1,0 +1,2 @@
+The packaged Python version can now be set with the ``--python-version`` CLI flag
+(if the ``PUP_PBS_URL`` environment variable is set, it takes precedence, however).

@@ -41,8 +41,7 @@ class Context:
         self.ignore_plugins = ignore_plugins
         self.pkg_platform = platform
         self.tgt_platform = platform
-        self.tgt_python_version = python_version[:3]
-        self.tgt_python_version_suffix = '.'.join(map(str, python_version[:2]))
+        self.tgt_python_version = python_version
 
         self.relocatable_root = None
 

@@ -35,6 +35,7 @@ class Context:
         if license_path and not self.license_path.exists():
             raise EnvironmentError(f'Non-existent license path {license_path!r}.')
 
+        self.src_wheel = None
         self.src_metadata = None
 
         self.ignore_plugins = ignore_plugins

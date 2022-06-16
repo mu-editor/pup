@@ -4,9 +4,7 @@ PUP Plugin implementing the 'pup.metadata' step.
 
 import logging
 import os
-import subprocess
 import sys
-import tempfile
 
 import pkginfo
 
@@ -69,9 +67,12 @@ class Step:
         src = ctx.src
         _log.info('Collecting metadata for %r.', src)
 
-        with tempfile.TemporaryDirectory(prefix='pup-metadata-') as temp_dir:
-            wheel_file = self._create_wheel(ctx.src, temp_dir, dsp)
-            ctx.src_metadata = pkginfo.Wheel(wheel_file)
+        build_dir = dsp.directories()['build']
+        build_dir.mkdir(parents=True, exist_ok=True)
+
+        wheel_file = self._create_wheel(ctx.src, build_dir, dsp)
+        ctx.src_wheel = wheel_file
+        ctx.src_metadata = pkginfo.Wheel(wheel_file)
 
         for field in self._METADATA_FIELDS:
             _log.debug('%s=%r', field, getattr(ctx.src_metadata, field))

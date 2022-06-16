@@ -1,2 +1,2 @@
-macOS packaging now accepts PNG files as icon,
-adding to the the native ICNS file support.
+Both macOS and Windows packaging now accept PNG files for icons.
+The native formats, respectively, ICNS and ICO, are still supported.

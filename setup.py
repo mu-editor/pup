@@ -125,6 +125,7 @@ if __name__ == "__main__":
                 'mac.create_dmg=pup.plugins.mac.create_dmg:Step',
                 'win.dirs=pup.plugins.win.dirs:Directories',
                 'win.steps=pup.plugins.win.steps:Steps',
+                'win.icon_from_png=pup.plugins.win.icon_from_png:Step',
                 'win.distribution_layout=pup.plugins.win.dist_layout:Step',
                 'win.create_msi=pup.plugins.win.create_msi:Step',
                 'win.sign_binaries=pup.plugins.win.signer:SignBinaries',

@@ -117,6 +117,7 @@ if __name__ == "__main__":
                 'pup.install_cleanup=pup.plugins.install_cleanup:Step',
                 'mac.dirs=pup.plugins.mac.dirs:Directories',
                 'mac.steps=pup.plugins.mac.steps:Steps',
+                'mac.icon_from_png=pup.plugins.mac.icon_from_png:Step',
                 'mac.app_bundle_template=pup.plugins.mac.app_bundle:Step',
                 'mac.launcher=pup.plugins.mac.launcher:Step',
                 'mac.sign_app_bundle=pup.plugins.mac.sign:Step',

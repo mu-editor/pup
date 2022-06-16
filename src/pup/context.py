@@ -35,13 +35,13 @@ class Context:
         if license_path and not self.license_path.exists():
             raise EnvironmentError(f'Non-existent license path {license_path!r}.')
 
+        self.src_wheel = None
         self.src_metadata = None
 
         self.ignore_plugins = ignore_plugins
         self.pkg_platform = platform
         self.tgt_platform = platform
-        self.tgt_python_version = python_version[:3]
-        self.tgt_python_version_suffix = '.'.join(map(str, python_version[:2]))
+        self.tgt_python_version = python_version
 
         self.relocatable_root = None
 

@@ -32,7 +32,7 @@ class Step:
             'pip',
             'install',
             '--no-warn-script-location',
-            ctx.src,
+            ctx.src_wheel,
         ]
 
         _log.info('About to run %r.', ' '.join(cmd))

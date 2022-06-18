@@ -34,7 +34,7 @@ class Step:
 
     def __call__(self, ctx, dsp):
 
-        if ctx.icon_path.suffix.upper() != '.PNG':
+        if not ctx.icon_path or ctx.icon_path.suffix.upper() != '.PNG':
             return
 
         build_dir = dsp.directories()['build']

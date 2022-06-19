@@ -28,16 +28,16 @@ CLASSIFIERS = [
     "Topic :: System :: Software Distribution",
 ]
 INSTALL_REQUIRES = [
-    "importlib-metadata==3.3.0;python_version<'3.8'",
-    "click==7.1.2",
-    "httpx==0.16.1",
-    "wheel==0.36.2",
-    "pkginfo==1.6.1",
-    "importlib-resources==4.1.1;python_version<'3.9'",
-    "cookiecutter==1.7.2",
-    "zstandard==0.15.1",
-    "dmgbuild==1.4.2;sys_platform=='darwin'",
-    "Pillow==8.3.2",
+    "importlib-metadata==4.11.4;python_version<'3.8'",
+    "click==8.1.3",
+    "httpx==0.23.0",
+    "wheel==0.37.1",
+    "pkginfo==1.8.3",
+    "importlib-resources==5.8.0;python_version<'3.9'",
+    "cookiecutter==2.1.1",
+    "zstandard==0.17.0",
+    "dmgbuild==1.5.2;sys_platform=='darwin'",
+    "Pillow==9.1.1",
 ]
 EXTRAS_REQUIRE = {
     "docs": [

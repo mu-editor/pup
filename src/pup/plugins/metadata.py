@@ -4,9 +4,12 @@ PUP Plugin implementing the 'pup.metadata' step.
 
 import logging
 import os
+import pathlib
 import sys
 
 import pkginfo
+import pkg_resources
+import requirements
 
 
 _log = logging.getLogger(__name__)
@@ -77,6 +80,8 @@ class Step:
         for field in self._METADATA_FIELDS:
             _log.debug('%s=%r', field, getattr(ctx.src_metadata, field))
 
+        self._collect_pup_extra_wheel_metadata( ctx)
+
 
     def _create_wheel(self, src, work_dir, dsp):
 
@@ -102,3 +107,46 @@ class Step:
             os.chdir(cwd)
 
         return os.path.join(work_dir, wheel_file)
+
+
+    # HUGE HACK
+    # ---------
+    # Leverage supported wheel metadata on package requirements to handle
+    # `pup`-usable metadata:
+    # - Find requirements associated to an extra named `pup`.
+    # - If their name is a `pup` paramenter...
+    # - ...use its version as the parameter value.
+    #
+    # Examples:
+    # - icon-path==./src/project/icon.png; extra='pup'
+    # - nice-name==The_Project; extra='pup'
+
+    _PUP_EXTRA_PARAMETERS = {
+        'icon-path': ('icon_path', lambda s: pathlib.Path(s).absolute()),
+        'license-path': ('license_path', lambda s: pathlib.Path(s).absolute()),
+        'nice-name': ('nice_name', lambda s: s.replace('_', ' ')),
+        'launch-module': ('launch_module', lambda s: s),
+    }
+
+    def _collect_pup_extra_wheel_metadata(self, ctx):
+
+        # Have to use `pkg_resources` to check for the extra because
+        # `requirements` does not seem to parse those correctly, as of now.
+
+        for req_line in ctx.src_metadata.requires_dist:
+
+            req = pkg_resources.Requirement.parse(req_line)
+            if not req.marker:
+                continue
+            if not req.marker.evaluate(dict(extra='pup')):
+                continue
+            if req.name not in self._PUP_EXTRA_PARAMETERS:
+                continue
+
+            req = requirements.requirement.Requirement.parse(req_line)
+            (_, value), *_ = req.specs
+            ctx_attr, value_mapper = self._PUP_EXTRA_PARAMETERS[req.name]
+            value = value_mapper(value)
+
+            _log.info(f'Setting {req.name!r} to {value!r}.')
+            setattr(ctx, ctx_attr, value)

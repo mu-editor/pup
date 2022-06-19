@@ -63,6 +63,12 @@ class Context:
         return self._nice_name or self.src_metadata.name
 
 
+    @nice_name.setter
+    def nice_name(self, value):
+
+        self._nice_name = value
+
+
     @property
     def application_id(self):
         """

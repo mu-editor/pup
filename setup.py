@@ -38,6 +38,7 @@ INSTALL_REQUIRES = [
     "zstandard==0.17.0",
     "dmgbuild==1.5.2;sys_platform=='darwin'",
     "Pillow==9.1.1",
+    "requirements-parser==0.5.0",
 ]
 EXTRAS_REQUIRE = {
     "docs": [

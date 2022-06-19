@@ -148,5 +148,5 @@ class Step:
             ctx_attr, value_mapper = self._PUP_EXTRA_PARAMETERS[req.name]
             value = value_mapper(value)
 
-            _log.info(f'Setting {req.name!r} to {value!r}.')
+            _log.info(f'Setting {req.name!r} to {str(value)!r}.')
             setattr(ctx, ctx_attr, value)

@@ -25,15 +25,13 @@ class Context:
         self.src = src
         self.launch_module = launch_module
         self.launch_pyflags = tuple(pyflag for pyflag in launch_pyflags if pyflag)
-        self._nice_name = nice_name
+        self.given_nice_name = nice_name
+
+        self._icon_path = None
         self.icon_path = pathlib.Path(icon_path).absolute() if icon_path else None
+
+        self._license_path = None
         self.license_path = pathlib.Path(license_path).absolute() if license_path else None
-
-        if icon_path and not self.icon_path.exists():
-            raise EnvironmentError(f'Non-existent icon path {icon_path!r}.')
-
-        if license_path and not self.license_path.exists():
-            raise EnvironmentError(f'Non-existent license path {license_path!r}.')
 
         self.src_wheel = None
         self.src_metadata = None
@@ -60,13 +58,38 @@ class Context:
         """
         User facing packaged name.
         """
-        return self._nice_name or self.src_metadata.name
+        return self.given_nice_name or self.src_metadata.name
 
 
-    @nice_name.setter
-    def nice_name(self, value):
+    @property
+    def icon_path(self):
+        """
+        Path to the packaged application Icon.
+        """
+        return self._icon_path
 
-        self._nice_name = value
+
+    @icon_path.setter
+    def icon_path(self, value):
+
+        if value and not value.exists():
+            raise EnvironmentError(f'Non-existent icon path {str(value)!r}.')
+        self._icon_path = value
+
+
+    @property
+    def license_path(self):
+        """
+        Path to the license text file.
+        """
+        return self._license_path
+
+    @license_path.setter
+    def license_path(self, value):
+
+        if value and not value.exists():
+            raise EnvironmentError(f'Non-existent license path {str(value)!r}.')
+        self._license_path = value
 
 
     @property

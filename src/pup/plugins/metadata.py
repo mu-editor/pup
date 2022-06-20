@@ -124,7 +124,7 @@ class Step:
     _PUP_EXTRA_PARAMETERS = {
         'icon-path': ('icon_path', lambda s: pathlib.Path(s).absolute()),
         'license-path': ('license_path', lambda s: pathlib.Path(s).absolute()),
-        'nice-name': ('nice_name', lambda s: s.replace('_', ' ')),
+        'nice-name': ('given_nice_name', lambda s: s.replace('_', ' ')),
         'launch-module': ('launch_module', lambda s: s),
     }
 
@@ -148,5 +148,6 @@ class Step:
             ctx_attr, value_mapper = self._PUP_EXTRA_PARAMETERS[req.name]
             value = value_mapper(value)
 
-            _log.info(f'Setting {req.name!r} to {value!r}.')
-            setattr(ctx, ctx_attr, value)
+            if not getattr(ctx, ctx_attr):
+                _log.info(f'Setting {req.name!r} to {str(value)!r}.')
+                setattr(ctx, ctx_attr, value)

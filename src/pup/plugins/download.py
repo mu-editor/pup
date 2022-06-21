@@ -8,6 +8,8 @@ import logging
 import httpx
 
 
+_log = logging.getLogger(__name__)
+
 
 class Step:
 
@@ -44,8 +46,10 @@ class Step:
         with open(file.with_suffix('.url'), 'wt', encoding='utf8') as f:
             f.write(url)
 
-        with open(file, 'wb') as f, httpx.stream('GET', url) as r:
+        _log.info(f'Downloading {url!r}...')
+        with open(file, 'wb') as f, httpx.stream('GET', url, follow_redirects=True) as r:
             for chunk in r.iter_bytes():
                 f.write(chunk)
+        _log.info(f'Cached in {str(file)!r}.')
 
         return file

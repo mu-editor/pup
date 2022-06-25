@@ -94,6 +94,6 @@ class Dispatcher:
         return self._invoke_plugin('pup.metadata')
 
 
-    def spawn(self, command, out_callable=None, err_callable=None, encoding='utf8'):
+    def spawn(self, command, out_callable=None, err_callable=None, encoding='utf8', env=None):
 
-        return spawn.spawn(command, out_callable, err_callable, encoding)
+        return spawn.spawn(command, out_callable, err_callable, encoding, env=env)

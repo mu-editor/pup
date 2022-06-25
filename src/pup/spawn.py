@@ -18,7 +18,7 @@ def _copy_lines(readable, write_callable):
 
 
 
-def spawn(command, out_callable=None, err_callable=None, encoding='utf8'):
+def spawn(command, out_callable=None, err_callable=None, encoding='utf8', env=None):
     """
     Spawns a child process specified by `command` which is passed to
     subprocess.Popen where `out/err_callable` is called for each stdout/err
@@ -34,6 +34,7 @@ def spawn(command, out_callable=None, err_callable=None, encoding='utf8'):
         bufsize=0,
         encoding=encoding,
         universal_newlines=True,
+        env=env,
     )
     _log.debug('Spawned PID %s.', child.pid)
 

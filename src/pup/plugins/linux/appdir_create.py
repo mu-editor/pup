@@ -29,6 +29,8 @@ class Step:
         cwd = os.getcwd()
         try:
             os.chdir(dist_dir)
+            env = dict(os.environ)
+            env['VERSION'] = ctx.src_metadata.version
             cmd = [
                 str(appimage_tool),
                 appdir_src,
@@ -37,6 +39,7 @@ class Step:
                 cmd,
                 out_callable=lambda line: _log.info('appimagetool out: %s', line),
                 err_callable=lambda line: _log.info('appimagetool err: %s', line),
+                env=env,
             )
         finally:
             os.chdir(cwd)

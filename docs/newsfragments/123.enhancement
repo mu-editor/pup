@@ -1,1 +1,0 @@
-`pup` can now collect some packaging paramenters -- icon-path, license-path, nice-name, and launch-module -- from the project's wheel metadata (warning: it's very very hackish!).

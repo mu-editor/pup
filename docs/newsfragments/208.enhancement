@@ -1,2 +1,0 @@
-The tool used to build Linux AppImages is no longer hardcoded to a specific version/URL.
-It defaults to `<https://github.com/AppImage/AppImageKit/releases/download/13/appimagetool-x86_64.AppImage>`_ but can be overridden with the ``PUP_AIT_URL`` environment variable.

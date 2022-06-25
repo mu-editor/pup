@@ -1,3 +1,0 @@
-The wheel generated during the metadata colletion stage
-is now kept under the build directory
-and used by the installation stage.

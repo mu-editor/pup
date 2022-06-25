@@ -5,6 +5,37 @@ Python Mu Packager Change Log
 
 .. towncrier release notes start
 
+Pup 1.0.0a17 (2022-06-25)
+-------------------------
+
+Enhancements
+^^^^^^^^^^^^
+
+- ``pup`` can now collect some packaging paramenters -- icon-path, license-path, nice-name, and launch-module -- from the project's wheel metadata (warning: it's very very hackish!). (`#123 <https://github.com/mu-editor/pup/issues/123>`_)
+- The tool used to build Linux AppImages is no longer hardcoded to a specific version/URL.
+  It defaults to `<https://github.com/AppImage/AppImageKit/releases/download/13/appimagetool-x86_64.AppImage>`_ but can be overridden with the ``PUP_AIT_URL`` environment variable. (`#208 <https://github.com/mu-editor/pup/issues/208>`_)
+- Linux AppImage filenames now include the packaged application's version. (`#209 <https://github.com/mu-editor/pup/issues/209>`_)
+- Both macOS and Windows packaging now accept PNG files for icons.
+  The native formats, respectively, ICNS and ICO, are still supported. (`#211 <https://github.com/mu-editor/pup/issues/211>`_)
+- The packaged Python version can now be set with the ``--python-version`` CLI flag
+  (if the ``PUP_PBS_URL`` environment variable is set, it takes precedence, however). (`#214 <https://github.com/mu-editor/pup/issues/214>`_)
+
+
+Bug Fixes
+^^^^^^^^^
+
+- HTTP downloads now follow redirects. (`#225 <https://github.com/mu-editor/pup/issues/225>`_)
+
+
+Other Changes
+^^^^^^^^^^^^^
+
+- The wheel generated during the metadata colletion stage
+  is now kept under the build directory
+  and used by the installation stage. (`#30 <https://github.com/mu-editor/pup/issues/30>`_)
+- Updated direct ``pup`` dependencies. (`#220 <https://github.com/mu-editor/pup/issues/220>`_)
+
+
 Pup 1.0.0a16 (2022-05-11)
 -------------------------
 

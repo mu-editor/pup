@@ -18,9 +18,6 @@ _log = logging.getLogger(__name__)
 
 
 _PYTHON_BUILD_STANDALONE_URLs = {
-    # Release https://github.com/indygreg/python-build-standalone/releases/tag/20220222
-    # upgraded Tcl/Tk and does not currently work for us on macOS: lock it across all
-    # platforms for consistency.
     'darwin': {
         '3.7': 'https://github.com/indygreg/python-build-standalone/releases/download/20200823/cpython-3.7.9-x86_64-apple-darwin-pgo-20200823T2228.tar.zst',
         '3.8': 'https://github.com/indygreg/python-build-standalone/releases/download/20220630/cpython-3.8.13+20220630-x86_64-apple-darwin-pgo-full.tar.zst',

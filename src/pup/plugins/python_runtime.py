@@ -18,25 +18,22 @@ _log = logging.getLogger(__name__)
 
 
 _PYTHON_BUILD_STANDALONE_URLs = {
-    # Release https://github.com/indygreg/python-build-standalone/releases/tag/20220222
-    # upgraded Tcl/Tk and does not currently work for us on macOS: lock it across all
-    # platforms for consistency.
     'darwin': {
         '3.7': 'https://github.com/indygreg/python-build-standalone/releases/download/20200823/cpython-3.7.9-x86_64-apple-darwin-pgo-20200823T2228.tar.zst',
-        '3.8': 'https://github.com/indygreg/python-build-standalone/releases/download/20211017/cpython-3.8.12-x86_64-apple-darwin-pgo-20211017T1616.tar.zst',
-        '3.9': 'https://github.com/indygreg/python-build-standalone/releases/download/20211017/cpython-3.9.7-x86_64-apple-darwin-pgo-20211017T1616.tar.zst',
-        '3.10': 'https://github.com/indygreg/python-build-standalone/releases/download/20211017/cpython-3.10.0-x86_64-apple-darwin-pgo-20211017T1616.tar.zst',
+        '3.8': 'https://github.com/indygreg/python-build-standalone/releases/download/20220630/cpython-3.8.13+20220630-x86_64-apple-darwin-pgo-full.tar.zst',
+        '3.9': 'https://github.com/indygreg/python-build-standalone/releases/download/20220630/cpython-3.9.13+20220630-x86_64-apple-darwin-pgo-full.tar.zst',
+        '3.10': 'https://github.com/indygreg/python-build-standalone/releases/download/20220630/cpython-3.10.5+20220630-x86_64-apple-darwin-pgo-full.tar.zst',
     },
     'win32': {
         '3.7': 'https://github.com/indygreg/python-build-standalone/releases/download/20200822/cpython-3.7.9-x86_64-pc-windows-msvc-shared-pgo-20200823T0118.tar.zst',
-        '3.8': 'https://github.com/indygreg/python-build-standalone/releases/download/20211017/cpython-3.8.12-x86_64-pc-windows-msvc-shared-pgo-20211017T1616.tar.zst',
-        '3.9': 'https://github.com/indygreg/python-build-standalone/releases/download/20211017/cpython-3.9.7-x86_64-pc-windows-msvc-shared-pgo-20211017T1616.tar.zst',
-        '3.10': 'https://github.com/indygreg/python-build-standalone/releases/download/20211017/cpython-3.10.0-x86_64-pc-windows-msvc-shared-pgo-20211017T1616.tar.zst',
+        '3.8': 'https://github.com/indygreg/python-build-standalone/releases/download/20220630/cpython-3.8.13+20220630-x86_64-pc-windows-msvc-shared-pgo-full.tar.zst',
+        '3.9': 'https://github.com/indygreg/python-build-standalone/releases/download/20220630/cpython-3.9.13+20220630-x86_64-pc-windows-msvc-shared-pgo-full.tar.zst',
+        '3.10': 'https://github.com/indygreg/python-build-standalone/releases/download/20220630/cpython-3.10.5+20220630-x86_64-pc-windows-msvc-shared-pgo-full.tar.zst',
     },
     'linux': {
-        '3.8': 'https://github.com/indygreg/python-build-standalone/releases/download/20211017/cpython-3.8.12-x86_64-unknown-linux-gnu-pgo-20211017T1616.tar.zst',
-        '3.9': 'https://github.com/indygreg/python-build-standalone/releases/download/20211017/cpython-3.9.7-x86_64-unknown-linux-gnu-pgo-20211017T1616.tar.zst',
-        '3.10': 'https://github.com/indygreg/python-build-standalone/releases/download/20211017/cpython-3.10.0-x86_64-unknown-linux-gnu-pgo-20211017T1616.tar.zst',
+        '3.8': 'https://github.com/indygreg/python-build-standalone/releases/download/20220630/cpython-3.8.13+20220630-x86_64-unknown-linux-gnu-pgo-full.tar.zst',
+        '3.9': 'https://github.com/indygreg/python-build-standalone/releases/download/20220630/cpython-3.9.13+20220630-x86_64-unknown-linux-gnu-pgo-full.tar.zst',
+        '3.10': 'https://github.com/indygreg/python-build-standalone/releases/download/20220630/cpython-3.10.5+20220630-x86_64-unknown-linux-gnu-pgo-full.tar.zst',
     },
 }
 

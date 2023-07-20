@@ -30,7 +30,7 @@ by running:
 
 .. code-block:: none
 
-   $ msiexec /i <msi-file>" MSIINSTALLPERUSER=""
+   $ msiexec /i <msi-file> MSIINSTALLPERUSER=""
 
 
 Versions
@@ -53,7 +53,7 @@ Things you want to know:
   Such segments are not supported by the MSI format
   and ``pup`` strips them away,
   logging a warning message like:
-  
+
   .. code-block:: none
 
       W Version '2.0.0a1' not MSI supported: using '2.0.0'.

@@ -28,16 +28,16 @@ CLASSIFIERS = [
     "Topic :: System :: Software Distribution",
 ]
 INSTALL_REQUIRES = [
-    "importlib-metadata==4.11.4;python_version<'3.8'",
-    "click==8.1.3",
-    "httpx==0.23.0",
-    "wheel==0.37.1",
-    "pkginfo==1.8.3",
-    "importlib-resources==5.8.0;python_version<'3.9'",
-    "cookiecutter==2.1.1",
-    "zstandard==0.17.0",
-    "dmgbuild==1.5.2;sys_platform=='darwin'",
-    "Pillow==9.1.1",
+    "importlib-metadata==6.8.0;python_version<'3.8'",
+    "click==8.1.6",
+    "httpx==0.24.1",
+    "wheel==0.40.0",
+    "pkginfo==1.9.6",
+    "importlib-resources==6.0.0;python_version<'3.9'",
+    "cookiecutter==2.2.3",
+    "zstandard==0.21.0",
+    "dmgbuild==1.6.1;sys_platform=='darwin'",
+    "Pillow==10.0.0",
     "requirements-parser==0.5.0",
 ]
 EXTRAS_REQUIRE = {
@@ -106,7 +106,7 @@ if __name__ == "__main__":
         classifiers=CLASSIFIERS,
         install_requires=INSTALL_REQUIRES,
         extras_require=EXTRAS_REQUIRE,
-        entry_points={                                                                    
+        entry_points={
             'console_scripts': [
                 'pup=pup.__main__:main',
             ],
@@ -139,4 +139,3 @@ if __name__ == "__main__":
         },
         include_package_data=True,
     )
-

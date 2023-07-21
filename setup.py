@@ -106,7 +106,7 @@ if __name__ == "__main__":
         classifiers=CLASSIFIERS,
         install_requires=INSTALL_REQUIRES,
         extras_require=EXTRAS_REQUIRE,
-        entry_points={                                                                    
+        entry_points={
             'console_scripts': [
                 'pup=pup.__main__:main',
             ],
@@ -139,4 +139,3 @@ if __name__ == "__main__":
         },
         include_package_data=True,
     )
-

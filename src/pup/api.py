@@ -24,6 +24,7 @@ def _context(
     nice_name=None,
     icon_path=None,
     license_path=None,
+    pip_platform=None,
 ):
 
     return context.Context(
@@ -35,6 +36,7 @@ def _context(
         license_path=license_path,
         ignore_plugins=ignore_plugins,
         platform=sys.platform,
+        pip_platform=pip_platform,
         python_version=python_version,
     )
 
@@ -50,11 +52,12 @@ def package(
     nice_name=None,
     icon_path=None,
     license_path=None,
+    pip_platform=None,
 ):
 
     _log.info('Package %r: starting.', src)
 
-    ctx = _context(ignore_plugins, src, python_version, launch_module, launch_pyflags, nice_name, icon_path, license_path)
+    ctx = _context(ignore_plugins, src, python_version, launch_module, launch_pyflags, nice_name, icon_path, license_path, pip_platform)
     dsp = dispatcher.Dispatcher(ctx)
 
     dsp.collect_src_metadata()

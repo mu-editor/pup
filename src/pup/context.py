@@ -19,6 +19,7 @@ class Context:
         license_path,
         ignore_plugins,
         platform,
+        pip_platform,
         python_version,
     ):
 
@@ -51,6 +52,8 @@ class Context:
         self.python_rel_tcl_library = None
 
         self.final_artifact = None
+
+        self.pip_platform = pip_platform
 
 
     @property
